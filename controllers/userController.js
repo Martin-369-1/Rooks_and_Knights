@@ -34,8 +34,6 @@ exports.postRegister = async (req, res) => {
             // Inform user of the error
             return res.status(400).json({ error: result.message });
         }
-        // Store user data in session
-        console.log(req.session);
 
         // Send success response with redirect URL
         res.status(200).json({ redirectUrl: result.redirectUrl });
@@ -43,7 +41,5 @@ exports.postRegister = async (req, res) => {
         console.error('Registration error:', err);
         res.status(500).json({ error: 'Server error. Please try again later.' });
     }
-
-
-
 }
+

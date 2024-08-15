@@ -29,6 +29,7 @@ app.use(session({
 
 //Routers
 const userRouter=require('./routers/userRoute');
+const OTPRouter=require('./routers/OTPRouter')
 
 //Database
 const connectDb=require('./config/database');
@@ -41,4 +42,5 @@ app.listen(process.env.PORT,()=>{
 
 //Using Routers
 app.use('/',userRouter);
+app.use('/OTP',OTPRouter)
 

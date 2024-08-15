@@ -1,20 +1,22 @@
 //Requiring modules
-const express=require('express');
-const router=express.Router();
+const express = require('express');
+const router = express.Router();
 
 //Controllers
-const userController=require('../controllers/userController')
+const userController = require('../controllers/userController')
 
 //GET login
-router.get('/login',userController.getLogin)
+router.get('/login', userController.getLogin)
 
 //POST login
-router.post('/login',userController.postLogin)
+router.post('/login', userController.postLogin)
 
 //GET register
-router.get('/register',userController.getRegister)
+router.get('/register', userController.getRegister)
 
 //POST register
-router.post('/register',userController.postRegister)
+router.post('/register', userController.postRegister)
 
-module.exports=router;
+
+
+module.exports = router;

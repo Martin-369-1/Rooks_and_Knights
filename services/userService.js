@@ -1,8 +1,8 @@
 //Requiring modules
-const userCollection=require('../models/userModel')
-const OTPUtils=require("../utils/OTPUtils")
+const userCollection = require('../models/userModel')
+const OTPUtils = require("../utils/OTPUtils")
 
-exports.registerUser=async(username,email,phoneNumber,password,req)=>{
+exports.registerUser = async (username, email, phoneNumber, password, req) => {
     try {
         // Check if email already exists
         const emailExistAlready = await userCollection.findOne({ email });
@@ -27,7 +27,7 @@ exports.registerUser=async(username,email,phoneNumber,password,req)=>{
         const OTP = OTPUtils.generateOTP();
         req.session.countdownTime = 30;
         console.log(email, OTP);
-        
+
         await OTPUtils.storeOTP(email, OTP);
 
         // Send OTP
@@ -42,7 +42,7 @@ exports.registerUser=async(username,email,phoneNumber,password,req)=>{
         OTPUtils.startCountdown(req);
 
         // Return success result
-        return { success: true, redirectUrl: '/OTP/OTPVerify' };
+        return { success: true, redirectUrl: '/OTP/verifyOTP' };
     } catch (err) {
         console.error('Registration error:', err);
         return { success: false, message: 'Server error. Please try again later.' };

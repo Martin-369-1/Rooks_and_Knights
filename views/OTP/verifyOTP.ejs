@@ -1,0 +1,93 @@
+<%- include('./partials/header') %>
+
+    <body class="login_body dis-flex flex-c-m">
+        <div class="login_outer_div p-b-20">
+            <div class="inner_div_1">
+                <p class="fs-30 clblack txt-center">Verify OTP</p>
+            </div>
+            <div class="inner_div_2 m-t-20 p-l-15 p-r-15">
+                <form action="/OTP/verifyOTP" method="post" id="OTPVerifyForm">
+                    <div class="w-full m-t-20">
+                        <label for="OTP" class="clblack f-w-600">Enter the OTP which sent to your email <%= email %>
+                                </label>
+                        <input class="input_box p-l-15" type="text" id="OTP" name="OTP" placeholder="Enter OTP">
+                    </div>
+                    <p id="error-message" class="text-danger mt-2 mb-2"></p>
+                    <button type="submit" class="btn btn-primary w-full m-t-20 submit_btn_1">
+                        <p class="fs-18">Verify OTP</p>
+                    </button>
+                </form>
+
+                <div id="resendOTP" class="m-t-20"></div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('OTPVerifyForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                let OTP = document.getElementById('OTP').value
+                fetch('/OTP/verifyOTP', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ OTP })
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        }
+                        document.getElementById('error-message').innerText = data.error;
+                    })
+                    .catch((err) => {
+                        document.getElementById('error-message').innerText = err;
+                    })
+            })
+
+
+
+
+            // Update the timer display
+            function updateTime() {
+
+                fetch('/OTP/timer')
+                    .then(res => res.json())
+                    .then(data => {
+                        let remainingTime = data.remainingTime;
+                        if (remainingTime > 0) {
+                            document.getElementById('resendOTP').innerHTML = `<p class='text-danger'>Resend OTP in ${remainingTime} seconds</p>`;
+                        } else {
+                            let resendOTPform = `
+                    <form action="/OTP/resendOTP" method="post">
+                            <button type="submit" id='resend-OTP'>
+                                <p class="fs-18">Resend OTP</p>
+                            </button>             
+                    </form>`
+
+
+
+                            document.getElementById('resendOTP').innerHTML = resendOTPform;
+
+                            document.getElementById('resend-OTP').onclick('submit', function () {
+                                const submitButton = document.getElementById('resend-OTP')
+                                submitButton.disabled = true;
+                            })
+
+                            clearInterval(timerInterval); // Clear the interval when time reaches 0
+
+                        }
+
+
+                    })
+                    .catch(err => console.log(err));
+            }
+
+            // Start the timer interval
+            const timerInterval = setInterval(updateTime, 1000);
+            updateTime();
+        </script>
+
+    </body>
+
+    </html>

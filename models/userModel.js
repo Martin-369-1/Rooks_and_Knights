@@ -13,33 +13,33 @@ const userShema = Schema({
     },
     email: {
         type: String,
-        unique:true,
+        unique: true,
         required: true,
 
     },
     phoneNumber: {
         type: String,
-        unique:true,
-        sparce:true
+        unique: true,
+        sparce: true
 
     },
     profilePicture: {
         type: String
     },
 
-    googleID:{
-        type:String,
-        unique:true,
-        sparce:true
+    googleID: {
+        type: String,
+        unique: true,
+        sparce: true
     },
 
     isblocked: {
         type: Boolean,
         default: false
     },
-    isAdmin:{
-        type:Boolean,
-        default:false
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 
