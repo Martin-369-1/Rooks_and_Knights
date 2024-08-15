@@ -28,17 +28,17 @@ app.use(session({
 }));
 
 //Routers
-
-
+const userRouter=require('./routers/userRoute');
 
 //Database
-const connectDb=require('./config/database')
+const connectDb=require('./config/database');
+connectDb()
 
 //Running Server
 app.listen(process.env.PORT,()=>{
     console.log(`Server is running at http://localhost:${process.env.PORT}`);    
 })
 
-app.get('/',(req,res)=>{
-    res.send("MY WEBSITE")
-})
+//Using Routers
+app.use('/',userRouter);
+
