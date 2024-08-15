@@ -1,6 +1,7 @@
 //Requiring modules
 const userCollection = require('../models/userModel')
 const OTPUtils = require("../utils/OTPUtils")
+const passwordUtils=require('../utils/passwordUtils')
 
 exports.registerUser = async (username, email, phoneNumber, password, req) => {
     try {
@@ -48,3 +49,34 @@ exports.registerUser = async (username, email, phoneNumber, password, req) => {
         return { success: false, message: 'Server error. Please try again later.' };
     }
 }
+
+exports.saveUserToDB= async (username, email, phoneNumber, password) => {
+    try {    
+        const hashedPassword = await passwordUtils.passwordHasher(password);
+
+        // Create a new user instance
+        const user = new userCollection({
+            username,
+            password: hashedPassword,
+            email,
+            phoneNumber
+        });
+
+        // Save the user to the database
+        await user.save();
+
+        return { success: true };
+    } catch (err) {
+        console.error('Error during registration:', err);
+        return { success: false, error: 'Registration failed. Please try again later.' };
+    }
+};
+
+
+exports.findUserByEmail=async(email)=>{
+    return await userCollection.findOne({ email });
+}
+
+exports.validateUserCredentials = async (password, userPasswordHash) => {
+    return await passwordUtils.comparePassword(password, userPasswordHash);
+};

@@ -1,4 +1,4 @@
-<%- include('./partials/header') %>
+<%- include('./partials/head') %>
 
 <body class="login_body dis-flex flex-c-m">
     <div class="login_outer_div p-b-20">
@@ -35,37 +35,42 @@
 
     <script>
 
-        // document.getElementById('login-form').addEventListener('submit', postForm)
+        document.getElementById('login-form').addEventListener('submit', postForm)
 
-        // function postForm(e) {
-        //     e.preventDefault()
-        //     let email = document.getElementById('email').value;
-        //     let password = document.getElementById('password').value;
+        function postForm(e) {
+            e.preventDefault()
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
 
-        //     fetch("/login", {
-        //         method: "POST",
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({ email, password })
-        //     })
-        //         .then((res) => {
-        //             if (res.redirected) {
-        //                 window.location.href = res.url;
-        //             } else {
-        //                 return res.json();
-        //             }
-        //         })
-        //         .then((data) => {
-        //             document.getElementById('error-message').innerText = data.error;
-        //         })
-        //         .catch((err) => {
-        //             document.getElementById('error-message').innerText = 'some eorror occured'
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+                .then((res) => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    } else {
+                        return res.json();
+                    }
+                })
+                .then((data) => {
+                    if(data && data.error){
+
+                        console.log(data.err);
+                        
+                        document.getElementById('error-message').innerText = data.error;
+                    }
+                })
+                .catch((err) => {
+                    document.getElementById('error-message').innerText = 'some eorror occured'
 
 
-        //         })
+                })
 
-        // }
+        }
 
     </script>
 </body>

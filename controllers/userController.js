@@ -1,6 +1,7 @@
 //requring modules
 const signupFormValidataion = require('../utils/registerValidation')
 const userSevice = require('../services/userService');
+const generateAccessToken=require('../utils/JWTUtils')
 
 //GET login 
 exports.getLogin = (req, res) => {
@@ -8,8 +9,45 @@ exports.getLogin = (req, res) => {
 }
 
 //POST login
-exports.postLogin = (req, res) => {
+exports.postLogin = async(req, res) => {
+    try {
+        const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        const userData = await userSevice.findUserByEmail(email);
+
+        if (!userData) {
+            return res.status(400).json({ error: 'User does not exist' });
+        }
+
+        const isValidPassword = await userSevice.validateUserCredentials(password, userData.password);
+        if (!isValidPassword) {
+            return res.status(400).json({ error: 'Incorrect password' });
+        }
+
+
+        if (userData.blocked) {
+            return res.status(400).json({ error: 'You are blocked by admin' });
+        }
+
+        const accessToken = generateAccessToken(email);
+
+        res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
+        
+        res.redirect('/home')
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
+//POST logout
+exports.postLogout=(req,res)=>{
+    res.clearCookie('token');
+    res.status(200).redirect('/login');
 }
 
 //GET Register
@@ -40,6 +78,31 @@ exports.postRegister = async (req, res) => {
     } catch (err) {
         console.error('Registration error:', err);
         res.status(500).json({ error: 'Server error. Please try again later.' });
+    }
+}
+
+//GET complete register
+exports.getCompleteRegister = (req, res) => {
+    res.render('userViews/completeRegister')
+}
+
+//POST complete register
+exports.postCompleteRegister = async (req, res) => {
+    const { username, email, phoneNumber, password } = req.session;
+
+    const result = await userSevice.saveUserToDB(username, email, phoneNumber, password)
+
+    if (result.success) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.log(err);
+            }
+
+            res.clearCookie();
+            res.redirect('/login');
+        })
+    }else{
+        console.log("error while complete registration");    
     }
 }
 
