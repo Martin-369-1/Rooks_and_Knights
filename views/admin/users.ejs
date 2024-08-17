@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+<body>
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
+
+        <div id="content" class="container-fluid">
+            <h1 class="m-b-10">Users</h1>
+            <form action="/" class="search-bar">
+                <input type="text" class="form-control" placeholder="Search by Email">
+                <button class="btn-primary btn m-t-3">Search</button>
+            </form>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered m-t-10">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>UserID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% userList.forEach(user=> { %>
+                            <tr>
+                            <td><%=user.username%></td>
+                            <td><%=user.email%></td>
+                            <td><%=user._id%></td>
+                            <td>
+                                <%if(user.isblocked){ %>
+                                    <form action="/admin/users/blockUnblockUser/<%= user._id %>?_method=PATCH" method="POST"><button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Unblock</button></form>
+                              
+                                <% }else{ %>
+                                    <form action="/admin/users/blockUnblockUser/<%= user._id %>?_method=PATCH" method="POST"><button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> Block</button></form>
+                                <%}%>
+                                
+                            </td>
+                            </tr>
+                        <%}); %>
+                
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>  
+
+    <%- include('./partials/footer') %>
+</body>
+</html>

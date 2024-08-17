@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+<body>
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
+
+        <div id="content" class="container-fluid">
+            <h1 class="m-b-10">Products</h1>
+            <form action="/" class="search-bar">
+                <input type="text" class="form-control" placeholder="Search by ProductName">
+                <button class="btn-primary btn m-t-3">Search</button>
+            </form>
+
+            <div class="m-t-30 m-b-30">
+                <a href="/admin/products/addProduct" class="text-decoration-none">
+                    <i class="fa fa-plus fs-20" style="float: left;"></i>
+                    <p class="fs-20">Add New Product</p>
+                </a>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ProductID</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Category</th>
+                            <th>Sub Category</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1456</td>
+                            <td>Chessbase 17</td>
+                            <td>5000</td>
+                            <td>4</td>
+                            <td>Software</td>
+                            <td>Database</td>
+                            <td>
+                                <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
+                                
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1456</td>
+                            <td>Chessbase 17</td>
+                            <td>5000</td>
+                            <td>4</td>
+                            <td>Software</td>
+                            <td>Database</td>
+                            <td>
+                                <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
+                                
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                            </td>
+                        </tr>
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>  
+
+    <%- include('./partials/footer') %>
+</body>
+</html>

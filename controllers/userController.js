@@ -5,7 +5,7 @@ const generateAccessToken=require('../utils/JWTUtils')
 
 //GET login 
 exports.getLogin = (req, res) => {
-    res.render('userViews/login')
+    res.render('user/login')
 }
 
 //POST login
@@ -21,6 +21,10 @@ exports.postLogin = async(req, res) => {
 
         if (!userData) {
             return res.status(400).json({ error: 'User does not exist' });
+        }
+
+        if(userData.isblocked){
+            return res.status(400).json({ error: 'You are bocked by admin' });
         }
 
         const isValidPassword = await userSevice.validateUserCredentials(password, userData.password);
@@ -52,7 +56,7 @@ exports.postLogout=(req,res)=>{
 
 //GET Register
 exports.getRegister = (req, res) => {
-    res.render('userViews/register')
+    res.render('user/register')
 }
 
 //POST Register
@@ -83,7 +87,7 @@ exports.postRegister = async (req, res) => {
 
 //GET complete register
 exports.getCompleteRegister = (req, res) => {
-    res.render('userViews/completeRegister')
+    res.render('user/completeRegister')
 }
 
 //POST complete register

@@ -1,0 +1,181 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f2f5;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.selected{
+    background-color: red;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 250px;
+    max-width: 250px;
+    height: 100vh;
+    transition: all 0.3s;
+    background-color: #343a40;
+    color: #fff;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#sidebar.minimized {
+    min-width: 80px;
+    max-width: 80px;
+}
+
+#sidebar.active {
+    min-width: 250px;
+    max-width: 250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 5px;
+    background: #c4c7cb;
+    text-align: center;
+}
+
+#sidebar ul.components {
+    padding: 0;
+    margin: 0;
+}
+
+#sidebar ul li {
+    padding: 7px;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+}
+
+#sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#sidebar ul li a i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+#sidebar ul li a .sidebar-title {
+    margin-left: 10px;
+    transition: opacity 0.3s;
+    opacity: 1;
+}
+
+#sidebar.minimized ul li a .sidebar-title {
+    opacity: 0;
+    display: none;
+}
+
+#sidebar ul li a:hover {
+    background: #495057;
+    color: #fff;
+}
+
+
+
+
+#content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+#sidebar.minimized ~ #content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        min-width: 80px;
+        max-width: 80px;
+    }
+    
+    #sidebarCollapse {
+        display: none;
+    }
+    
+    #sidebar ul li a .sidebar-title {
+        display: none;
+    }
+
+    #content {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+    }
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Adds momentum scrolling on iOS */
+}
+
+.product-image-box {
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image-box .image-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.product-image-box .image-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.product-image-box i {
+    color: #aaa;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Style for larger screen to widen input boxes */
+@media (min-width: 768px) {
+    .product-image-box {
+        width: 150px;
+        height: 150px;
+    }
+
+    .product-image-box i {
+        font-size: 3rem;
+    }
+}

@@ -5,6 +5,8 @@ const app = express();
 const nocache = require('nocache');
 const cookieParser = require('cookie-parser');
 const session=require('express-session');
+const methodOverride = require('method-override');
+const flash = require('connect-flash');
 
 //Setting view engine
 app.set('view engine','ejs')
@@ -14,9 +16,10 @@ app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use('/public', express.static('public')); //setting public folder
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride('_method'));
 app.use(nocache())
 app.use(session({
-    secret: process.env.SESSION_SECRE,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { 
@@ -26,10 +29,13 @@ app.use(session({
         sameSite: 'strict'
     }
 }));
+app.use(flash())
+
 
 //Routers
 const userRouter=require('./routers/userRoute');
-const OTPRouter=require('./routers/OTPRouter')
+const OTPRouter=require('./routers/OTPRouter');
+const adminRouter=require('./routers/adminRouter');
 
 //Database
 const connectDb=require('./config/database');
@@ -42,5 +48,6 @@ app.listen(process.env.PORT,()=>{
 
 //Using Routers
 app.use('/',userRouter);
-app.use('/OTP',OTPRouter)
-
+app.use('/OTP',OTPRouter);
+app.use('/admin',adminRouter);
+app.use(flash());

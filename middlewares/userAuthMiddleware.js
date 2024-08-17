@@ -18,11 +18,6 @@ exports.checkUserAuthenticated = (req, res, next) => {
         console.log('Email set in middleware:', req.email);
         next();
     })
-    if(req.session.user){
-        next()
-    }else{
-        res.send("err")
-    }
 };
 
 //used where the user should not be authenticated aldready

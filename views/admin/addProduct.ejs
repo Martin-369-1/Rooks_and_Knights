@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+<body>
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
+
+        <div id="content" class="p-4 p-md-5" style="background-color:#f1f2f5 ;">
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2>Product Form</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <!-- Image Upload Section -->
+                            <div class="form-group text-center">
+                                <label for="productImages">Image Upload</label>
+                                <div class="d-flex justify-content-center">
+                                    <!-- Box 1 -->
+                                    <div class="product-image-box mx-2">
+                                        <label for="productImage1" class="image-label">
+                                            <img id="previewImage1" class="image-preview" src="" alt="" style="display:none;">
+                                            <i class="fa fa-picture-o fa-2x"></i>
+                                            <input type="file" class="form-control-file image-input" id="productImage1" accept="image/*" onchange="previewImage(event, 'previewImage1')" required>
+                                        </label>
+                                    </div>
+                                    <!-- Box 2 -->
+                                    <div class="product-image-box mx-2">
+                                        <label for="productImage2" class="image-label">
+                                            <img id="previewImage2" class="image-preview" src="" alt="" style="display:none;">
+                                            <i class="fa fa-picture-o fa-2x"></i>
+                                            <input type="file" class="form-control-file image-input" id="productImage2" accept="image/*" onchange="previewImage(event, 'previewImage2')" required>
+                                        </label>
+                                    </div>
+                                    <!-- Box 3 -->
+                                    <div class="product-image-box mx-2">
+                                        <label for="productImage3" class="image-label">
+                                            <img id="previewImage3" class="image-preview" src="" alt="" style="display:none;">
+                                            <i class="fa fa-picture-o fa-2x"></i>
+                                            <input type="file" class="form-control-file image-input" id="productImage3" accept="image/*" onchange="previewImage(event, 'previewImage3')" required>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="productName">Product Name</label>
+                                    <input type="text" class="form-control" id="productName" placeholder="ex. Chessbase17" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="productPrice">Price</label>
+                                    <input type="number" class="form-control" id="productPrice" placeholder="ex. 1000" min="0" required>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <div class="form-group">
+                                        <label for="productCategory">Category</label>
+                                        <select id="productCategory" class="form-control" required>
+                                            <option selected>Choose...</option>
+                                            <option>Software</option>
+                                            <option>Accessories</option>
+                                            <option>Books</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <div class="form-group">
+                                        <label for="productCategory">Category</label>
+                                        <select id="productCategory" class="form-control" required>
+                                            <option selected>Choose...</option>
+                                            <option>Software</option>
+                                            <option>Accessories</option>
+                                            <option>Books</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-md-6">
+                                    <label for="productWeight">Stock</label>
+                                    <input type="number" class="form-control" id="productWeight" placeholder="ex. 500gm" required>
+                                </div>
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="productAbout">About</label>
+                                <textarea class="form-control" id="productAbout" rows="1" name="about" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productDescription">Description</label>
+                                <textarea class="form-control" id="productDescription" rows="1" oninput="adjustTextareaHeight(this)" name="about" required></textarea>
+                            </div>
+        
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary btn-block">Save Product</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <%- include('./partials/footer') %>
+</body>
+</html>

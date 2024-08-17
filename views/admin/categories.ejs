@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+<body>
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
+
+        <div id="content" class="container-fluid">
+            <h1 class="m-b-10">Categories</h1>
+            <form action="/" class="search-bar">
+                <input type="text" class="form-control" placeholder="Search Category Name">
+                <button class="btn-primary btn m-t-3">Search</button>
+            </form>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered m-t-10">
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% categoryList.forEach(category=> { %>
+                            <tr>
+                                <td><%= category._id %></td>
+                                <td><%= category.categoryName %></td>
+                                <td>
+                                    <form action="/admin/categories/deleteCategory/<%= category._id %>/?_method=DELETE" method="post">
+                                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                                    </form> 
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-danger fs-20"><%= error%></p>
+            <div>
+                <form action="/admin/categories/addCategory" method="post" id="addCategoryForm">
+                    <label for="categoryName" class="fs-30 fw-10">New Category</label>
+                    <div >
+                        <input type="text" placeholder="Category Name" class="p-2 " style="float: left;" name="categoryName" id="categoryName">
+                        <button class="btn btn-success fs-16">Add</button>
+                    </div>
+                </form>
+                      
+            </div>
+            
+        </div>
+        
+    </div>  
+
+    <%- include('./partials/footer') %>
+
+</body>
+</html>
