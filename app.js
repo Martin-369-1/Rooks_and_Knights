@@ -15,7 +15,7 @@ app.set('view engine','ejs')
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use('/public', express.static('public')); //setting public folder
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(nocache())
 app.use(session({
@@ -50,4 +50,3 @@ app.listen(process.env.PORT,()=>{
 app.use('/',userRouter);
 app.use('/OTP',OTPRouter);
 app.use('/admin',adminRouter);
-app.use(flash());

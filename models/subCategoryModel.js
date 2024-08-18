@@ -1,19 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CategorySchema = new Schema({
+const subCategorySchema = new Schema({
   
-  categoryName: { 
+  subCategoryName: { 
     type: String, 
     unique:true,
     required: true 
   },
-
-  offer: { 
-    type: Number, 
-    default: 0  
-  },
-
   isDeleted:{
     type:Boolean,
     required:true,
@@ -23,7 +17,7 @@ const CategorySchema = new Schema({
 }, {timestamps: true  });
 
 
-const Category = mongoose.model('categories', CategorySchema);
+const subCategory = mongoose.model('subCategories', subCategorySchema);
 
-module.exports = Category;
+module.exports = subCategory;
 

@@ -1,5 +1,6 @@
 const adminUserService=require('../services/adminUserService')
 const adminCategoryService=require('../services/adminCategoryService')
+const adminProductService=require('../services/adminProductService')
 
 
 exports.getUsers=async (req,res)=>{
@@ -26,11 +27,68 @@ exports.patchBlockUnblockUser=async (req,res)=>{
 
 
 exports.getProducts=async(req,res)=>{
-    res.render('admin/products')
+    try{
+        let productList=await adminProductService.productList();
+        res.render('admin/products',{productList})
+    }catch(err){
+        console.log(err);   
+    }
 }
 
-exports.addProduct=async (req,res)=>{
-    res.render('admin/addProduct')
+exports.getAddProduct=async (req,res)=>{
+    let categories=await adminProductService.categories();
+    let subCategories=await adminProductService.subCategories();
+    
+    res.render('admin/addProduct',{categories,subCategories})
+    
+}
+
+exports.postAddProduct=async (req,res)=>{
+    try{
+        await adminProductService.addProduct(req,res)
+        res.redirect('/admin/products')
+    }catch(err){
+        console.log(err);       
+    }
+}
+
+exports.getViewEditProduct=async(req,res)=>{
+    try{
+        let _id=req.params.id;
+        
+        let categories=await adminProductService.categories();
+        let subCategories=await adminProductService.subCategories();
+        let product=(await adminProductService.viewProduct(_id))[0];
+        
+        res.render('admin/viewEditProduct',{product,categories,subCategories})
+
+    }catch(err){
+        console.log((err));
+        
+    }
+}
+
+exports.putViewEditProduct=async(req,res)=>{
+    let _id=req.params.id;
+    console.log(req.body);
+    
+    try{
+        await adminProductService.editProduct(req,res,_id)
+        res.redirect('/admin/products')
+    }catch(err){
+        console.log(err);       
+    }
+}
+
+exports.deleteProduct=async (req,res)=>{
+    try{
+        let _id=req.params.id;
+        await adminProductService.deleteProduct(_id);
+        res.redirect('/admin/products')
+    }catch(err){
+        console.log(err);
+        
+    }
 }
 
 exports.getCategories=async (req,res)=>{
@@ -72,7 +130,6 @@ exports.addCategory=async (req,res)=>{
     }
 }
 
-exports.getProducts=async (req,res)=>{
-    res.render('admin/products')
-}
+
+
 

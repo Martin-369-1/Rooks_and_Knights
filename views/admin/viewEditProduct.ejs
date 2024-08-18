@@ -14,7 +14,7 @@
                         <h2>Product Form</h2>
                     </div>
                     <div class="card-body">
-                        <form action="/admin/products/addProduct" method="post" enctype="multipart/form-data">
+                        <form action="/admin/products/viewEditProduct/<%= product._id %>/?_method=PUT" method="post" enctype="multipart/form-data">
                             <!-- Image Upload Section -->
                             <div class="form-group text-center">
                                 <label for="productImages">Image Upload</label>
@@ -22,25 +22,22 @@
                                     <!-- Box 1 -->
                                     <div class="product-image-box mx-2">
                                         <label for="productImage1" class="image-label">
-                                            <img id="previewImage1" class="image-preview" src="" alt="" style="display:none;">
-                                            <i class="fa fa-picture-o fa-2x"></i>
-                                            <input type="file" class="form-control-file image-input" id="productImage1" accept="image/*" onchange="previewImage(event, 'previewImage1')" name="img1" required>
+                                            <img id="previewImage1" class="image-preview" src="<%= product.productImage1 %>" alt="img1">
+                                            <input type="file" class="form-control-file image-input" id="productImage1" accept="image/*" onchange="previewImage(event, 'previewImage1')" name="img1" value="<%= product.productImage1 %>">
                                         </label>
                                     </div>
                                     <!-- Box 2 -->
                                     <div class="product-image-box mx-2">
                                         <label for="productImage2" class="image-label">
-                                            <img id="previewImage2" class="image-preview" src="" alt="" style="display:none;">
-                                            <i class="fa fa-picture-o fa-2x"></i>
-                                            <input type="file" class="form-control-file image-input" id="productImage2" accept="image/*" onchange="previewImage(event, 'previewImage2')" name="img2" required>
+                                            <img id="previewImage2" class="image-preview" src="<%= product.productImage2 %>" alt="img2" >
+                                            <input type="file" class="form-control-file image-input" id="productImage2" accept="image/*" onchange="previewImage(event, 'previewImage2')" name="img2" value="<%= product.productImage2 %>" >
                                         </label>
                                     </div>
                                     <!-- Box 3 -->
                                     <div class="product-image-box mx-2">
                                         <label for="productImage3" class="image-label">
-                                            <img id="previewImage3" class="image-preview" src="" alt="" style="display:none;">
-                                            <i class="fa fa-picture-o fa-2x"></i>
-                                            <input type="file" class="form-control-file image-input" id="productImage3" accept="image/*" onchange="previewImage(event, 'previewImage3')" name="img3" required>
+                                            <img id="previewImage3" class="image-preview" src="<%= product.productImage3 %>" alt="img3" >
+                                            <input type="file" class="form-control-file image-input" id="productImage3" accept="image/*" onchange="previewImage(event, 'previewImage3')" name="img3" value="<%= product.productImage3 %>" >
                                         </label>
                                     </div>
                                 </div>
@@ -50,25 +47,39 @@
 
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="productName">Product Name</label>
-                                    <input type="text" class="form-control" id="productName" name="productName" placeholder="ex. Chessbase17" required>
+                                    <label for="productID">Product ID</label>
+                                    <input type="text" class="form-control" id="productID" value="<%= product.productName %>" readonly>
                                 </div>
+                                <div class="form-group col-md-6">
+                                    <label for="productName">Product Name</label>
+                                    <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" >
+                                </div>
+
                                 <div class="form-group col-md-6">
                                     <label for="productPrice">Price</label>
-                                    <input type="number" class="form-control" id="productPrice" name="price" placeholder="ex. 1000" min="0" required>
+                                    <input type="number" class="form-control" id="productPrice" name="price" value="<%= product.price %>" min="0" >
                                 </div>
+
                                 <div class="form-group col-md-6">
                                     <label for="productOffer">Offer</label>
-                                    <input type="number" class="form-control" id="productOffer" name="offer" placeholder="ex. 1000" min="0" required>
+                                    <input type="number" class="form-control" id="productOffer" name="offer" value="<%= product.offers %>" min="0" >
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="noOfOrders">No of Orders</label>
+                                    <input type="number" class="form-control" id="noOfOrders" value="<%= product.noOfOrders %>" readonly>
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <div class="form-group">
                                         <label for="productCategory">Category</label>
-                                        <select id="productCategory" class="form-control" name="category" required >
-                                            <option value="" disabled selected>Select a category</option>
+                                        <select id="productCategory" class="form-control" name="category"  >
                                             <% categories.forEach((category)=>{ %>
-                                                <option><%= category.categoryName %></option>
+                                                <% if(category.categoryName==product.category) {%>
+                                                    <option selected><%= category.categoryName %></option>
+                                                <% }else{ %>
+                                                    <option><%= category.categoryName %></option>
+                                                <% } %>
                                             <%  }) %>
                                         </select>
                                     </div>
@@ -77,29 +88,32 @@
                                 <div class="form-group col-md-6">
                                     <div class="form-group">
                                         <label for="productSubCategory">Sub Category</label>
-                                        <select id="productSubCategory" class="form-control" name="subCategory" required>
-                                            <option value="" disabled selected>Select a sub category</option>
+                                        <select id="productSubCategory" class="form-control" name="subCategory" >
                                             <% subCategories.forEach((subCategory)=>{ %>
-                                                <option><%= subCategory.subCategoryName %></option>
-                                            <% }) %>
+                                                <% if(subCategory.subCategoryName==product.subCategory) {%>
+                                                    <option selected><%= subCategory.subCategoryName %></option>
+                                                <% }else{ %>
+                                                    <option><%= subCategory.subCategoryName %></option>
+                                                <% } %>
+                                            <%  }) %>
                                         </select>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group col-md-6">
                                     <label for="productWeight">Stock</label>
-                                    <input type="number" class="form-control" id="productWeight" name="stock" placeholder="ex. 500gm" required>
+                                    <input type="number" class="form-control" id="productWeight" name="stock" value="<%= product.stock %>" >
                                 </div>
                             </div>
         
                             <div class="form-group">
                                 <label for="productAbout">About</label>
-                                <textarea class="form-control" id="productAbout" rows="1" name="productAbout" required></textarea>
+                                <textarea class="form-control" id="productAbout" rows="1"  ><%= product.productAbout %></textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="productDescription">Description</label>
-                                <textarea class="form-control" id="productDescription" rows="1" oninput="adjustTextareaHeight(this)" name="productDescription" required></textarea>
+                                <textarea class="form-control" id="productDescription" rows="1" oninput="adjustTextareaHeight(this)" name="productDescription" ><%= product.productDescription %></textarea>
                             </div>
         
                             <!-- Submit Button -->

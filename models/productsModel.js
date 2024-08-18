@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const ProductsSchema = new Schema({
     productName: {
         type: String,
+        unique:true,
         required: true
     },
 
@@ -41,12 +42,13 @@ const ProductsSchema = new Schema({
 
     categoryID: {
         type: Schema.Types.ObjectId,
-        ref: 'category', 
+        ref: 'categories', 
         required: true
     },
 
-    subCategory: {
-        type: String,
+    subCategoryID: {
+        type: Schema.Types.ObjectId,
+        ref: 'subCategories', 
         required: true
     },
 

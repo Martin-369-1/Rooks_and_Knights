@@ -10,13 +10,6 @@ exports.categoryList=async()=>{
     }
 }
 
-exports.deleteCategory=async(_id)=>{
-    try{
-        await categoryCollection.updateOne({_id},{isDeleted:true})
-    }catch(err){
-
-    }
-}
 
 exports.addCategory=async (categoryName)=>{
     try{
@@ -38,5 +31,13 @@ exports.addCategory=async (categoryName)=>{
     }catch(err){
         console.log(err);
         
+    }
+}
+
+exports.deleteCategory=async(_id)=>{
+    try{
+        await categoryCollection.updateOne({_id},{isDeleted:true})
+    }catch(err){
+
     }
 }

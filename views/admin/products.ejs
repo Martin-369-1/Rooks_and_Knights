@@ -37,37 +37,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>#1456</td>
-                            <td>Chessbase 17</td>
-                            <td>5000</td>
-                            <td>4</td>
-                            <td>Software</td>
-                            <td>Database</td>
-                            <td>
-                                <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
-                                
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#1456</td>
-                            <td>Chessbase 17</td>
-                            <td>5000</td>
-                            <td>4</td>
-                            <td>Software</td>
-                            <td>Database</td>
-                            <td>
-                                <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
-                                
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
-                            </td>
-                        </tr>
-                        
+                        <% productList.forEach(product => {%>
+                            <tr>
+                                <td><%= product._id %></td>
+                                <td><%= product.productName %></td>
+                                <td><%= product.price %></td>
+                                <td><%= product.stock %></td>
+                                <td><%= product.category %></td>
+                                <td><%= product.subCategory %></td>
+                                <td>
+                                    <form action="/admin/products/viewEditProduct/<%= product._id %>" method="get">
+                                        <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
+                                    </form>
+                                    
+                                </td>
+                                <td>
+                                    <form action="/admin/products/deleteProduct/<%= product._id %>/?_method=DELETE" method="post">
+                                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
                         
                     </tbody>
                 </table>
