@@ -56,21 +56,22 @@ exports.getViewEditProduct=async(req,res)=>{
     try{
         let _id=req.params.id;
         
+        
         let categories=await adminProductService.categories();
         let subCategories=await adminProductService.subCategories();
-        let product=(await adminProductService.viewProduct(_id))[0];
+        let product=await adminProductService.viewProduct(_id);
+        
         
         res.render('admin/viewEditProduct',{product,categories,subCategories})
 
     }catch(err){
-        console.log((err));
+        console.log(err);
         
     }
 }
 
 exports.putViewEditProduct=async(req,res)=>{
     let _id=req.params.id;
-    console.log(req.body);
     
     try{
         await adminProductService.editProduct(req,res,_id)

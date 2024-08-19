@@ -16,10 +16,7 @@ router.post('/products/addProduct',upload,adminController.postAddProduct);
 
 router.get('/products/viewEditProduct/:id',adminController.getViewEditProduct)
 
-router.put('/products/viewEditProduct/:id',(req,res)=>{
-    console.log(req.body);
-
-});
+router.put('/products/viewEditProduct/:id',upload,adminController.putViewEditProduct);
 
 router.delete('/products/deleteProduct/:id',adminController.deleteProduct);
 

@@ -2,91 +2,49 @@ const productCollection=require('../models/productsModel');
 const categoryCollection=require('../models/CategoryModel');
 const subCategoryCollection=require('../models/subCategoryModel');
 const fs=require('node:fs')
+const path=require('node:path')
 const mongoose=require('mongoose');
 
 const upload=require('../utils/multerUtils')
 
-const productListQueiry=[{
-    $match: {
-      isDeleted:false
-    }
-  },
-  {
-    $lookup: {
-      from: 'categories',
-      localField: 'categoryID',
-      foreignField: '_id',
-      as: 'category'
-    }
-  },
-   {$unwind:'$category'},
-   {
-    $lookup: {
-      from: 'subcategories',
-      localField: 'subCategoryID',
-      foreignField: '_id',
-      as: 'subCategory'
-    }
-  },
-   {$unwind:'$subCategory'},
-   {$project: {
-     _id:1,
-     productName:1,
-     price:1,
-     stock:1,
-     category:"$category.categoryName",
-     subCategory:"$subCategory.subCategoryName"
-   }}
-  ]
 
-const productViewQueiry=function(_id){
-    return [{
-        $match: {
-          _id:new mongoose.Types.ObjectId(_id),
-        }
-      },
-      {
-        $lookup: {
-          from: 'categories',
-          localField: 'categoryID',
-          foreignField: '_id',
-          as: 'category'
-        }
-      },
-       {$unwind:'$category'},
-       {
-        $lookup: {
-          from: 'subcategories',
-          localField: 'subCategoryID',
-          foreignField: '_id',
-          as: 'subCategory'
-        }
-      },
-       {$unwind:'$subCategory'},
-       {$project: {
-         _id:1,
-         productName:1,
-         productDescription:1,
-         price:1,
-         productAbout:1,
-         stock:1,
-         noOfOrders:1,
-         productImage1:1,
-         productImage2:1,
-         productImage3:1,
-         offers:1,
-         category:"$category.categoryName",
-         subCategory:"$subCategory.subCategoryName"
-       }}
-    ]
-      
-}
 
 
 
 exports.productList=async()=>{
     try{
-        let productList=await productCollection.aggregate(productListQueiry);       
+        let productList=await productCollection.aggregate([{
+            $match: {
+              isDeleted:false
+            }
+          },
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'categoryID',
+              foreignField: '_id',
+              as: 'category'
+            }
+          },
+           {$unwind:'$category'},
+           {
+            $lookup: {
+              from: 'subcategories',
+              localField: 'subCategoryID',
+              foreignField: '_id',
+              as: 'subCategory'
+            }
+          },
+           {$unwind:'$subCategory'},
+           {$project: {
+             _id:1,
+             productName:1,
+             price:1,
+             stock:1,
+             category:"$category.categoryName",
+             subCategory:"$subCategory.subCategoryName"
+           }}
+          ]);       
         return productList;
     }catch(err){
         console.log(err);  
@@ -98,7 +56,7 @@ exports.addProduct=async(req,res)=>{
     
     try{
         
-        const {productName,productDescription,productAbout,stock,price,category,subCategory,offer}=req.body;
+        const {productName,productDescription,productAbout,stock,price,category,subCategory,offers}=req.body;
         
         const categoryID=await categoryCollection.findOne({categoryName:category});
         const subCategoryID=await subCategoryCollection.findOne({subCategoryName:subCategory});
@@ -111,7 +69,7 @@ exports.addProduct=async(req,res)=>{
             stock,
             categoryID,
             subCategoryID,
-            offer,
+            offers,
             productImage1:`/public/upload/${req.files['img1'][0].filename}`,
             productImage2:`/public/upload/${req.files['img2'][0].filename}`,
             productImage3:`/public/upload/${req.files['img3'][0].filename}`,
@@ -127,9 +85,32 @@ exports.addProduct=async(req,res)=>{
 
 exports.viewProduct=async(_id)=>{
     try{
-        const queiry=productViewQueiry(_id)
-        const product=await productCollection.aggregate(queiry)
-        
+        const product = await productCollection.findById(_id)
+      .populate({
+        path: 'categoryID',    // Reference to Category collection
+        select: 'categoryName' // Include only categoryName field
+      })
+      .populate({
+        path: 'subCategoryID', // Reference to SubCategory collection
+        select: 'subCategoryName' // Include only subCategoryName field
+      })
+      .select({
+        _id: 1,
+        productName: 1,
+        productDescription: 1,
+        price: 1,
+        productAbout: 1,
+        stock: 1,
+        noOfOrders: 1,
+        productImage1: 1,
+        productImage2: 1,
+        productImage3: 1,
+        offers: 1,
+        category: 'categoryID.categoryName',  
+        subCategory: 'subCategoryID.subCategoryName'
+      })
+      .exec();
+       
         return product;
     }catch(err){
         console.log(err);
@@ -138,11 +119,9 @@ exports.viewProduct=async(_id)=>{
 }
 
 exports.editProduct=async(req,res,_id)=>{
-    console.log(req.body);
     try{
-        console.log(req.body);
         
-        const {productName,productDescription,productAbout,stock,price,category,subCategory,offer}=req.body;
+        const {productName,productDescription,productAbout,stock,price,category,subCategory,offers}=req.body;
         
         const categoryID=await categoryCollection.findOne({categoryName:category});
         const subCategoryID=await subCategoryCollection.findOne({subCategoryName:subCategory});
@@ -154,17 +133,37 @@ exports.editProduct=async(req,res,_id)=>{
         let productImage2 = oldProductData.productImage2;
         let productImage3 = oldProductData.productImage3;
 
+        
         if (req.files['img1']) {
-            productImage1 = `/upload/${req.files['img1'][0].filename}`;
-            fs.unlink(oldProductData.productImage1)
+            fs.unlink(path.join('./',productImage1),(err)=>{
+                if(err){
+                    console.log(err);;
+                    return         
+                }
+            })
+            productImage1 = `/public/upload/${req.files['img1'][0].filename}`;
+            
+            
         }
         if (req.files['img2']) {
-            productImage2 = `/upload/${req.files['img2'][0].filename}`;
-            fs.unlink(oldProductData.productImage2)
+            fs.unlink(path.join('./',productImage2),(err)=>{
+                if(err){
+                    console.log(err);;
+                    return         
+                }
+            })
+            productImage2 = `/public/upload/${req.files['img1'][0].filename}`;
+          
         }
         if (req.files['img3']) {
-            productImage3 = `/upload/${req.files['img3'][0].filename}`;
-            fs.unlink(oldProductData.productImage3)
+            fs.unlink(path.join('./',productImage3),(err)=>{
+                if(err){
+                    console.log(err);;
+                    return         
+                }
+            })
+            productImage3 = `/public/upload/${req.files['img1'][0].filename}`;
+
         }
 
         await productCollection.updateOne({_id},{
@@ -175,7 +174,7 @@ exports.editProduct=async(req,res,_id)=>{
             stock,
             categoryID,
             subCategoryID,
-            offer,
+            offers,
             productImage1,
             productImage2,
             productImage3,

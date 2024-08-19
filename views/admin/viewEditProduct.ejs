@@ -48,7 +48,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="productID">Product ID</label>
-                                    <input type="text" class="form-control" id="productID" value="<%= product.productName %>" readonly>
+                                    <input type="text" class="form-control" id="productID" value="<%= product._id %>" readonly>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="productName">Product Name</label>
@@ -62,7 +62,7 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="productOffer">Offer</label>
-                                    <input type="number" class="form-control" id="productOffer" name="offer" value="<%= product.offers %>" min="0" >
+                                    <input type="number" class="form-control" id="productOffer" name="offers" value="<%= product.offers %>" min="0" >
                                 </div>
 
                                 <div class="form-group col-md-6">
@@ -113,7 +113,7 @@
 
                             <div class="form-group">
                                 <label for="productDescription">Description</label>
-                                <textarea class="form-control" id="productDescription" rows="1" oninput="adjustTextareaHeight(this)" name="productDescription" ><%= product.productDescription %></textarea>
+                                <textarea class="form-control" id="productDescription" rows="10" name="productDescription" ><%= product.productDescription %></textarea>
                             </div>
         
                             <!-- Submit Button -->
@@ -148,11 +148,6 @@
             }
         }
 
-        function adjustTextareaHeight(textarea) {
-        textarea.style.height = 'auto';
-
-        textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
     </script>
 </body>
 </html>
