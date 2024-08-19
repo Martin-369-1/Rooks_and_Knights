@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/public/css/main.css">
+    <link rel="stylesheet" href="/public/css/util.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+</head>
+
+<body class="login_body dis-flex flex-c-m">
+    <div class="login_outer_div p-b-20">
+        <div class="inner_div_1">
+            <p class="fs-30 clblack txt-center">Login</p>
+        </div>
+        <p id="error-message" class="text-danger txt-center"></p>
+        <div class="inner_div_2 m-t-20 p-l-15 p-r-15">
+            <form action="/admin/login" method="post" id="login-form">
+                <div class="w-full m-t-20">
+                    <label for="email" class="clblack f-w-600">Email Address</label>
+                    <input class="input_box p-l-15" type="email" id="email" name="email" placeholder="abc@gmail.com"
+                        required>
+                </div>
+                <div class="w-full m-t-20">
+                    <label for="password" class="clblack f-w-600">Password</label>
+                    <input class="input_box p-l-15" type="password" id="password" name="password" placeholder="******"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary w-full m-t-20 submit_btn_1">
+                    <p class="fs-18">Login</p>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        document.getElementById('login-form').addEventListener('submit', postForm)
+
+        function postForm(e) {
+            e.preventDefault()
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+
+            fetch("/admin/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+                .then((res) => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    } else {
+                        return res.json();
+                    }
+                })
+                .then((data) => {
+                    if(data && data.error){
+
+                        console.log(data.err);
+                        
+                        document.getElementById('error-message').innerText = data.error;
+                    }
+                })
+                .catch((err) => {
+                    document.getElementById('error-message').innerText = 'some eorror occured'
+
+
+                })
+
+        }
+
+    </script>
+</body>
+
+</html>

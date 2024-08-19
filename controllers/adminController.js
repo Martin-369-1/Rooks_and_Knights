@@ -1,7 +1,51 @@
 const adminUserService=require('../services/adminUserService')
 const adminCategoryService=require('../services/adminCategoryService')
 const adminProductService=require('../services/adminProductService')
+const adminService=require('../services/adminService')
+const generateAccessToken=require('../utils/JWTUtils')
 
+exports.getLogin=(req,res)=>{
+    res.render('admin/login')
+}
+
+exports.postLogin=async(req,res)=>{
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        const adminData = await adminService.findUserByEmail(email);
+
+        if (!adminData) {
+            return res.status(400).json({ error: 'Admin does not exist' });
+        }
+
+        const isValidPassword = await adminService.validateUserCredentials(password, adminData.password);
+        if (!isValidPassword) {
+            return res.status(400).json({ error: 'Incorrect password' });
+        }
+
+        const accessToken = generateAccessToken(email);
+
+        res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
+        
+        res.redirect('/admin')
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
+exports.postLogout=(req,res)=>{
+    res.clearCookie('token');
+    res.status(200).redirect('/admin/login');
+}
+
+exports.getDashboard=async(req,res)=>{
+    res.render('admin/dashboard')
+}
 
 exports.getUsers=async (req,res)=>{
     try{

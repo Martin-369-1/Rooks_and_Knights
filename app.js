@@ -10,7 +10,7 @@ const flash = require('connect-flash');
 
 //Setting view engine
 app.set('view engine','ejs')
-
+app.locals.title="Rooks & Knights"
 //Middlewares
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use('/public', express.static('public')); //setting public folder
@@ -50,3 +50,13 @@ app.listen(process.env.PORT,()=>{
 app.use('/',userRouter);
 app.use('/OTP',OTPRouter);
 app.use('/admin',adminRouter);
+
+
+app.get('/error',(req,res)=>{
+    res.status(500).render('serverError')
+})
+
+
+app.use((req,res,next)=>{
+    res.status(404).render('404')
+})

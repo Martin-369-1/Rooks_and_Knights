@@ -3751,6 +3751,18 @@ input.num-product::-webkit-inner-spin-button {
 
 }
 
+.error_body {
+  background-image: url('../images/errorbg.jpg');
+  background-size: cover;
+  /* Ensure the image covers the entire area */
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 100vh;
+  padding: 30px !important;
+
+
+}
+
 .login_outer_div {
 
   width: 410px;
