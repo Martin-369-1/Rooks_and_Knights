@@ -36,7 +36,7 @@
                 </a>
             </div>
             <p id="error-message" class="fs=15 bg-white text-danger error"></p>
-            <form action="/register" id="registerForm" method="post">
+            <form action="/user/register" id="registerForm" method="post">
 
                 <div class="w-full m-t-20">
                     <label for="username" class="clblack f-w-600">Enter your Name</label>
@@ -73,7 +73,7 @@
                 </button>
                 
             </form>
-            <a href="/login" class="clblack m-t-20 dis-block fs-18">Already have an account? Login here</a>
+            <a href="/user/login" class="clblack m-t-20 dis-block fs-18">Already have an account? Login here</a>
         </div>
     </div>
     
@@ -126,7 +126,7 @@
 
     if (isValid) {
         submitButton.disabled = true;
-        fetch('/register', {
+        fetch('/user/register', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

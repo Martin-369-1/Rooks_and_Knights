@@ -36,6 +36,7 @@ app.use(flash())
 const userRouter=require('./routers/userRoute');
 const OTPRouter=require('./routers/OTPRouter');
 const adminRouter=require('./routers/adminRouter');
+const homeRouter=require('./routers/homeRouter');
 
 //Database
 const connectDb=require('./config/database');
@@ -47,9 +48,10 @@ app.listen(process.env.PORT,()=>{
 })
 
 //Using Routers
-app.use('/',userRouter);
+app.use('/user',userRouter);
 app.use('/OTP',OTPRouter);
 app.use('/admin',adminRouter);
+app.use('/',homeRouter);
 
 
 app.get('/error',(req,res)=>{

@@ -13,7 +13,7 @@
                     Log in with Google
                 </a>
             </div>
-            <form action="/login" method="post" id="login-form">
+            <form action="/user/login" method="post" id="login-form">
                 <div class="w-full m-t-20">
                     <label for="email" class="clblack f-w-600">Email Address</label>
                     <input class="input_box p-l-15" type="email" id="email" name="email" placeholder="abc@gmail.com"
@@ -28,7 +28,7 @@
                     <p class="fs-18">Login</p>
                 </button>
             </form>
-            <a href="/register" class="clblack m-t-20 dis-block fs-18">Don't have an account? Register</a>
+            <a href="/user/register" class="clblack m-t-20 dis-block fs-18">Don't have an account? Register</a>
             <a href="#" class="clblack dis-block fs-18">Forgot password</a>
         </div>
     </div>
@@ -42,7 +42,7 @@
             let email = document.getElementById('email').value;
             let password = document.getElementById('password').value;
 
-            fetch("/login", {
+            fetch("/user/login", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

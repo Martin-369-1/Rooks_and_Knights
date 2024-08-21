@@ -12,7 +12,7 @@ exports.checkAdminAuthenticated = (req, res, next) => {
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) {
-            return res.status(403).send('Invalid token');
+            return res.status(403).redirect('/admin/login')
         }
         req.email = user.email;
         console.log('Email set in middleware:', req.email);
@@ -23,10 +23,18 @@ exports.checkAdminAuthenticated = (req, res, next) => {
 //used where the user should not be authenticated aldready
 exports.checkAdminAldreadyAuthenticated = (req, res, next) => {
     const token = req.cookies.token;
-    
-    if (!token && !req.email) {
+
+    if (!token) {
         next()
-    } else {
-        res.redirect('/admin')
+        return
     }
+    
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) {
+           next()
+           return
+        }
+    })
+
+    return res.redirect('/admin')
 }

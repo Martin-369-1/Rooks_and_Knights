@@ -1,9 +1,13 @@
-const adminUserService=require('../services/adminUserService')
-const adminCategoryService=require('../services/adminCategoryService')
-const adminProductService=require('../services/adminProductService')
-const adminService=require('../services/adminService')
-const generateAccessToken=require('../utils/JWTUtils')
+//Services
+const adminUserService=require('../services/adminUserService');
+const adminCategoryService=require('../services/adminCategoryService');
+const adminProductService=require('../services/adminProductService');
+const adminService=require('../services/adminService');
 
+//Utils
+const generateAccessToken=require('../utils/JWTUtils');
+
+//Login 
 exports.getLogin=(req,res)=>{
     res.render('admin/login')
 }
@@ -34,7 +38,7 @@ exports.postLogin=async(req,res)=>{
         res.redirect('/admin')
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error' });
+        res.redirect('/error')
     }
 }
 
@@ -43,16 +47,23 @@ exports.postLogout=(req,res)=>{
     res.status(200).redirect('/admin/login');
 }
 
+
+
+//Dashboard
 exports.getDashboard=async(req,res)=>{
     res.render('admin/dashboard')
 }
 
+
+
+//Users
 exports.getUsers=async (req,res)=>{
     try{
         let userList=await adminUserService.userList();
         res.render('admin/users.ejs',{userList})
     }catch(err){
-        console.log(err);      
+        console.log(err);
+        res.redirect('/error');     
     }
        
 }
@@ -65,17 +76,22 @@ exports.patchBlockUnblockUser=async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.redirect('/error');
         
     }
 }
 
 
+
+
+//Products
 exports.getProducts=async(req,res)=>{
     try{
         let productList=await adminProductService.productList();
         res.render('admin/products',{productList})
     }catch(err){
-        console.log(err);   
+        console.log(err); 
+        res.redirect('/error'); 
     }
 }
 
@@ -92,7 +108,8 @@ exports.postAddProduct=async (req,res)=>{
         await adminProductService.addProduct(req,res)
         res.redirect('/admin/products')
     }catch(err){
-        console.log(err);       
+        console.log(err); 
+        res.redirect('/error');     
     }
 }
 
@@ -110,6 +127,7 @@ exports.getViewEditProduct=async(req,res)=>{
 
     }catch(err){
         console.log(err);
+        res.redirect('/error');
         
     }
 }
@@ -121,7 +139,8 @@ exports.putViewEditProduct=async(req,res)=>{
         await adminProductService.editProduct(req,res,_id)
         res.redirect('/admin/products')
     }catch(err){
-        console.log(err);       
+        console.log(err);
+        res.redirect('/error');       
     }
 }
 
@@ -132,30 +151,25 @@ exports.deleteProduct=async (req,res)=>{
         res.redirect('/admin/products')
     }catch(err){
         console.log(err);
+        res.redirect('/error');
         
     }
 }
 
+
+
+
+//Categories
 exports.getCategories=async (req,res)=>{
     try{
         let categoryList=await adminCategoryService.categoryList();
         res.render('admin/categories',{categoryList,error:req.flash('addCategoryError') || ''})
     }catch(err){
         console.log(err);
+        res.redirect('/error');
         
     }
     
-}
-
-exports.deleteCategory=async (req,res)=>{
-    try{
-        let _id=req.params.id;
-        await adminCategoryService.deleteCategory(_id);
-        res.redirect('/admin/categories')
-    }catch(err){
-        console.log(err);
-        
-    }
 }
 
 exports.addCategory=async (req,res)=>{
@@ -171,6 +185,19 @@ exports.addCategory=async (req,res)=>{
         res.redirect('/admin/categories')
     }catch(err){
         console.log(err);
+        res.redirect('/error');
+        
+    }
+}
+
+exports.deleteCategory=async (req,res)=>{
+    try{
+        let _id=req.params.id;
+        await adminCategoryService.deleteCategory(_id);
+        res.redirect('/admin/categories')
+    }catch(err){
+        console.log(err);
+        res.redirect('/error');
         
     }
 }

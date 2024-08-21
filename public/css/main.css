@@ -86,9 +86,15 @@ h6 {
 /*------------------------------------------------------------------
 [ Slick2 ]*/
 .slick-slide {
-  outline: none !important;
+
+  display: flex !important; 
+  flex-wrap: wrap !important;
+  gap: 20px !important; 
 }
 
+.slick2 .isotope-item {
+  margin: 0 30px; /* Add margin for spacing */
+}
 
 
 
@@ -2068,6 +2074,10 @@ input.num-product::-webkit-inner-spin-button {
 
 /*//////////////////////////////////////////////////////////////////
 [ Block2 ]*/
+.block2{
+  width: 250px;
+}
+
 .block2-pic {
   position: relative;
 }

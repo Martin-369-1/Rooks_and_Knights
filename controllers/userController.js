@@ -41,7 +41,7 @@ exports.postLogin = async(req, res) => {
 
         res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
         
-        res.redirect('/home')
+        res.redirect('/user/home')
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -51,7 +51,7 @@ exports.postLogin = async(req, res) => {
 //POST logout
 exports.postLogout=(req,res)=>{
     res.clearCookie('token');
-    res.status(200).redirect('/login');
+    res.status(200).redirect('/user/login');
 }
 
 //GET Register
@@ -103,7 +103,7 @@ exports.postCompleteRegister = async (req, res) => {
             }
 
             res.clearCookie();
-            res.redirect('/login');
+            res.redirect('/user/login');
         })
     }else{
         console.log("error while complete registration");    

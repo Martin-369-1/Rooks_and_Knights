@@ -1,41 +1,56 @@
-const express=require('express');
-const router=express.Router();
-const upload=require('../utils/multerUtils')
+//requiring modules
+const express = require('express');
+const router = express.Router();
 
-const adminController=require('../controllers/adminController');
-const adminMiddleware=require('../middlewares/adminAuthMiddleware')
+//controllers
+const adminController = require('../controllers/adminController');
 
-router.get('/login',adminMiddleware.checkAdminAldreadyAuthenticated,adminController.getLogin);
+//multer upload middleware
+const upload = require('../utils/multerUtils');;
 
-router.post('/login',adminController.postLogin);
+//middlewares
+const adminMiddleware = require('../middlewares/adminAuthMiddleware');;
 
-router.post('/logout',adminController.postLogout)
+//Login 
+router.get('/login',adminMiddleware.checkAdminAldreadyAuthenticated, adminController.getLogin);
 
-router.get('/',adminMiddleware.checkAdminAuthenticated,adminController.getDashboard);
+router.post('/login', adminController.postLogin);
 
-router.get('/users',adminMiddleware.checkAdminAuthenticated,adminController.getUsers);
-
-router.patch('/users/blockUnblockUser/:id',adminMiddleware.checkAdminAuthenticated,adminController.patchBlockUnblockUser);
-
-router.get('/products',adminMiddleware.checkAdminAuthenticated,adminController.getProducts);
-
-router.get('/products/addProduct',adminMiddleware.checkAdminAuthenticated,adminController.getAddProduct);
-
-router.post('/products/addProduct',[adminMiddleware.checkAdminAuthenticated,upload],adminController.postAddProduct);
-
-router.get('/products/viewEditProduct/:id',adminMiddleware.checkAdminAuthenticated,adminController.getViewEditProduct)
-
-router.put('/products/viewEditProduct/:id',[adminMiddleware.checkAdminAuthenticated,upload],adminController.putViewEditProduct);
-
-router.delete('/products/deleteProduct/:id',adminMiddleware.checkAdminAuthenticated,adminController.deleteProduct);
-
-router.get('/categories',adminMiddleware.checkAdminAuthenticated,adminController.getCategories);
-
-router.delete('/categories/deleteCategory/:id',adminMiddleware.checkAdminAuthenticated,adminController.deleteCategory);
-
-router.post('/categories/addCategory',adminMiddleware.checkAdminAuthenticated,adminController.addCategory);
+router.post('/logout', adminController.postLogout);
 
 
+//Dashboard
+router.get('/', adminMiddleware.checkAdminAuthenticated, adminController.getDashboard);
 
 
-module.exports=router;
+//Users
+router.get('/users', adminMiddleware.checkAdminAuthenticated, adminController.getUsers);
+
+router.patch('/users/blockUnblockUser/:id', adminMiddleware.checkAdminAuthenticated, adminController.patchBlockUnblockUser);
+
+
+//Products
+router.get('/products', adminMiddleware.checkAdminAuthenticated, adminController.getProducts);
+
+router.get('/products/addProduct', adminMiddleware.checkAdminAuthenticated, adminController.getAddProduct);
+
+router.post('/products/addProduct', [adminMiddleware.checkAdminAuthenticated, upload], adminController.postAddProduct);
+
+router.get('/products/viewEditProduct/:id', adminMiddleware.checkAdminAuthenticated, adminController.getViewEditProduct);
+
+router.put('/products/viewEditProduct/:id', [adminMiddleware.checkAdminAuthenticated, upload], adminController.putViewEditProduct);
+
+router.delete('/products/deleteProduct/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteProduct);
+
+
+//Categories;;
+router.get('/categories', adminMiddleware.checkAdminAuthenticated, adminController.getCategories);
+
+router.delete('/categories/deleteCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteCategory);
+
+router.post('/categories/addCategory', adminMiddleware.checkAdminAuthenticated, adminController.addCategory);
+
+
+
+
+module.exports = router;
