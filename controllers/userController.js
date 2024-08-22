@@ -2,6 +2,7 @@
 const signupFormValidataion = require('../utils/registerValidation')
 const userSevice = require('../services/userService');
 const generateAccessToken=require('../utils/JWTUtils')
+const passport=require('passport')
 
 //GET login 
 exports.getLogin = (req, res) => {
@@ -41,7 +42,7 @@ exports.postLogin = async(req, res) => {
 
         res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
         
-        res.redirect('/user/home')
+        res.redirect('/')
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -109,4 +110,20 @@ exports.postCompleteRegister = async (req, res) => {
         console.log("error while complete registration");    
     }
 }
+
+
+exports.getGoogleCallback=(req,res)=>{
+        const accessToken=generateAccessToken(req.user.email)
+
+        res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
+        console.log(accessToken);
+        
+        res.send(`
+            <script>
+                window.location.href = '/user/account';
+            </script>
+        `);
+
+    }
+
 

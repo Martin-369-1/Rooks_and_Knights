@@ -1,6 +1,8 @@
 //Requiring modules
 const express = require('express');
 const router = express.Router();
+const passport=require('passport')
+const generateAccessToken=require('../utils/JWTUtils')
 
 //Controllers
 const userController = require('../controllers/userController');
@@ -8,6 +10,7 @@ const userController = require('../controllers/userController');
 //middlewaress
 const userAuthMiddleware = require('../middlewares/userAuthMiddleware');
 const OTPMiddleware = require("../middlewares/OTPMiddleware");
+
 
 //Routers
 //Login
@@ -29,12 +32,16 @@ router.get('/completeRegister', [userAuthMiddleware.checkUserAldreadyAuthenticat
 
 router.post('/completeRegister', userController.postCompleteRegister);
 
-;
+
+//google Auth
+router.get('/google',passport.authenticate('google',{scope:['profile','email']}));
+
+router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/user/login'}),userController.getGoogleCallback)
+
+
 //temp home route
-router.get('/home', userAuthMiddleware.checkUserAuthenticated, (req, res) => {
-    console.log("dkjf;alksdfjlk");
-    
-    res.render('home', { email: req.email });
+router.get('/account', userAuthMiddleware.checkUserAuthenticated, (req, res) => {
+    res.render('account', { email: req.email });
 })
 
 module.exports = router;

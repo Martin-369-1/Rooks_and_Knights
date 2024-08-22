@@ -191,7 +191,7 @@ exports.deleteProduct=async(_id)=>{
     try{
         await productCollection.updateOne({_id},{isDeleted:true})
     }catch(err){
-
+        console.log(err);       
     }
 }
 

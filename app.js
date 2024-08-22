@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const session=require('express-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
+const passport=require('passport')
+require('./config/passport')
 
 //Setting view engine
 app.set('view engine','ejs')
@@ -20,7 +22,7 @@ app.use(methodOverride('_method'));
 app.use(nocache())
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     cookie: { 
         maxAge: process.env.COOKIE_VALID_MINUTES * 60 * 1000,  
@@ -30,6 +32,8 @@ app.use(session({
     }
 }));
 app.use(flash())
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 //Routers

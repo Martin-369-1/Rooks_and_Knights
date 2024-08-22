@@ -20,7 +20,7 @@ const userShema = Schema({
     phoneNumber: {
         type: String,
         unique: true,
-        sparce: true
+        sparse: true
 
     },
     profilePicture: {
@@ -30,11 +30,12 @@ const userShema = Schema({
     googleID: {
         type: String,
         unique: true,
-        sparce: true
+        sparse: true
     },
 
     isblocked: {
         type: Boolean,
+        required:true,
         default: false
     },
     isAdmin: {

@@ -14,7 +14,7 @@ exports.postVerifyOTP = async (req, res) => {
         if (isOTPVerified) {
             req.session.isOTPVerified = true;
             req.session.save();
-            res.status(200).json({ redirectUrl: '/completeRegister' });
+            res.status(200).json({ redirectUrl: '/user/completeRegister' });
         } else {
             res.status(400).json({error:"Invalid OTP"});
         }
@@ -26,7 +26,7 @@ exports.postVerifyOTP = async (req, res) => {
 
 exports.getTimer=(req,res)=>{
     if (!req.session.email) {
-        return res.redirect('/register');
+        return res.redirect('/user/register');
     }
     const remainingTime = req.session.countdownTime || 0;
     res.json({ remainingTime, email: req.session.email });

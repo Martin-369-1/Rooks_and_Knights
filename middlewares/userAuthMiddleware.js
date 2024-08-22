@@ -5,11 +5,11 @@ const jwt = require('jsonwebtoken');
 //used whre the admin should be auhtenticated aldready
 exports.checkUserAuthenticated = async(req, res, next) => {
     try{
-        const token = req.cookies.token;
+
+        const token = req.cookies.token;     
         
-        if (!token) {
-            
-            return res.status(401).redirect('user/login');
+        if (!token) {          
+            return res.status(401).redirect('/user/login');
         }
     
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -17,22 +17,21 @@ exports.checkUserAuthenticated = async(req, res, next) => {
             
             if (err) {
                 
-                return res.status(403).redirect('user/login');
+                return res.status(403).redirect('/user/login');
             }
             req.email = user.email;
         })
 
         let user=await userCollection.findOne({email:req.email});
         // console.log(user);
-        if(user.isblocked){
-            console.log(5);
-            
+        if(user.isblocked){          
             return res.status(403).redirect('/user/login');
         }
         
         next();
 
     }catch(err){
+        console.log(err);
         
     }
 
@@ -44,14 +43,13 @@ exports.checkUserAldreadyAuthenticated = async (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-        next()
-        return 
+        return next()
     }
     
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) {
-            next()
-            return
+            return next()
+            
         }
         req.email=user.email;
     })
@@ -62,5 +60,5 @@ exports.checkUserAldreadyAuthenticated = async (req, res, next) => {
             return
     }
 
-    return res.redirect('/user/home')
+    res.redirect('/')
 }

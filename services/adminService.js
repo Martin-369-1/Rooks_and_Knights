@@ -5,7 +5,10 @@ const passwordUtils=require('../utils/passwordUtils')
 
 
 exports.findUserByEmail=async(email)=>{
-    return await userCollection.findOne({ email ,isAdmin:true});
+    const admin=await userCollection.findOne({ email ,isAdmin:true});
+    console.log(admin);
+    
+    return admin;
 }
 
 exports.validateUserCredentials = async (password, userPasswordHash) => {

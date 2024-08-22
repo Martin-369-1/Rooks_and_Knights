@@ -9,7 +9,7 @@ exports.checkOTPVerified = (req, res, next) => {
 //Used where the user should not be aldready verfied OTP
 exports.checkOTPAldreadyVerified = (req, res, next) => {
     if (req.session.isOTPVerified) {
-        return res.redirect('/completeRegister')
+        return res.redirect('/user/completeRegister')
     }
     next()
 }

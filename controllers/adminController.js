@@ -21,7 +21,8 @@ exports.postLogin=async(req,res)=>{
         }
 
         const adminData = await adminService.findUserByEmail(email);
-
+        console.log(adminData);
+        
         if (!adminData) {
             return res.status(400).json({ error: 'Admin does not exist' });
         }
