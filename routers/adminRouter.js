@@ -44,13 +44,22 @@ router.delete('/products/deleteProduct/:id', adminMiddleware.checkAdminAuthentic
 
 
 //Categories;;
+
 router.get('/categories', adminMiddleware.checkAdminAuthenticated, adminController.getCategories);
 
 router.delete('/categories/deleteCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteCategory);
 
+router.put('/categories/editCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.putEditCategory)
+
 router.post('/categories/addCategory', adminMiddleware.checkAdminAuthenticated, adminController.addCategory);
 
 
+//subCategories
 
+router.delete('/categories/deleteSubCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteSubCategory);
+
+router.put('/categories/editSubCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.putEditSubCategory)
+
+router.post('/categories/addSubCategory', adminMiddleware.checkAdminAuthenticated, adminController.addSubCategory);
 
 module.exports = router;

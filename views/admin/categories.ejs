@@ -3,7 +3,7 @@
 
 <%- include('./partials/header') %>
 
-<body>
+<body style="height: auto !important; padding-bottom: 200px;">
     <div class="wrapper">
         <%- include('./partials/slidebar') %>
 
@@ -22,13 +22,15 @@
                             <th>Category ID</th>
                             <th>Category Name</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <% categoryList.forEach(category=> { %>
                             <tr>
-                                <td><%= category._id %></td>
-                                <td><%= category.categoryName %></td>
+                                <td ><%= category._id %></td>
+                                <td id="editCategoryInput_<%=category._id%>"><%= category.categoryName %></td>
+                                <td><button class="btn btn-dark btn-sm" id="editCategoryBtn" onclick="editCategory('<%=category._id%>','<%=category.categoryName%>')"><i class="fa fa-ban"></i>Edit</button></td>
                                 <td>
                                     <form action="/admin/categories/deleteCategory/<%= category._id %>/?_method=DELETE" method="post">
                                         <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
@@ -39,7 +41,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text-danger fs-20"><%= error%></p>
+            <p class="text-danger fs-20"><%= categoryError%></p>
             <div>
                 <form action="/admin/categories/addCategory" method="post" id="addCategoryForm">
                     <label for="categoryName" class="fs-30 fw-10">New Category</label>
@@ -50,12 +52,78 @@
                 </form>
                       
             </div>
+
+
+            <h1 class="m-b-10 m-t-100">Subategories</h1>
+            <form action="/" class="search-bar">
+                <input type="text" class="form-control" placeholder="Search Category Name">
+                <button class="btn-primary btn m-t-3">Search</button>
+            </form>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered m-t-10">
+                    <thead>
+                        <tr>
+                            <th>Sub Category ID</th>
+                            <th>Sub Category Name</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% subCategoryList.forEach(subCategory=> { %>
+                            <tr>
+                                <td ><%= subCategory._id %></td>
+                                <td id="editSubCategoryInput_<%=subCategory._id%>"><%= subCategory.subCategoryName %></td>
+                                <td><button class="btn btn-dark btn-sm" id="editCategoryBtn" onclick="editSubCategory('<%=subCategory._id%>','<%=subCategory.subCategoryName%>')"><i class="fa fa-ban"></i>Edit</button></td>
+                                <td>
+                                    <form action="/admin/categories/deletesubCategory/<%= subCategory._id %>/?_method=DELETE" method="post">
+                                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                                    </form> 
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-danger fs-20"><%=subCategoryError%></p>
+            <div>
+                <form action="/admin/categories/addSubCategory" method="post" id="addSubCategoryForm">
+                    <label for="subCategoryName" class="fs-30 fw-10">New subCategory</label>
+                    <div >
+                        <input type="text" placeholder="subCategory Name" class="p-2 " style="float: left;" name="subCategoryName" id="subCategoryName">
+                        <button class="btn btn-success fs-16">Add</button>
+                    </div>
+                </form>
+                      
+            </div>
             
         </div>
-        
+
     </div>  
+    
 
     <%- include('./partials/footer') %>
 
+    <script>
+
+
+        function editCategory(id,categoryName){
+            document.getElementById(`editCategoryInput_${id}`).innerHTML=`<form action="/admin/categories/editCategory/${id}/?_method=PUT" method="post" class="dis-flex">
+            <input type="text" value="${categoryName}" class="fs-15 fw-10" name="categoryName" required>
+            <button type="submit" class="btn btn-success fs-15">Change</button>
+        </form>`
+        }
+
+        function editSubCategory(id,subCategoryName){
+            document.getElementById(`editSubCategoryInput_${id}`).innerHTML=`<form action="/admin/categories/editsubCategory/${id}/?_method=PUT" method="post" class="dis-flex">
+            <input type="text" value="${subCategoryName}" class="fs-15 fw-10" name="subCategoryName" required>
+            <button type="submit" class="btn btn-success fs-15">Change</button>
+        </form>`
+        }
+        
+
+    </script>
 </body>
 </html>

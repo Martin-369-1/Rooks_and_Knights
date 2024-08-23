@@ -13,38 +13,24 @@ const upload=require('../utils/multerUtils')
 
 exports.productList=async()=>{
     try{
-        let productList=await productCollection.aggregate([{
-            $match: {
-              isDeleted:false
-            }
-          },
-          {
-            $lookup: {
-              from: 'categories',
-              localField: 'categoryID',
-              foreignField: '_id',
-              as: 'category'
-            }
-          },
-           {$unwind:'$category'},
-           {
-            $lookup: {
-              from: 'subcategories',
-              localField: 'subCategoryID',
-              foreignField: '_id',
-              as: 'subCategory'
-            }
-          },
-           {$unwind:'$subCategory'},
-           {$project: {
-             _id:1,
-             productName:1,
-             price:1,
-             stock:1,
-             category:"$category.categoryName",
-             subCategory:"$subCategory.subCategoryName"
-           }}
-          ]);       
+        const productList = await productCollection.find({ isDeleted: false ,isListed: true})
+  .populate({
+    path: 'categoryID',
+    select: 'categoryName' 
+  })
+  .populate({
+    path: 'subCategoryID',
+    select: 'subCategoryName' 
+  })
+  .select({
+    _id: 1,
+    productName: 1,
+    price: 1,
+    stock: 1,
+    categoryID: 1, 
+    subCategoryID: 1
+  })
+  .lean();
         return productList;
     }catch(err){
         console.log(err);  
@@ -54,10 +40,15 @@ exports.productList=async()=>{
 
 exports.addProduct=async(req,res)=>{    
     
-    try{
-        
+    try{ 
         const {productName,productDescription,productAbout,stock,price,category,subCategory,offers}=req.body;
         
+        const product=await productCollection.findOne({productName})
+
+        if(product){
+            return "Product Aldready exists"
+        }
+
         const categoryID=await categoryCollection.findOne({categoryName:category});
         const subCategoryID=await subCategoryCollection.findOne({subCategoryName:subCategory});
 
@@ -86,30 +77,24 @@ exports.addProduct=async(req,res)=>{
 exports.viewProduct=async(_id)=>{
     try{
         const product = await productCollection.findById(_id)
-      .populate({
-        path: 'categoryID',    // Reference to Category collection
-        select: 'categoryName' // Include only categoryName field
-      })
-      .populate({
-        path: 'subCategoryID', // Reference to SubCategory collection
-        select: 'subCategoryName' // Include only subCategoryName field
-      })
-      .select({
-        _id: 1,
-        productName: 1,
-        productDescription: 1,
-        price: 1,
-        productAbout: 1,
-        stock: 1,
-        noOfOrders: 1,
-        productImage1: 1,
-        productImage2: 1,
-        productImage3: 1,
-        offers: 1,
-        category: 'categoryID.categoryName',  
-        subCategory: 'subCategoryID.subCategoryName'
-      })
-      .exec();
+        .populate({
+            path: 'categoryID subCategoryID', // Populate both fields at once
+            select: 'categoryName subCategoryName', // Select relevant fields from both collections
+        })
+        .select({
+            _id: 1,
+            productName: 1,
+            productDescription: 1,
+            price: 1,
+            productAbout: 1,
+            stock: 1,
+            noOfOrders: 1,
+            productImage1: 1,
+            productImage2: 1,
+            productImage3: 1,
+            offers: 1
+        })
+        .exec();
        
         return product;
     }catch(err){

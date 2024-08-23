@@ -43,8 +43,8 @@
                                 <td><%= product.productName %></td>
                                 <td><%= product.price %></td>
                                 <td><%= product.stock %></td>
-                                <td><%= product.category %></td>
-                                <td><%= product.subCategory %></td>
+                                <td><%= product.categoryID.categoryName %></td>
+                                <td><%= product.subCategoryID.subCategoryName %></td>
                                 <td>
                                     <form action="/admin/products/viewEditProduct/<%= product._id %>" method="get">
                                         <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>

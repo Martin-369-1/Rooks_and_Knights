@@ -1,6 +1,7 @@
 //Services
 const adminUserService=require('../services/adminUserService');
 const adminCategoryService=require('../services/adminCategoryService');
+const adminSubCategoryService=require('../services/adminSubCategoryServices')
 const adminProductService=require('../services/adminProductService');
 const adminService=require('../services/adminService');
 
@@ -100,13 +101,17 @@ exports.getAddProduct=async (req,res)=>{
     let categories=await adminProductService.categories();
     let subCategories=await adminProductService.subCategories();
     
-    res.render('admin/addProduct',{categories,subCategories})
+    res.render('admin/addProduct',{categories,subCategories,error:req.flash('addProductError') || ''})
     
 }
 
 exports.postAddProduct=async (req,res)=>{
     try{
-        await adminProductService.addProduct(req,res)
+        let error=await adminProductService.addProduct(req,res)
+        if(error){
+            req.flash('addProductError',error)
+            return res.redirect('/admin/products/addProduct')
+        }
         res.redirect('/admin/products')
     }catch(err){
         console.log(err); 
@@ -160,11 +165,12 @@ exports.deleteProduct=async (req,res)=>{
 
 
 
-//Categories
+//Categories and subCategory get
 exports.getCategories=async (req,res)=>{
     try{
         let categoryList=await adminCategoryService.categoryList();
-        res.render('admin/categories',{categoryList,error:req.flash('addCategoryError') || ''})
+        let subCategoryList=await adminSubCategoryService.subCategoryList();
+        res.render('admin/categories',{categoryList,subCategoryList,categoryError:req.flash('addCategoryError') || '',subCategoryError:req.flash('addSubCategoryError') || ''})
     }catch(err){
         console.log(err);
         res.redirect('/error');
@@ -173,6 +179,8 @@ exports.getCategories=async (req,res)=>{
     
 }
 
+
+//categories
 exports.addCategory=async (req,res)=>{
     try{
         const {categoryName}=req.body;
@@ -191,10 +199,74 @@ exports.addCategory=async (req,res)=>{
     }
 }
 
+exports.putEditCategory=async(req,res)=>{
+    try{
+        const _id=req.params.id;
+        const {categoryName}=req.body;
+        let error=await adminCategoryService.editCategory(_id,categoryName);
+        if(error){
+            req.flash('addCategoryError',error)
+        }
+
+        res.redirect('/admin/categories')
+    }catch(err){
+        console.log(err);
+        res.redirect('/error');
+    }
+}
+
 exports.deleteCategory=async (req,res)=>{
     try{
         let _id=req.params.id;
         await adminCategoryService.deleteCategory(_id);
+        res.redirect('/admin/categories')
+    }catch(err){
+        console.log(err);
+        res.redirect('/error');
+        
+    }
+}
+
+//subCategory
+
+exports.addSubCategory=async (req,res)=>{
+    try{
+        const {subCategoryName}=req.body;
+        
+        let error=await adminSubCategoryService.addSubCategory(subCategoryName)
+    
+        if(error){
+            req.flash('addSubCategoryError',error)
+        }
+
+        res.redirect('/admin/categories')
+    }catch(err){
+        console.log(err);
+        res.redirect('/error');
+        
+    }
+}
+
+exports.putEditSubCategory=async(req,res)=>{
+    try{
+        const _id=req.params.id;
+        const {subCategoryName}=req.body;
+        let error=await adminSubCategoryService.editSubCategory(_id,subCategoryName);
+        if(error){
+            req.flash('addSubCategoryError',error)
+        }
+
+        res.redirect('/admin/categories')
+    }catch(err){
+        console.log(err);
+        res.redirect('/error');
+    }
+}
+
+exports.deleteSubCategory=async (req,res)=>{
+    try{
+        let _id=req.params.id;
+        await adminSubCategoryService.deleteSubCategory(_id);
         res.redirect('/admin/categories')
     }catch(err){
         console.log(err);

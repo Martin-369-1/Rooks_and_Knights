@@ -8,7 +8,7 @@ body {
 }
 
 .wrapper {
-    display: flex;
+    
     align-items: stretch;
     width: 100%;
 }

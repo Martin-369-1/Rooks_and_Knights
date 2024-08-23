@@ -76,7 +76,12 @@ const ProductsSchema = new Schema({
         type:Boolean,
         required:true,
         default:false
-      }
+      },
+    isListed:{
+        type:Boolean,
+        required:true,
+        default:true
+    }
 
 }, { timestamps: true });  
 
