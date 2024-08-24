@@ -1,186 +1,188 @@
 <%- include('./partials/head') %>
 
-<body class="login_body dis-flex flex-c-m">
-    
-    <div class="login_outer_div_2 p-b-20 m-r-20 ">
-        <div class="inner_div_2 m-t-20 p-l-15 p-r-15">
-            <p class="fs-18 clblack">Please ensure your inputs meet the following criteria:</p>
-            <ul class="list-unstyled">
-                <li>Username: <strong>Must be at least 3 characters long.</strong></li>
-                <li>Email: <strong>Must be a valid email address.</strong></li>
-                <li>Password:
-                    <ul>
-                        <li><strong>Must be between 8 and 20 characters long.</strong></li>
-                        <li><strong>Must include at least one uppercase letter (A-Z).</strong></li>
-                        <li><strong>Must include at least one lowercase letter (a-z).</strong></li>
-                        <li><strong>Must include at least one digit (0-9).</strong></li>
-                        <li><strong>Must include at least one special character (e.g., @, $, !, %, *, ?, &).</strong></li>
-                        <li><strong>Must not contain spaces.</strong></li>
-                    </ul>
-                </li>
-                <li>Confirm Password: <strong>Must match the password.</strong></li>
-            </ul>
-        </div>
-    </div>
+    <body class="login_body dis-flex flex-c-m">
 
-    <div class="login_outer_div p-b-20">
-        <div class="inner_div_1">
-            <p class="fs-30 clblack txt-center">Register</p>
-            
-        </div>
-        <div class="inner_div_2 m-t-20 p-l-15 p-r-15">
-            <div class="dis-flex flex-c">
-                <a href="#" class="google-btn clblack dis-flex flex-c">
-                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google logo">
-                    Signup with Google
-                </a>
+
+        <div class="login_outer_div p-b-20">
+            <div class="inner_div_1">
+                <p class="fs-30 clblack txt-center">Register</p>
+
             </div>
-            <p id="error-message" class="fs=15 bg-white text-danger error"></p>
-            <form action="/user/register" id="registerForm" method="post">
-
-                <div class="w-full m-t-20">
-                    <label for="username" class="clblack f-w-600">Enter your Name</label>
-                    <input class="input_box p-l-15" type="text" id="username" name="username" placeholder="Joe" required minlength="3">
-                    <p id="usernameError" class="fs=15 bg-white text-danger"></p>
+            <div class="inner_div_2 m-t-20 p-l-15 p-r-15">
+                <div class="dis-flex flex-c">
+                    <a href="#" class="google-btn clblack dis-flex flex-c">
+                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google logo">
+                        Signup with Google
+                    </a>
                 </div>
+                <p id="error-message" class="fs=15 bg-white text-danger error"></p>
+                <form action="/user/register" id="registerForm" method="post">
 
-                <div class="w-full m-t-20">
-                    <label for="email" class="clblack f-w-600">Email Address</label>
-                    <input class="input_box p-l-15" type="email" id="email" name="email" placeholder="abc@gmail.com" required>
-                    <p id="emailError" class="fs=15 bg-white text-danger"></p>
-                </div>
+                    <div class="w-full m-t-20">
+                        <label for="username" class="clblack f-w-600">Enter your Name</label>
+                        <input class="input_box p-l-15" type="text" id="username" name="username" placeholder="Joe">
+                        <p id="usernameError" class="fs=15 bg-white text-danger"></p>
+                    </div>
 
-                <div class="w-full m-t-20">
-                    <label for="phoneNumber" class="clblack f-w-600">Phone Number</label>
-                    <input class="input_box p-l-15" type="tel" id="phoneNumber" name="phoneNumber" placeholder="89809834" required>
-                    <p id="phoneNumberError" class="fs=15 bg-white text-danger"></p>
-                </div>
+                    <div class="w-full m-t-20">
+                        <label for="email" class="clblack f-w-600">Email Address</label>
+                        <input class="input_box p-l-15" type="email" id="email" name="email"
+                            placeholder="abc@gmail.com">
+                        <p id="emailError" class="fs=15 bg-white text-danger"></p>
+                    </div>
 
-                <div class="w-full m-t-20">
-                    <label for="password" class="clblack f-w-600">Password</label>
-                    <input class="input_box p-l-15" type="password" id="password" name="password" placeholder="********" required minlength="8">
-                    <p id="passwordError" class="fs=15 bg-white text-danger"></p>
-                </div>
+                    <div class="w-full m-t-20">
+                        <label for="phoneNumber" class="clblack f-w-600">Phone Number</label>
+                        <input class="input_box p-l-15" type="tel" id="phoneNumber" name="phoneNumber"
+                            placeholder="89809834">
+                        <p id="phoneNumberError" class="fs=15 bg-white text-danger"></p>
+                    </div>
 
-                <div class="w-full m-t-20">
-                    <label for="confirmPassword" class="clblack f-w-600">Confirm Password</label>
-                    <input class="input_box p-l-15" type="password" id="confirmPassword" name="confirmPassword" placeholder="********" required minlength="8">
-                    <p id="confirmPasswordError" class="fs=15 bg-white text-danger"></p>
-                </div>
+                    <div class="w-full m-t-20 password-container">
+                        <label for="password" class="clblack f-w-600">Password</label>
+                        <input class="input_box p-l-15" type="password" id="password" name="password"
+                            placeholder="********">
+                        <button type="button" id="togglePassword" class="m-t-10">
+                            <i class="fas fa-eye fs-20"></i>
+                        </button>
+                        <p id="passwordError" class="fs=15 bg-white text-danger"></p>
+                    </div>
 
-                <button type="submit" class="btn btn-primary w-full m-t-20 submit_btn_1" id="submit-btn">
-                    <p class="fs-18">Register</p>
-                </button>
-                
-            </form>
-            <a href="/user/login" class="clblack m-t-20 dis-block fs-18">Already have an account? Login here</a>
+
+                    <div class="w-full m-t-20">
+                        <label for="confirmPassword" class="clblack f-w-600">Confirm Password</label>
+                        <input class="input_box p-l-15" type="password" id="confirmPassword" name="confirmPassword"
+                            placeholder="********">
+                        <p id="confirmPasswordError" class="fs=15 bg-white text-danger"></p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full m-t-20 submit_btn_1" id="submit-btn">
+                        <p class="fs-18">Register</p>
+                    </button>
+
+                </form>
+                <a href="/user/login" class="clblack m-t-20 dis-block fs-18">Already have an account? Login here</a>
+            </div>
         </div>
-    </div>
-    
 
 
 
 
-    
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    clearErrors();
 
-    const submitButton=document.getElementById('submit-btn')
-    // submitButton.disabled = true;
+        <script>
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
 
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const phoneNumber = document.getElementById('phoneNumber').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    
-    submitButton.disabled = false;
-    let isValid = true;
+            togglePassword.addEventListener('click', function (e) {
+                // toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
 
-    if (!validateUsername(username)) {
-        displayError('usernameError', 'Invalid Username');
-        isValid = false;
-    }
+                // toggle the eye / eye slash icon
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+        </script>
+        <script>
+            document.getElementById('registerForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                clearErrors();
 
-    if (!validateEmail(email)) {
-        displayError('emailError', 'Invalid email format');
-        isValid = false;
-    }
+                const submitButton = document.getElementById('submit-btn')
+                // submitButton.disabled = true;
 
-    if (!validatePhoneNumber(phoneNumber)) {
-        displayError('phoneNumberError', 'Invalid Phone Number format');
-        isValid = false;
-    }
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
 
-    if (!validatePassword(password)) {
-        displayError('passwordError', 'Invalid Password');
-        isValid = false;
-    }
+                submitButton.disabled = false;
+                let isValid = true;
 
-    if (password !== confirmPassword) {
-        displayError('confirmPasswordError', 'Passwords do not match');
-        isValid = false;
-    }
+                if (!validateUsername(username)) {
+                    displayError('usernameError', 'Invalid Username');
+                    isValid = false;
+                }
 
-    if (isValid) {
-        submitButton.disabled = true;
-        fetch('/user/register', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username, email, phoneNumber, password, confirmPassword })
-        })
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            // console.log(data.redirectUrl);
-            submitButton.disabled = false;
-            if (data.redirectUrl) {
-                window.location.href = data.redirectUrl;
+                if (!validateEmail(email)) {
+                    displayError('emailError', 'Invalid email format');
+                    isValid = false;
+                }
+
+                if (!validatePhoneNumber(phoneNumber)) {
+                    displayError('phoneNumberError', 'Invalid Phone Number format');
+                    isValid = false;
+                }
+
+                if (!validatePassword(password)) {
+                    displayError('passwordError', 'Invalid Password');
+                    isValid = false;
+                }
+
+                if (password !== confirmPassword) {
+                    displayError('confirmPasswordError', 'Passwords do not match');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    submitButton.disabled = true;
+                    fetch('/user/register', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ username, email, phoneNumber, password, confirmPassword })
+                    })
+                        .then(res => {
+                            return res.json();
+                        })
+                        .then(data => {
+                            // console.log(data.redirectUrl);
+                            submitButton.disabled = false;
+                            if (data.redirectUrl) {
+                                window.location.href = data.redirectUrl;
+                            }
+                            document.getElementById('error-message').innerText = data.error;
+                        })
+                        .catch(err => {
+                            console.error('An error occurred:', err);
+                            document.getElementById('error-message').innerText = 'Some error occurred';
+                        });
+                }
+            });
+
+            function validateUsername(username) {
+                const usernameRegex = /^[A-Za-z]+$/;
+                return usernameRegex.test(username);
             }
-                document.getElementById('error-message').innerText = data.error;
-        })
-        .catch(err => {
-            console.error('An error occurred:', err);
-            document.getElementById('error-message').innerText = 'Some error occurred';
-        });
-    }
-});
 
-function validateUsername(username) {
-    const usernameRegex = /^[A-Za-z]+$/;
-    return usernameRegex.test(username);
-}
+            function validateEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
 
-function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
+            function validatePhoneNumber(phoneNumber) {
+                const phoneNumberRegex = /^\d{10}$/;
+                return phoneNumberRegex.test(phoneNumber);
+            }
 
-function validatePhoneNumber(phoneNumber) {
-    const phoneNumberRegex = /^\d{10}$/;
-    return phoneNumberRegex.test(phoneNumber);
-}
+            function validatePassword(password) {
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+                return passwordRegex.test(password) && !password.includes(' ');
+            }
 
-function validatePassword(password) {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-    return passwordRegex.test(password) && !password.includes(' ');
-}
+            function displayError(elementId, message) {
 
-function displayError(elementId, message) {
-    
-    document.getElementById(elementId).innerText = message;
-}
+                document.getElementById(elementId).innerText = message;
+            }
 
-function clearErrors() {
-    const errors = document.querySelectorAll('.error');
-    errors.forEach(error => error.innerText = '');
-}
+            function clearErrors() {
+                const errors = document.querySelectorAll('.error');
+                errors.forEach(error => error.innerText = '');
+            }
 
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+
+    </html>

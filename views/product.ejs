@@ -296,36 +296,27 @@
 				</h3>
 			</div>
 
-			<!-- Slide2 -->
-			<div class="wrap-slick2">
-				<div class="slick2 row">
-                    <% relatedProducts.forEach((product)=> {%>
-                        <a href="/shop/product/<%= product._id %>"  class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women m-l-10 m-r-16">
-                            <div>
-
-                                <div class="block2">
-                                    <div class="block2-pic hov-img0">
-                                        <img src="<%= product.productImage1 %>" alt="IMG-PRODUCT">
-                                    </div>
-            
-                                    <div class="block2-txt flex-w flex-t p-t-14">
-                                        <div class="block2-txt-child1 flex-col-l ">
-                                            <p class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-                                                <%= product.productName %>
-                                            </0>
-                                            <br>
-                                            <span class="stext-105 cl3">
-                                                ₹<%= product.price %>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </a>
-                        <% }) %>
-					
+			
+			<div class="related-products-container">
+				<button class="prev-btn" onclick="scroll(-1)">&#10094;</button>
+				<div class="related-products">
+					<% relatedProducts.forEach((product) => { %>
+						<a href="/shop/product/<%= product._id %>" class="product-item">
+							<div class="product-image">
+								<img src="<%= product.productImage1 %>" alt="<%= product.productName %>">
+							</div>
+							<div class="product-info">
+								<p class="product-name">
+									<%= product.productName %>
+								</p>
+								<span class="product-price">
+									₹<%= product.price %>
+								</span>
+							</div>
+						</a>
+					<% }) %>
 				</div>
+				<button class="next-btn" onclick="scroll(1)">&#10095;</button>
 			</div>
 		</div>
 	</section>
@@ -349,7 +340,13 @@
 
     <%- include('./partials/scriptBody.ejs') %>
 
-
+	<script>
+		 function scroll(direction) {
+            const container = document.querySelector('.related-products');
+            const scrollAmount = direction * 300; // Amount to scroll (adjust as needed)
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+	</script>
 
 </body>
 </html>

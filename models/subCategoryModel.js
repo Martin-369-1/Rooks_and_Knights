@@ -8,6 +8,11 @@ const subCategorySchema = new Schema({
     unique:true,
     required: true 
   },
+  subCategoryDescription:{
+    type:String,
+    required:true
+  },
+  
   isDeleted:{
     type:Boolean,
     required:true,

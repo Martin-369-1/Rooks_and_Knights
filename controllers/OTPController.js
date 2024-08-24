@@ -14,7 +14,7 @@ exports.postVerifyOTP = async (req, res) => {
         if (isOTPVerified) {
             req.session.isOTPVerified = true;
             req.session.save();
-            res.status(200).json({ redirectUrl: '/user/completeRegister' });
+            res.status(200).json({ redirectUrl:req.session.OTPVerificationRedirect });
         } else {
             res.status(400).json({error:"Invalid OTP"});
         }

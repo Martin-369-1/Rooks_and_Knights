@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/public/css/main.css">
     <link rel="stylesheet" href="/public/css/util.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+
 </head>
 
 <body class="login_body dis-flex flex-c-m">
@@ -23,6 +23,9 @@
                     <label for="email" class="clblack f-w-600">Email Address</label>
                     <input class="input_box p-l-15" type="email" id="email" name="email" placeholder="abc@gmail.com"
                         required>
+                    <button type="button" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
                 <div class="w-full m-t-20">
                     <label for="password" class="clblack f-w-600">Password</label>
@@ -60,10 +63,10 @@
                     }
                 })
                 .then((data) => {
-                    if(data && data.error){
+                    if (data && data.error) {
 
                         console.log(data.err);
-                        
+
                         document.getElementById('error-message').innerText = data.error;
                     }
                 })
@@ -76,6 +79,8 @@
         }
 
     </script>
+
+    
 </body>
 
 </html>

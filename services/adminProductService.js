@@ -13,7 +13,7 @@ const upload=require('../utils/multerUtils')
 
 exports.productList=async()=>{
     try{
-        const productList = await productCollection.find({ isDeleted: false ,isListed: true})
+        const productList = await productCollection.find({ isDeleted: false})
   .populate({
     path: 'categoryID',
     select: 'categoryName' 

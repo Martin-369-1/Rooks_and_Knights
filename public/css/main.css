@@ -96,7 +96,84 @@ h6 {
   margin: 0 30px; /* Add margin for spacing */
 }
 
+.related-products-container {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  padding: 16px; /* Space around the container */
+}
 
+/* Buttons for scrolling */
+.prev-btn, .next-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 1;
+}
+
+.prev-btn {
+  left: 0;
+}
+
+.next-btn {
+  right: 0;
+}
+
+/* Flexbox container for products */
+.related-products {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth; /* Smooth scrolling */
+  gap: 16px; /* Space between items */
+}
+
+/* Style for each product item */
+.product-item {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  width: 200px; /* Fixed width for each product item */
+  border: 1px solid #ddd; /* Light border around items */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Ensure rounded corners work */
+  transition: box-shadow 0.3s;
+}
+
+.product-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+/* Style for the product image */
+.product-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Style for product info section */
+.product-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-size: 1.2em;
+  margin: 0;
+  margin-bottom: 8px;
+}
+
+.product-price {
+  font-size: 1em;
+  color: #333;
+}
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -3854,4 +3931,23 @@ input.num-product::-webkit-inner-spin-button {
   width: 100% !important;
   height: 35px;
   border-radius: 5px;
+}
+
+.password-container {
+  position: relative;
+  display: inline-block;
+}
+
+.password-container input {
+  padding-right: 40px; /* space for the eye icon */
+}
+
+.password-container button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
 }

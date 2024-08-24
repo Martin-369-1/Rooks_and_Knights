@@ -1,6 +1,7 @@
 //requring modules
 const signupFormValidataion = require('../utils/registerValidation')
 const userSevice = require('../services/userService');
+const resetPasswordServices=require('../services/resetPasswordServices');
 const generateAccessToken=require('../utils/JWTUtils')
 const passport=require('passport')
 
@@ -77,7 +78,7 @@ exports.postRegister = async (req, res) => {
             // Inform user of the error
             return res.status(400).json({ error: result.message });
         }
-
+        req.session.OTPVerificationRedirect='/user/completeRegister';
         // Send success response with redirect URL
         res.status(200).json({ redirectUrl: result.redirectUrl });
     } catch (err) {
@@ -126,4 +127,55 @@ exports.getGoogleCallback=(req,res)=>{
 
     }
 
+exports.getForgetPassword=(req,res)=>{
+    res.render('user/forgetPassword')
+}
 
+
+exports.postForgetPassword=async(req,res)=>{
+    try{
+        const {email}=req.body;
+        let error=await resetPasswordServices.forgetPassword(email,req)
+        
+        if(error){
+            return res.json({error})
+        }
+        req.session.OTPVerificationRedirect= '/user/resetPassword';
+        res.redirect('/OTP/verifyOTP')
+
+    }catch(err){
+        console.log(err);
+        
+    }
+}
+
+exports.getResetPassword=(req,res)=>{
+    
+    res.render('user/resetPassword')
+}
+
+exports.postResetPassword=async(req,res)=>{
+    const {password,confirmPassword}=req.body;
+    if(!password || !confirmPassword){
+        return res.status(500).json({ error: 'Server error. Please try again later.' });
+    }
+
+    if(password != confirmPassword){
+        return res.json({error:"password and confirmPassword doesnot match"})
+    }
+
+    try{
+        await resetPasswordServices.resetPassword(password,req.session.email)
+
+        req.session.destroy((err) => {
+            if (err) {
+                console.log(err);
+            }
+            res.clearCookie();
+            res.redirect('/user/login');
+        })
+    }catch(err){
+        console.log("getResetPassword Error",err);
+        
+    }
+}

@@ -3,293 +3,280 @@
 
 <%- include('./partials/header') %>
 
-<body>
-    <style>
-        .modal-body {
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       overflow: hidden;
-   }
+    <body>
+        <style>
+            .modal-body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+            }
 
-   #imageToCrop {
-       max-width: 100%;
-       max-height: 80vh;
-       width: auto;
-       height: auto;
-   }
+            #imageToCrop {
+                max-width: 100%;
+                max-height: 80vh;
+                width: auto;
+                height: auto;
+            }
 
-       .image-preview {
-           display: block;
-           margin: 0 auto;
-           max-width: 100%;
-           max-height: 70vh;
-       }
+            .image-preview {
+                display: block;
+                margin: 0 auto;
+                max-width: 100%;
+                max-height: 70vh;
+            }
 
-       .product-image-box {
-           width: 150px;
-           height: 150px;
-           border: 1px dashed #ddd;
-           display: flex;
-           justify-content: center;
-           align-items: center;
-           position: relative;
-       }
+            .product-image-box {
+                width: 150px;
+                height: 150px;
+                border: 1px dashed #ddd;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+            }
 
-       .product-image-box img {
-           max-width: 100%;
-           max-height: 100%;
-           display: none;
-       }
+            .product-image-box img {
+                max-width: 100%;
+                max-height: 100%;
+                display: none;
+            }
 
-       .product-image-box i {
-           font-size: 2rem;
-           color: #aaa;
-       }
-   </style>
-    <div class="wrapper">
-        <%- include('./partials/slidebar') %>
+            .product-image-box i {
+                font-size: 2rem;
+                color: #aaa;
+            }
+        </style>
+        <div class="wrapper">
+            <%- include('./partials/slidebar') %>
 
-        <div id="content" class="p-4 p-md-5" style="background-color:#f1f2f5 ;">
-            <div class="container mt-5">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h2>Add Product </h2>
+                <div id="content" class="p-4 p-md-5" style="background-color:#f1f2f5 ;">
+                    <div class="container mt-5">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                <h2>Add Product </h2>
+                            </div>
+                            <p class="fs-15 text-danger text-center">
+                                <%= error %>
+                            </p>
+                            <div class="card-body">
+                                <form action="/admin/products/addProduct" method="post" enctype="multipart/form-data"
+                                    id="addProductForm" onsubmit="addProductValidation(event,true)">
+                                    <!-- Image Upload Section -->
+                                    <div class="form-group text-center">
+                                        <label for="productImages">Image Upload</label>
+                                        <div class="d-flex justify-content-center">
+                                            <!-- Box 1 -->
+                                            <div class="product-image-box mx-2">
+                                                <label for="productImage1" class="image-label">
+                                                    <img id="previewImage1" class="image-preview" src="" alt="">
+                                                    <i class="fa fa-picture-o"></i>
+                                                    <input type="file" class="form-control-file image-input"
+                                                        id="productImage1" accept="image/*"
+                                                        onchange="openCropperModal('productImage1', 'previewImage1')"
+                                                        name="img1">
+                                                </label>
+                                            </div>
+
+                                            <!-- Box 2 -->
+                                            <div class="product-image-box mx-2">
+                                                <label for="productImage2" class="image-label">
+                                                    <img id="previewImage2" class="image-preview" src="" alt="">
+                                                    <i class="fa fa-picture-o"></i>
+                                                    <input type="file" class="form-control-file image-input"
+                                                        id="productImage2" accept="image/*"
+                                                        onchange="openCropperModal('productImage2', 'previewImage2')"
+                                                        name="img2">
+                                                </label>
+                                            </div>
+                                            <!-- Box 3 -->
+                                            <div class="product-image-box mx-2">
+                                                <label for="productImage3" class="image-label">
+                                                    <img id="previewImage3" class="image-preview" src="" alt="">
+                                                    <i class="fa fa-picture-o"></i>
+                                                    <input type="file" class="form-control-file image-input"
+                                                        id="productImage3" accept="image/*"
+                                                        onchange="openCropperModal('productImage3', 'previewImage3')"
+                                                        name="img3">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <p id="productImageError" class="text-danger fs-15"></p>
+                                    </div>
+
+
+
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="productName">Product Name</label>
+                                            <input type="text" class="form-control" id="productName" name="productName"
+                                                placeholder="ex. Chessbase17">
+                                            <p id="productNameError" class="text-danger fs-15"></p>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="productPrice">Price</label>
+                                            <input type="number" class="form-control" id="productPrice" name="price"
+                                                placeholder="ex. 3000">
+                                            <p id="priceError" class="text-danger fs-15"></p>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="productOffer">Offer</label>
+                                            <input type="number" class="form-control" id="productOffer" name="offers"
+                                                placeholder="ex. 1000">
+                                            <p id="offersError" class="text-danger fs-15"></p>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <div class="form-group">
+                                                <label for="productCategory">Category</label>
+                                                <select id="productCategory" class="form-control" name="category">
+                                                    <option value="" disabled selected>Select a category</option>
+                                                    <% categories.forEach((category)=>{ %>
+                                                        <option>
+                                                            <%= category.categoryName %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <p id="categoryError" class="text-danger fs-15"></p>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <div class="form-group">
+                                                <label for="productSubCategory">Sub Category</label>
+                                                <select id="productSubCategory" class="form-control" name="subCategory">
+                                                    <option value="" disabled selected>Select a sub category</option>
+                                                    <% subCategories.forEach((subCategory)=>{ %>
+                                                        <option>
+                                                            <%= subCategory.subCategoryName %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <p id="subCategoryError" class="text-danger fs-15"></p>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label for="productStock">Stock</label>
+                                            <input type="number" class="form-control" id="productStock" name="stock"
+                                                placeholder="ex. 50">
+                                            <p id="stockError" class="text-danger fs-15"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="productAbout">About</label>
+                                        <p id="productAboutError" class="text-danger fs-15"></p>
+                                        <textarea class="form-control" id="productAbout" rows="1"
+                                            name="productAbout"></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="productDescription">Description</label>
+                                        <p id="productDescriptionError" class="text-danger fs-15"></p>
+                                        <textarea class="form-control" id="productDescription" rows="1"
+                                            oninput="adjustTextareaHeight(this)" name="productDescription"></textarea>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <button type="submit" class="btn btn-primary btn-block">Save Product</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <p class="fs-20 text-danger text-center"><%= error %></p>
-                    <div class="card-body">
-                        <form action="/admin/products/addProduct" method="post" enctype="multipart/form-data" id="addProductForm">
-                            <!-- Image Upload Section -->
-                            <div class="form-group text-center">
-                                <label for="productImages">Image Upload</label>
-                                <div class="d-flex justify-content-center">
-                                    <!-- Box 1 -->
-                                    <div class="product-image-box mx-2">
-                                        <label for="productImage1" class="image-label">
-                                            <img id="previewImage1" class="image-preview" src="" alt="">
-                                            <i class="fa fa-picture-o"></i>
-                                            <input type="file" class="form-control-file image-input" id="productImage1" accept="image/*" onchange="openCropperModal('productImage1', 'previewImage1')" name="img1" required>
-                                        </label>
-                                    </div>
-                                    <!-- Box 2 -->
-                                    <div class="product-image-box mx-2">
-                                        <label for="productImage2" class="image-label">
-                                            <img id="previewImage2" class="image-preview" src="" alt="">
-                                            <i class="fa fa-picture-o"></i>
-                                            <input type="file" class="form-control-file image-input" id="productImage2" accept="image/*" onchange="openCropperModal('productImage2', 'previewImage2')" name="img2" required>
-                                        </label>
-                                    </div>
-                                    <!-- Box 3 -->
-                                    <div class="product-image-box mx-2">
-                                        <label for="productImage3" class="image-label">
-                                            <img id="previewImage3" class="image-preview" src="" alt="">
-                                            <i class="fa fa-picture-o"></i>
-                                            <input type="file" class="form-control-file image-input" id="productImage3" accept="image/*" onchange="openCropperModal('productImage3', 'previewImage3')" name="img3" required>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+        </div>
 
-        
-                            
 
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="productName">Product Name</label>
-                                    <input type="text" class="form-control" id="productName" name="productName" placeholder="ex. Chessbase17" required>
-                                    <p class="productNameError"></p>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="productPrice">Price</label>
-                                    <input type="number" class="form-control" id="productPrice" name="price" placeholder="ex. 1000" min="0" required>
-                                    <p class="productPriceError"></p>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="productOffer">Offer</label>
-                                    <input type="number" class="form-control" id="productOffer" name="offers" placeholder="ex. 1000" min="0" required>
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <div class="form-group">
-                                        <label for="productCategory">Category</label>
-                                        <select id="productCategory" class="form-control" name="category" required >
-                                            <option value="" disabled selected>Select a category</option>
-                                            <% categories.forEach((category)=>{ %>
-                                                <option><%= category.categoryName %></option>
-                                            <%  }) %>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <div class="form-group">
-                                        <label for="productSubCategory">Sub Category</label>
-                                        <select id="productSubCategory" class="form-control" name="subCategory" required>
-                                            <option value="" disabled selected>Select a sub category</option>
-                                            <% subCategories.forEach((subCategory)=>{ %>
-                                                <option><%= subCategory.subCategoryName %></option>
-                                            <% }) %>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group col-md-6">
-                                    <label for="productStock">Stock</label>
-                                    <input type="number" class="form-control" id="productStock" name="stock" placeholder="ex. 500gm" required>
-                                </div>
-                            </div>
-        
-                            <div class="form-group">
-                                <label for="productAbout">About</label>
-                                <textarea class="form-control" id="productAbout" rows="1" name="productAbout" required></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="productDescription">Description</label>
-                                <textarea class="form-control" id="productDescription" rows="1" oninput="adjustTextareaHeight(this)" name="productDescription" required></textarea>
-                            </div>
-        
-                            <!-- Submit Button -->
-                            <button type="submit" class="btn btn-primary btn-block">Save Product</button>
-                        </form>
+        <div class="modal fade" id="cropModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 50%; width: auto;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-15">Crop Image</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="imageToCrop" class="image-preview" style="width: 50%;">
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary" id="cropButton">Crop and Save</button>
                     </div>
                 </div>
             </div>
+
         </div>
-    </div>  
 
+        <%- include('./partials/footer') %>
 
-    <div class="modal fade" id="cropModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 50%; width: auto;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-20">Crop Image</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img id="imageToCrop" class="image-preview" style="width: 50%;">
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary" id="cropButton">Crop and Save</button>
-                </div>
-            </div>
-        </div>
-        
-    </div>
+            <!-- Bootstrap and Cropper.js JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
-    <%- include('./partials/footer') %>
+            <script>
+                let cropper;
+                let currentImageInput;
+                let currentPreviewId;
 
-    <!-- Bootstrap and Cropper.js JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+                function openCropperModal(imageInputId, previewId) {
+                    const imageInput = document.getElementById(imageInputId);
+                    const file = imageInput.files[0];
+                    currentImageInput = imageInput;
+                    currentPreviewId = previewId;
 
-    <script>
-        let cropper;
-        let currentImageInput;
-        let currentPreviewId;
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const imageElement = document.getElementById('imageToCrop');
+                            imageElement.src = e.target.result;
 
-        function openCropperModal(imageInputId, previewId) {
-            const imageInput = document.getElementById(imageInputId);
-            const file = imageInput.files[0];
-            currentImageInput = imageInput;
-            currentPreviewId = previewId;
+                            const cropModal = new bootstrap.Modal(document.getElementById('cropModel'));
+                            cropModal.show();
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const imageElement = document.getElementById('imageToCrop');
-                    imageElement.src = e.target.result;
-
-                    const cropModal = new bootstrap.Modal(document.getElementById('cropModel'));
-                    cropModal.show();
-
-                    cropModal._element.addEventListener('shown.bs.modal', function () {
-                        if (cropper) {
-                            cropper.destroy();
-                        }
-                        cropper = new Cropper(imageElement, {
-                            aspectRatio: 1,
-                            viewMode: 1,
-                            autoCropArea: 0.9,
-                        });
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        document.getElementById('cropButton').addEventListener('click', function () {
-            if (cropper) {
-                const canvas = cropper.getCroppedCanvas();
-                canvas.toBlob(function (blob) {
-                    const croppedImageUrl = URL.createObjectURL(blob);
-
-                    const previewElement = document.getElementById(currentPreviewId);
-                    previewElement.src = croppedImageUrl;
-                    previewElement.style.display = 'block';
-
-                    const iconElement = previewElement.parentElement.querySelector('i');
-                    if (iconElement) {
-                        iconElement.style.display = 'none';
-                    }
-
-                    // Replace the file input value with the cropped image blob
-                    const fileInputContainer = new DataTransfer();
-                    fileInputContainer.items.add(new File([blob], currentImageInput.files[0].name, { type: 'image/png' }));
-                    currentImageInput.files = fileInputContainer.files;
-
-                    const cropModal = bootstrap.Modal.getInstance(document.getElementById('cropModel'));
-                    cropModal.hide();
-                });
-            }
-        });
-    </script>
-
-    <script>
-        function previewImage(event, previewId) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewElement = document.getElementById(previewId);
-                    previewElement.src = e.target.result;
-                    previewElement.style.display = 'block';
-        
-                    // Hide the icon after image loads
-                    const iconElement = previewElement.parentElement.querySelector('i');
-                    if (iconElement) {
-                        iconElement.style.display = 'none';
+                            cropModal._element.addEventListener('shown.bs.modal', function () {
+                                if (cropper) {
+                                    cropper.destroy();
+                                }
+                                cropper = new Cropper(imageElement, {
+                                    aspectRatio: 1,
+                                    viewMode: 1,
+                                    autoCropArea: 0.9,
+                                });
+                            });
+                        };
+                        reader.readAsDataURL(file);
                     }
                 }
-                reader.readAsDataURL(file);
-            }
-        } 
 
-        function adjustTextareaHeight(textarea) {
-        textarea.style.height = 'auto';
+                document.getElementById('cropButton').addEventListener('click', function () {
+                    if (cropper) {
+                        const canvas = cropper.getCroppedCanvas();
+                        canvas.toBlob(function (blob) {
+                            const croppedImageUrl = URL.createObjectURL(blob);
 
-        textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
+                            const previewElement = document.getElementById(currentPreviewId);
+                            previewElement.src = croppedImageUrl;
+                            previewElement.style.display = 'block';
 
-        document.getElementById('addProductForm').addEventListener('submit',(event)=>{
-            event.preventDefault;
+                            const iconElement = previewElement.parentElement.querySelector('i');
+                            if (iconElement) {
+                                iconElement.style.display = 'none';
+                            }
 
-            let img1=document.getElementById('productImage1').value;
-            let img2=document.getElementById('productImage2').value;
-            let img3=document.getElementById('productImage3').value;
-            let productName=document.getElementById('productName').value;
-            let price=document.getElementById('productPrice').value;
-            let offers=document.getElementById('productOffer').value;
-            let category=document.getElementById('productCategory').value;
-            let subCategory=document.getElementById('productSubCategory').value;
-            let stock=document.getElementById('productStock').value;
-            let productAbout=document.getElementById('productAbout').value;
-            let productDescription=document.getElementById('productDescription').value;
+                            // Replace the file input value with the cropped image blob
+                            const fileInputContainer = new DataTransfer();
+                            fileInputContainer.items.add(new File([blob], currentImageInput.files[0].name, { type: 'image/png' }));
+                            currentImageInput.files = fileInputContainer.files;
 
+                            const cropModal = bootstrap.Modal.getInstance(document.getElementById('cropModel'));
+                            cropModal.hide();
+                        });
+                    }
+                });
+            </script>
 
-        })
+            <script src="/public/JS/productValidation.js"></script>
+    </body>
 
-
-    </script>
-</body>
 </html>

@@ -66,7 +66,7 @@
                         <h2>Product Form</h2>
                     </div>
                     <div class="card-body">
-                        <form action="/admin/products/viewEditProduct/<%= product._id %>/?_method=PUT" method="post" enctype="multipart/form-data" id="editProductForm">
+                        <form action="/admin/products/viewEditProduct/<%= product._id %>/?_method=PUT" method="post" enctype="multipart/form-data" id="editProductForm" onsubmit="addProductValidation(event,false)">
                             <!-- Image Upload Section -->
                             <div class="form-group text-center">
                                 <label for="productImages">Image Upload</label>
@@ -98,26 +98,30 @@
                                         </label>
                                     </div>
                                 </div>
+                                <p id="productImageError" class="text-danger fs-15"></p>
                             </div>
         
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="productName">Product Name</label>
-                                    <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
+                                    <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>">
+                                    <p id="productNameError" class="text-danger fs-15"></p>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="productPrice">Price</label>
-                                    <input type="number" class="form-control" id="productPrice" name="price" value="<%= product.price %>" min="0" required>
+                                    <input type="number" class="form-control" id="productPrice" name="price" value="<%= product.price %>" >
+                                    <p id="priceError" class="text-danger fs-15"></p>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="productOffer">Offer</label>
-                                    <input type="number" class="form-control" id="productOffer" name="offers" value="<%= product.offers %>" min="0" required>
+                                    <input type="number" class="form-control" id="productOffer" name="offers" value="<%= product.offers %>" >
+                                    <p id="offersError" class="text-danger fs-15"></p>
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <div class="form-group">
                                         <label for="productCategory">Category</label>
-                                        <select id="productCategory" class="form-control" name="category" required>
+                                        <select id="productCategory" class="form-control" name="category">
                                             <% categories.forEach((category)=>{ %>
                                                 <% if(category.categoryName == product.category) { %>
                                                     <option selected><%= category.categoryName %></option>
@@ -127,12 +131,13 @@
                                             <% }) %>
                                         </select>
                                     </div>
+                                    <p id="categoryError" class="text-danger fs-15"></p>
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <div class="form-group">
                                         <label for="productSubCategory">Sub Category</label>
-                                        <select id="productSubCategory" class="form-control" name="subCategory" required>
+                                        <select id="productSubCategory" class="form-control" name="subCategory">
                                             <% subCategories.forEach((subCategory)=>{ %>
                                                 <% if(subCategory.subCategoryName == product.subCategory) { %>
                                                     <option selected><%= subCategory.subCategoryName %></option>
@@ -142,22 +147,26 @@
                                             <% }) %>
                                         </select>
                                     </div>
+                                    <p id="subCategoryError" class="text-danger fs-15"></p>
                                 </div>
                                 
                                 <div class="form-group col-md-6">
                                     <label for="productStock">Stock</label>
-                                    <input type="number" class="form-control" id="productStock" name="stock" value="<%= product.stock %>" required>
+                                    <input type="number" class="form-control" id="productStock" name="stock" value="<%= product.stock %>">
+                                    <p id="stockError" class="text-danger fs-15"></p>
                                 </div>
                             </div>
         
                             <div class="form-group">
                                 <label for="productAbout">About</label>
-                                <textarea class="form-control" id="productAbout" rows="1" name="productAbout" required><%= product.productAbout %></textarea>
+                                <p id="productAboutError" class="text-danger fs-15"></p>
+                                <textarea class="form-control" id="productAbout" rows="1" name="productAbout"><%= product.productAbout %></textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="productDescription">Description</label>
-                                <textarea class="form-control" id="productDescription" rows="10" name="productDescription" required><%= product.productDescription %></textarea>
+                                <p id="productDescriptionError" class="text-danger fs-15"></p>
+                                <textarea class="form-control" id="productDescription" rows="10" name="productDescription"><%= product.productDescription %></textarea>
                             </div>
         
                             <!-- Submit Button -->
@@ -254,6 +263,7 @@
             }
         });
     </script>
+    <script src="/public/JS/productValidation.js"></script>
 
    
 </body>

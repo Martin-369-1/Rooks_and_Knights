@@ -3,127 +3,270 @@
 
 <%- include('./partials/header') %>
 
-<body style="height: auto !important; padding-bottom: 200px;">
-    <div class="wrapper">
-        <%- include('./partials/slidebar') %>
+    <body style="height: auto !important;">
+        <div class="wrapper">
+            <%- include('./partials/slidebar') %>
 
-        <div id="content" class="container-fluid">
-            <h1 class="m-b-10">Categories</h1>
-            <form action="/" class="search-bar">
-                <input type="text" class="form-control" placeholder="Search Category Name">
-                <button class="btn-primary btn m-t-3">Search</button>
-            </form>
+                <div id="content" class="container-fluid">
+                    <h1 class="m-b-10">Categories</h1>
+                    <form action="/" class="search-bar">
+                        <input type="text" class="form-control" placeholder="Search Category Name">
+                        <button class="btn-primary btn m-t-3">Search</button>
+                    </form>
 
-            <div class="table-responsive">
+                    <div class="table-responsive">
 
-                <table class="table table-bordered m-t-10">
-                    <thead>
-                        <tr>
-                            <th>Category ID</th>
-                            <th>Category Name</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% categoryList.forEach(category=> { %>
-                            <tr>
-                                <td ><%= category._id %></td>
-                                <td id="editCategoryInput_<%=category._id%>"><%= category.categoryName %></td>
-                                <td><button class="btn btn-dark btn-sm" id="editCategoryBtn" onclick="editCategory('<%=category._id%>','<%=category.categoryName%>')"><i class="fa fa-ban"></i>Edit</button></td>
-                                <td>
-                                    <form action="/admin/categories/deleteCategory/<%= category._id %>/?_method=DELETE" method="post">
-                                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
-                                    </form> 
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-            <p class="text-danger fs-20"><%= categoryError%></p>
-            <div>
-                <form action="/admin/categories/addCategory" method="post" id="addCategoryForm">
-                    <label for="categoryName" class="fs-30 fw-10">New Category</label>
-                    <div >
-                        <input type="text" placeholder="Category Name" class="p-2 " style="float: left;" name="categoryName" id="categoryName">
-                        <button class="btn btn-success fs-16">Add</button>
+                        <table class="table table-bordered m-t-10">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Category Description</th>
+                                    <th></th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% categoryList.forEach(category=> { %>
+                                    <tr>
+                                        <form class=""
+                                            action="/admin/categories/editCategory/<%= category._id %>/?_method=PUT"
+                                            method="post" id="editCategoryForm_<%= category._id %>"
+                                            onsubmit="editCategoryValidation('<%= category._id %>',event)">
+                                            <td>
+                                                <input type="text" class="form-control transparent-input"
+                                                    value="<%= category.categoryName %>" name="categoryName"
+                                                    id="categoryName_<%= category._id %>">
+                                            </td>
+                                            <td class="dis-flex">
+                                                <input type="text" class="form-control transparent-input"
+                                                    value="<%= category.categoryDescription %>"
+                                                    name="categoryDescription"
+                                                    id="categoryDescription_<%= category._id %>">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-dark btn-sm" type="submit"><i
+                                                        class="fa fa-ban"></i>Edit</button>
+                                            </td>
+                                        </form>
+                                        <td>
+                                            <form
+                                                action="/admin/categories/deleteCategory/<%= category._id %>/?_method=DELETE"
+                                                method="post">
+                                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
+                                                    Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
                     </div>
-                </form>
-                      
-            </div>
+                    <p class="text-danger fs-20" id="categoryError">
+                        <%= categoryError%>
+                    </p>
+                    <div>
+                        <form action="/admin/categories/addCategory" method="post" id="addCategoryForm" onsubmit="addCategoryValidation(event)">
+                            <label for="categoryName" class="fs-30 fw-10">New Category</label>
+                            <div>
+                                <input type="text" placeholder="Category Name" class="p-2 m-r-10" style="float: left;"
+                                    name="categoryName" id="categoryName">
+                                <input type="text" placeholder="Category Description" class="p-2 m-r-10"
+                                    style="float: left;" name="categoryDescription" id="categoryDescription">
+                                <button class="btn btn-success fs-16" id="addCategoryBtn">Add</button>
+                            </div>
+                        </form>
 
-
-            <h1 class="m-b-10 m-t-100">Subategories</h1>
-            <form action="/" class="search-bar">
-                <input type="text" class="form-control" placeholder="Search Category Name">
-                <button class="btn-primary btn m-t-3">Search</button>
-            </form>
-
-            <div class="table-responsive">
-
-                <table class="table table-bordered m-t-10">
-                    <thead>
-                        <tr>
-                            <th>Sub Category ID</th>
-                            <th>Sub Category Name</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% subCategoryList.forEach(subCategory=> { %>
-                            <tr>
-                                <td ><%= subCategory._id %></td>
-                                <td id="editSubCategoryInput_<%=subCategory._id%>"><%= subCategory.subCategoryName %></td>
-                                <td><button class="btn btn-dark btn-sm" id="editCategoryBtn" onclick="editSubCategory('<%=subCategory._id%>','<%=subCategory.subCategoryName%>')"><i class="fa fa-ban"></i>Edit</button></td>
-                                <td>
-                                    <form action="/admin/categories/deletesubCategory/<%= subCategory._id %>/?_method=DELETE" method="post">
-                                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
-                                    </form> 
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-            <p class="text-danger fs-20"><%=subCategoryError%></p>
-            <div>
-                <form action="/admin/categories/addSubCategory" method="post" id="addSubCategoryForm">
-                    <label for="subCategoryName" class="fs-30 fw-10">New subCategory</label>
-                    <div >
-                        <input type="text" placeholder="subCategory Name" class="p-2 " style="float: left;" name="subCategoryName" id="subCategoryName">
-                        <button class="btn btn-success fs-16">Add</button>
                     </div>
-                </form>
-                      
-            </div>
-            
+
+
+                    <h1 class="m-b-10 m-t-80">SubCategories</h1>
+                    <form action="/" class="search-bar">
+                        <input type="text" class="form-control" placeholder="Search Category Name">
+                        <button class="btn-primary btn m-t-3">Search</button>
+                    </form>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered m-t-10">
+                            <thead>
+                                <tr>
+                                    <th>Sub Category Name</th>
+                                    <th>Sub Category Description</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% subCategoryList.forEach(subCategory=> { %>
+                                    <tr>
+                                        <form class=""
+                                            action="/admin/categories/editSubCategory/<%= subCategory._id %>/?_method=PUT"
+                                            method="post" onsubmit="editSubCategoryValidation(`<%=subCategory._id%>`, event)" id="editSubCategoryForm_<%=subCategory._id%>">
+                                            <td>
+                                                <input type="text" class="form-control transparent-input"
+                                                    value="<%= subCategory.subCategoryName %>" name="subCategoryName" id="subCategoryName_<%=subCategory._id%>">
+                                            </td>
+                                            <td class="dis-flex">
+                                                <input type="text" class="form-control transparent-input"
+                                                    value="<%= subCategory.subCategoryDescription %>"
+                                                    name="subCategoryDescription" id="subCategoryDescription_<%=subCategory._id%>">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-dark btn-sm" type="submit"><i
+                                                        class="fa fa-ban"></i>Edit</button>
+                                            </td>
+                                        </form>
+                                        <td>
+                                            <form
+                                                action="/admin/categories/deletesubCategory/<%= subCategory._id %>/?_method=DELETE"
+                                                method="post">
+                                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
+                                                    Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-danger fs-20" id="subCategoryError">
+                        <%=subCategoryError%>
+                    </p>
+                    <div class="m-b-150">
+                        <form action="/admin/categories/addSubCategory" method="post" id="addSubCategoryForm" onsubmit="addSubCategoryValidation(event)">
+                            <label for="categoryName" class="fs-30 fw-10">New Sub Category</label>
+                            <div>
+                                <input type="text" placeholder="Sub Category Name" class="p-2 m-r-10"
+                                    style="float: left;" name="subCategoryName" id="subCategoryName">
+                                <input type="text" placeholder="Sub Category Description" class="p-2 m-r-10"
+                                    style="float: left;" name="subCategoryDescription" id="subCategoryDescription">
+                                <button class="btn btn-success fs-16" id="addSubCategoryBtn">Add</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
         </div>
 
-    </div>  
-    
 
-    <%- include('./partials/footer') %>
+        <%- include('./partials/footer') %>
 
-    <script>
-
-
-        function editCategory(id,categoryName){
-            document.getElementById(`editCategoryInput_${id}`).innerHTML=`<form action="/admin/categories/editCategory/${id}/?_method=PUT" method="post" class="dis-flex">
-            <input type="text" value="${categoryName}" class="fs-15 fw-10" name="categoryName" required>
-            <button type="submit" class="btn btn-success fs-15">Change</button>
-        </form>`
-        }
-
-        function editSubCategory(id,subCategoryName){
-            document.getElementById(`editSubCategoryInput_${id}`).innerHTML=`<form action="/admin/categories/editsubCategory/${id}/?_method=PUT" method="post" class="dis-flex">
-            <input type="text" value="${subCategoryName}" class="fs-15 fw-10" name="subCategoryName" required>
-            <button type="submit" class="btn btn-success fs-15">Change</button>
-        </form>`
-        }
+        <script>
+            function editCategoryValidation(id, event) {
+                event.preventDefault();
+                
+                const categoryName = document.getElementById(`categoryName_${id}`).value.trim();
+                const categoryDescription = document.getElementById(`categoryDescription_${id}`).value.trim();
         
+                let flag = true;
+        
+                if (!checkName(categoryName)) {
+                    flag = false;
+                    displayCategoryError("Category Name must be at least 3 characters long and contain only letters.");
+                }
+        
+                if (!checkDescription(categoryDescription)) {
+                    flag = false;
+                    displayCategoryError("Category Description must be at least 20 characters long and contain only letters and spaces.");
+                }
+        
+                if (flag) {
+                    document.getElementById(`editCategoryForm_${id}`).submit();
+                }
+            }
 
-    </script>
-</body>
+
+            function editSubCategoryValidation(id, event) {
+                event.preventDefault();
+                
+                const subCategoryName = document.getElementById(`subCategoryName_${id}`).value.trim();
+                const subCategoryDescription = document.getElementById(`subCategoryDescription_${id}`).value.trim();
+        
+                let flag = true;
+        
+                if (!checkName(subCategoryName)) {
+                    flag = false;
+                    displaySubCategoryError("Sub Category Name must be at least 3 characters long and contain only letters.");
+                }
+        
+                if (!checkDescription(subCategoryDescription)) {
+                    flag = false;
+                    displaySubCategoryError("Sub Category Description must be at least 20 characters long and contain only letters and spaces.");
+                }
+        
+                if (flag) {
+                    document.getElementById(`editSubCategoryForm_${id}`).submit();
+                }
+            }
+
+            function addCategoryValidation(event) {
+                event.preventDefault();
+                
+                const categoryName = document.getElementById('categoryName').value.trim();
+                const categoryDescription = document.getElementById('categoryDescription').value.trim();
+                console.log(categoryName);
+                
+                let flag = true;
+        
+                if (!checkName(categoryName)) {
+                    flag = false;
+                    displayCategoryError("Category Name must be at least 3 characters long and contain only letters.");
+                }
+        
+                if (!checkDescription(categoryDescription)) {
+                    flag = false;
+                    displayCategoryError("Category Description must be at least 20 characters long and contain only letters and spaces.");
+                }
+        
+                if (flag) {
+                    document.getElementById(`addCategoryForm`).submit();
+                }
+            }
+
+            function addSubCategoryValidation(event) {
+                event.preventDefault();
+                
+                const subCategoryName = document.getElementById(`subCategoryName`).value.trim();
+                const subCategoryDescription = document.getElementById(`subCategoryDescription`).value.trim();
+        
+                let flag = true;
+        
+                if (!checkName(subCategoryName)) {
+                    flag = false;
+                    displaySubCategoryError("Sub Category Name must be at least 3 characters long and contain only letters.");
+                }
+        
+                if (!checkDescription(subCategoryDescription)) {
+                    flag = false;
+                    displaySubCategoryError("Sub Category Description must be at least 20 characters long and contain only letters and spaces.");
+                }
+        
+                if (flag) {
+                    document.getElementById(`addSubCategoryForm`).submit();
+                }
+            }
+
+        
+            function checkName(name) {
+                const regex = /^[A-Za-z\s]{3,}$/;
+                return regex.test(name);
+            }
+        
+            function checkDescription(description) {
+                return description.length >= 20 && /^[A-Za-z\s]+$/.test(description);
+            }
+        
+            function displayCategoryError(error) {
+                document.getElementById('categoryError').innerText = error;
+            }
+
+            function displaySubCategoryError(error) {
+                document.getElementById('subCategoryError').innerText = error;
+            }
+            </script>
+        
+    </body>
+
 </html>

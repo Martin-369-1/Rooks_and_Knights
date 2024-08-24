@@ -77,11 +77,6 @@ const ProductsSchema = new Schema({
         required:true,
         default:false
       },
-    isListed:{
-        type:Boolean,
-        required:true,
-        default:true
-    }
 
 }, { timestamps: true });  
 

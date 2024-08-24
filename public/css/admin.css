@@ -179,3 +179,8 @@ body {
         font-size: 3rem;
     }
 }
+
+.transparent-input {
+    background-color: rgba(0, 0, 0, 0) !important;
+    border: none !important;
+  }

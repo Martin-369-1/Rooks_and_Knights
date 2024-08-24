@@ -5,7 +5,7 @@ const subCategoryCollection=require('../models/subCategoryModel')
 exports.index=async()=>{
     try{
         let categories=await categoryCollection.find({isDeleted:false})
-        let topProductList=await productCollection.find({isDeleted:false,isListed:true},{_id:1,productName:1,price:1,productImage1:1}).sort({noOfOrders:-1});
+        let topProductList=await productCollection.find({isDeleted:false},{_id:1,productName:1,price:1,productImage1:1}).sort({noOfOrders:-1});
         return {categories,topProductList};
     }catch(err){
         console.log(err);        
@@ -43,7 +43,7 @@ exports.viewProduct=async(_id)=>{
         .exec();
 
       
-      const relatedProducts=await productCollection.find({isDeleted:false,isListed:true,categoryID:product.categoryID._id,_id:{$ne:product._id}},{_id:1,productName:1,price:1,productImage1:1})
+      const relatedProducts=await productCollection.find({isDeleted:false,categoryID:product.categoryID._id,_id:{$ne:product._id}},{_id:1,productName:1,price:1,productImage1:1})
       console.log(relatedProducts);
       
        
