@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ProductsSchema = new Schema({
     productName: {
         type: String,
-        unique:true,
+        unique: true,
         required: true
     },
 
@@ -31,7 +31,7 @@ const ProductsSchema = new Schema({
     reviews: [{
         comments: { type: String },
         ratingStar: { type: Number, min: 1, max: 5 },
-        userID: { type: Schema.Types.ObjectId, ref: 'users' },  
+        userID: { type: Schema.Types.ObjectId, ref: 'users' },
     }],
 
     noOfOrders: {
@@ -42,13 +42,13 @@ const ProductsSchema = new Schema({
 
     categoryID: {
         type: Schema.Types.ObjectId,
-        ref: 'categories', 
+        ref: 'categories',
         required: true
     },
 
     subCategoryID: {
         type: Schema.Types.ObjectId,
-        ref: 'subCategories', 
+        ref: 'subCategories',
         required: true
     },
 
@@ -72,13 +72,13 @@ const ProductsSchema = new Schema({
         default: 0
     },
 
-    isDeleted:{
-        type:Boolean,
-        required:true,
-        default:false
-      },
+    isDeleted: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
 
-}, { timestamps: true });  
+}, { timestamps: true });
 
 const Products = mongoose.model('products', ProductsSchema);
 

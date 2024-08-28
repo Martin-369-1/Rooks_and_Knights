@@ -1,4 +1,4 @@
-function addProductValidation(event,imageValidation) {
+function addProductValidation(event, imageValidation) {
     event.preventDefault();
 
     //values
@@ -27,10 +27,10 @@ function addProductValidation(event,imageValidation) {
 
     let flag = true;
 
-    if(imageValidation){
+    if (imageValidation) {
         checkImage();
     }
-    
+
     checkProductName();
     checkPrice();
     checkOffer();
@@ -43,7 +43,7 @@ function addProductValidation(event,imageValidation) {
     if (flag) {
         event.target.submit();
     }
-    
+
     function checkImage() {
         if (!img1 || !img2 || !img3) {
             productImageError.innerText = "All three images should be uploaded";
@@ -173,7 +173,7 @@ function addProductValidation(event,imageValidation) {
             productDescriptionError.innerText = "Product Description should not be empty";
             flag = false;
             return;
-         }
+        }
         //  else if (!productDescriptionRegex.test(productDescription)) {
         //     productDescriptionError.innerText = "Product Description should only contain letters and spaces";
         //     flag = false;
@@ -183,5 +183,5 @@ function addProductValidation(event,imageValidation) {
     }
 
     // If all validations pass, you can submit the form
-    
-    }
+
+}

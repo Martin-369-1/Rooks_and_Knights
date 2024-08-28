@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.querySelectorAll('.components li').forEach(function(item) {
-    item.addEventListener('click', function() {
+document.querySelectorAll('.components li').forEach(function (item) {
+    item.addEventListener('click', function () {
         // Remove 'selected' class from all <li> elements
-        document.querySelectorAll('.components li').forEach(function(li) {
+        document.querySelectorAll('.components li').forEach(function (li) {
             li.classList.remove('selected');
         });
         // Add 'selected' class to the clicked <li>

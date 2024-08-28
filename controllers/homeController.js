@@ -1,3 +1,4 @@
+//services
 let homeServices = require('../services/homeServices');
 
 exports.getHome = async (req, res) => {

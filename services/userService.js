@@ -1,7 +1,7 @@
 //Requiring modules
 const userCollection = require('../models/userModel')
 const OTPUtils = require("../utils/OTPUtils")
-const passwordUtils=require('../utils/passwordUtils')
+const passwordUtils = require('../utils/passwordUtils')
 
 exports.registerUser = async (username, email, phoneNumber, password, req) => {
     try {
@@ -50,8 +50,8 @@ exports.registerUser = async (username, email, phoneNumber, password, req) => {
     }
 }
 
-exports.saveUserToDB= async (username, email, phoneNumber, password) => {
-    try {    
+exports.saveUserToDB = async (username, email, phoneNumber, password) => {
+    try {
         const hashedPassword = await passwordUtils.passwordHasher(password);
 
         // Create a new user instance
@@ -73,7 +73,7 @@ exports.saveUserToDB= async (username, email, phoneNumber, password) => {
 };
 
 
-exports.findUserByEmail=async(email)=>{
+exports.findUserByEmail = async (email) => {
     return await userCollection.findOne({ email });
 }
 

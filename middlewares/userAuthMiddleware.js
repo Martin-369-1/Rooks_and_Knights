@@ -35,14 +35,14 @@ exports.checkUserAuthenticated = async (req, res, next) => {
     }
 };
 
-
-exports.validUser=async (req, res, next) => {
+//used in post request
+exports.validUser = async (req, res, next) => {
     try {
 
         const token = req.cookies.token;
 
         if (!token) {
-            return res.status(401).json({error:'You must login first to continue',errorRedirect:`<a href="/user/login">Login here?</a>`});
+            return res.status(401).json({ error: 'You must login first to continue', errorRedirect: `<a href="/user/login">Login here</a>` });
         }
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
@@ -50,7 +50,7 @@ exports.validUser=async (req, res, next) => {
 
             if (err) {
 
-                return res.status(403).json({errorRedirect:'/user/login'});
+                return res.status(403).json({ error: 'You must login first to continue', errorRedirect: `<a href="/user/login">Login here</a>` });
             }
             req.email = user.email;
             console.log(user.email, user._id);
@@ -58,7 +58,7 @@ exports.validUser=async (req, res, next) => {
             req.userID = user._id;
             let userData = await userCollection.findOne({ email: req.email });
             if (userData.isblocked) {
-                return res.status(403).json({errorRedirect:'/user/login'});
+                return res.status(403).json({ error: 'You are blocked', errorRedirect: `<a href="/user/login">Login here</a>` });
             }
 
             next();

@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('node:path');
-const crypto=require('node:crypto')
+const crypto = require('node:crypto')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

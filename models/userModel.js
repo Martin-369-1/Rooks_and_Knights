@@ -35,7 +35,7 @@ const userShema = Schema({
 
     isblocked: {
         type: Boolean,
-        required:true,
+        required: true,
         default: false
     },
     isAdmin: {

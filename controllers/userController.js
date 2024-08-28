@@ -1,9 +1,9 @@
 //requring modules
 const signupFormValidataion = require('../utils/registerValidation')
 const userSevice = require('../services/userService');
-const resetPasswordServices=require('../services/resetPasswordServices');
-const generateAccessToken=require('../utils/JWTUtils')
-const passport=require('passport')
+const resetPasswordServices = require('../services/resetPasswordServices');
+const generateAccessToken = require('../utils/JWTUtils')
+const passport = require('passport')
 
 //GET login 
 exports.getLogin = (req, res) => {
@@ -11,7 +11,7 @@ exports.getLogin = (req, res) => {
 }
 
 //POST login
-exports.postLogin = async(req, res) => {
+exports.postLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -25,7 +25,7 @@ exports.postLogin = async(req, res) => {
             return res.status(400).json({ error: 'User does not exist' });
         }
 
-        if(userData.isblocked){
+        if (userData.isblocked) {
             return res.status(400).json({ error: 'You are bocked by admin' });
         }
 
@@ -33,11 +33,11 @@ exports.postLogin = async(req, res) => {
         if (!isValidPassword) {
             return res.status(400).json({ error: 'Incorrect password' });
         }
-        
-        const accessToken = generateAccessToken(email,userData._id);
+
+        const accessToken = generateAccessToken(email, userData._id);
 
         res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
-        
+
         res.redirect('/')
     } catch (err) {
         console.error(err);
@@ -46,7 +46,7 @@ exports.postLogin = async(req, res) => {
 }
 
 //POST logout
-exports.postLogout=(req,res)=>{
+exports.postLogout = (req, res) => {
     res.clearCookie('token');
     res.status(200).redirect('/user/login');
 }
@@ -73,7 +73,7 @@ exports.postRegister = async (req, res) => {
             // Inform user of the error
             return res.status(400).json({ error: result.message });
         }
-        req.session.OTPVerificationRedirect='/user/completeRegister';
+        req.session.OTPVerificationRedirect = '/user/completeRegister';
         // Send success response with redirect URL
         res.status(200).json({ redirectUrl: result.redirectUrl });
     } catch (err) {
@@ -102,65 +102,68 @@ exports.postCompleteRegister = async (req, res) => {
             res.clearCookie();
             res.redirect('/user/login');
         })
-    }else{
-        console.log("error while complete registration");    
+    } else {
+        console.log("error while complete registration");
     }
 }
 
+//google auth
+exports.getGoogleCallback = (req, res) => {
 
-exports.getGoogleCallback=(req,res)=>{
-        const accessToken=generateAccessToken(req.user.email)
+    const accessToken = generateAccessToken(req.user.email, req.user._id)
 
-        res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
-        console.log(accessToken);
-        
-        res.send(`
+    res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
+
+    res.send(`
             <script>
                 window.location.href = '/user/account';
             </script>
         `);
 
-    }
+}
 
-exports.getForgetPassword=(req,res)=>{
+//render forgot password
+exports.getForgetPassword = (req, res) => {
     res.render('user/forgetPassword')
 }
 
+//get email for forget password
+exports.postForgetPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        let error = await resetPasswordServices.forgetPassword(email, req)
 
-exports.postForgetPassword=async(req,res)=>{
-    try{
-        const {email}=req.body;
-        let error=await resetPasswordServices.forgetPassword(email,req)
-        
-        if(error){
-            return res.json({error})
+        if (error) {
+            return res.json({ error })
         }
-        req.session.OTPVerificationRedirect= '/user/resetPassword';
+        req.session.OTPVerificationRedirect = '/user/resetPassword';
         res.redirect('/OTP/verifyOTP')
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
-        
+
     }
 }
 
-exports.getResetPassword=(req,res)=>{
-    
+//render reset password page
+exports.getResetPassword = (req, res) => {
+
     res.render('user/resetPassword')
 }
 
-exports.postResetPassword=async(req,res)=>{
-    const {password,confirmPassword}=req.body;
-    if(!password || !confirmPassword){
+//handle reset  password
+exports.postResetPassword = async (req, res) => {
+    const { password, confirmPassword } = req.body;
+    if (!password || !confirmPassword) {
         return res.status(500).json({ error: 'Server error. Please try again later.' });
     }
 
-    if(password != confirmPassword){
-        return res.json({error:"password and confirmPassword doesnot match"})
+    if (password != confirmPassword) {
+        return res.json({ error: "password and confirmPassword doesnot match" })
     }
 
-    try{
-        await resetPasswordServices.resetPassword(password,req.session.email)
+    try {
+        await resetPasswordServices.resetPassword(password, req.session.email)
 
         req.session.destroy((err) => {
             if (err) {
@@ -169,8 +172,8 @@ exports.postResetPassword=async(req,res)=>{
             res.clearCookie();
             res.redirect('/user/login');
         })
-    }catch(err){
-        console.log("getResetPassword Error",err);
-        
+    } catch (err) {
+        console.log("getResetPassword Error", err);
+
     }
 }

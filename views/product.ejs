@@ -109,17 +109,17 @@
 										onsubmit="addToCart('<%= product._id %>',event)">
 										<p id="stock-Left"></p>
 										<div class="wrap-num-product flex-w  m-tb-10">
-											
-											<div
-												class="btn-num-product-down btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="decreaseProduct(this)">
+
+											<div class="btn-num-product-down btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+												onclick="decreaseProduct(this)">
 												<i class="fs-16 zmdi zmdi-minus"></i>
 											</div>
 
 											<input class="mtext-104 cl3 txt-center num-product" type="number"
-												name="quantity" value="1" id="productQuantity" >
+												name="quantity" value="1" id="productQuantity">
 
-											<div
-												class="btn-num-product btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" onclick="increaseProduct(this,'<%= product.stock %>')">
+											<div class="btn-num-product btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+												onclick="increaseProduct(this,'<%= product.stock %>')">
 												<i class="fs-16 zmdi zmdi-plus"></i>
 											</div>
 										</div>
@@ -347,39 +347,42 @@
 
 		<%- include('./partials/scriptBody.ejs') %>
 
+
 			<script>
-				function scroll(direction) {
-					const container = document.querySelector('.related-products');
-					const scrollAmount = direction * 300; // Amount to scroll (adjust as needed)
-					container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-				}
-			</script>
-			<script>
+				//handle the quantity
+
+				const maximumProductQuantity = 10;
+
 				// Function to decrease the number of products
-                function decreaseProduct(button) {
-                    const quantity=document.getElementById(`productQuantity`)
-                    const quantityVal =Number(quantity.value);
-                    if (quantityVal > 1) {
-                        quantity.value = quantityVal - 1
-						document.getElementById(`stock-Left`).innerText=""
-                    };
-                }
+				function decreaseProduct(button) {
+					const quantity = document.getElementById(`productQuantity`)
+					const quantityVal = Number(quantity.value);
+					if (quantityVal > 1) {
+						quantity.value = quantityVal - 1
+						document.getElementById(`stock-Left`).innerText = ""
+					};
+				}
 
-                // Function to increase the number of products
-                function increaseProduct(button,stock) {
-                    const quantity=document.getElementById(`productQuantity`)
-                    const quantityVal =Number(quantity.value);
-                    
-                    if(quantityVal<stock){
-                        quantity.value = quantityVal + 1;
-                    }else{
-                        document.getElementById(`stock-Left`).innerText="Out of Stock"
-                    }
-                    
-                }
+				// Function to increase the number of products
+				function increaseProduct(button, stock) {
+					const quantity = document.getElementById(`productQuantity`)
+					const quantityVal = Number(quantity.value);
+
+					if (quantityVal < stock && quantityVal < maximumProductQuantity) {
+						quantity.value = quantityVal + 1;
+					} else if (quantityVal == maximumProductQuantity) {
+						document.getElementById(`stock-Left`).innerText = `Max ${maximumProductQuantity} is allwoed`
+					} else {
+						document.getElementById(`stock-Left`).innerText = "Out of Stock"
+					}
+
+				}
 
 			</script>
 			<script>
+				//sending request to server
+
+				//function ot add prouduct to cart
 				function addToCart(productID, event) {
 					event.preventDefault();
 					let quantity = document.getElementById('productQuantity').value;
@@ -400,18 +403,27 @@
 									icon: "success",
 									footer: `<a href="/cart">Go to cart</a>`,
 								})
-							} else {
+							} else if (data.error) {
 								Swal.fire({
 									icon: "error",
 									title: "Oops...",
 									text: data.error,
 									footer: data.errorRedirect
 								});
+							} else {
+								Swal.fire({
+									icon: "error",
+									title: "Server Error",
+									text: "Error form our side",
+								});
 							}
+						}).catch((err) => {
+							console.log(err);
 						})
 				}
 
 
+				//function to add review
 				function addReview(event) {
 					event.preventDefault();
 					Swal.fire({
@@ -425,6 +437,14 @@
 						}
 					})
 
+				}
+			</script>
+
+			<script>
+				function scroll(direction) {
+					const container = document.querySelector('.related-products');
+					const scrollAmount = direction * 300; // Amount to scroll (adjust as needed)
+					container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
 				}
 			</script>
 

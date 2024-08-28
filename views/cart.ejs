@@ -33,7 +33,8 @@
 
                                     <tr class="table_row" id="cartItemRow_<%= cartItem._id %>">
                                         <td class="column-1">
-                                            <a class="how-itemcart1 d-block" href="/shop/product/<%= cartItem.productID._id %>">
+                                            <a class="how-itemcart1 d-block"
+                                                href="/shop/product/<%= cartItem.productID._id %>">
                                                 <img src="<%= cartItem.productID.productImage1 %>" alt="IMG">
                                             </a>
                                         </td>
@@ -47,27 +48,29 @@
 
                                         <td class="column-4">
                                             <% if(cartItem.productID.stock>0){%>
-                                                
+
                                                 <p id="stock-Left_<%=cartItem._id%>"></p>
                                                 <div class="wrap-num-product flex-w m-l-auto m-r-0">
                                                     <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
-                                                    onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>')">
+                                                        onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>')">
                                                         <i class="fs-16 zmdi zmdi-minus"></i>
                                                     </div>
 
                                                     <input class="mtext-104 cl3 txt-center num-product " type="number"
-                                                        name="num-product1" value="<%= (cartItem.quantity <= cartItem.productID.stock)? cartItem.quantity:1 %>"
+                                                        name="num-product1"
+                                                        value="<%= (cartItem.quantity <= cartItem.productID.stock)? cartItem.quantity:1 %>"
                                                         id="productQuantity_<%= cartItem._id %>"
-                                                        oninput="productTotalPrice('<%= cartItem._id %>', '<%= cartItem.productID.price %>')" readonly>
+                                                        oninput="productTotalPrice('<%= cartItem._id %>', '<%= cartItem.productID.price %>')"
+                                                        readonly>
 
                                                     <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
                                                         onclick="increaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>','<%= cartItem.productID.stock %>')">
                                                         <i class="fs-16 zmdi zmdi-plus"></i>
                                                     </div>
                                                 </div>
-                                            <% }else{ %>
-                                                <p>Out of Stock</p>
-                                            <% } %>
+                                                <% }else{ %>
+                                                    <p>Out of Stock</p>
+                                                    <% } %>
                                         </td>
                                         <td class="column-5 cart-product-total" id="cartProductTotal_<%=cartItem._id%>">
                                             <%=cartItem.productID.price * cartItem.quantity%>
@@ -142,79 +145,46 @@
         <%- include('./partials/scriptBody.ejs') %>
 
             <script>
+                //handle the quantity
 
+                const maximumProductQuantity = 10;
                 // Function to decrease the number of products
-                function decreaseProduct(button,ID, productPrice) {
-                    const quantity=document.getElementById(`productQuantity_${ID}`)
-                    const quantityVal =Number(quantity.value);
+                function decreaseProduct(button, ID, productPrice) {
+                    const quantity = document.getElementById(`productQuantity_${ID}`)
+                    const quantityVal = Number(quantity.value);
                     if (quantityVal > 1) {
                         quantity.value = quantityVal - 1
                         const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
                         document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) - Number(productPrice);
-                        document.getElementById(`stock-Left_${ID}`).innerText=""
+                        document.getElementById(`stock-Left_${ID}`).innerText = ""
                     };
                 }
 
                 // Function to increase the number of products
-                function increaseProduct(button,ID, productPrice,stock) {
-                    const quantity=document.getElementById(`productQuantity_${ID}`)
-                    const quantityVal =Number(quantity.value);
-                    
-                    if(quantityVal<stock){
+                function increaseProduct(button, ID, productPrice, stock) {
+                    const quantity = document.getElementById(`productQuantity_${ID}`)
+                    const quantityVal = Number(quantity.value);
+
+                    if (quantityVal < stock && quantityVal < maximumProductQuantity) {
                         quantity.value = quantityVal + 1;
                         const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
                         document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) + Number(productPrice);
-                    }else{
-                        document.getElementById(`stock-Left_${ID}`).innerText="Out of Stock"
+                    } else if (quantityVal == maximumProductQuantity) {
+                        document.getElementById(`stock-Left_${ID}`).innerText = `Max ${maximumProductQuantity} is allwoed`
                     }
-                    
+                    else {
+                        document.getElementById(`stock-Left_${ID}`).innerText = "Out of Stock"
+                    }
+
                 }
 
 
             </script>
 
-
             <script>
-                totalPrice()
-                function productTotalPrice(ID, productPrice) {
-                    const quantity = document.getElementById(`productQuantity_${ID}`).value;
-                    document.getElementById(`cartProductTotal_${ID}`).innerText = quantity * productPrice;
+                //sending request to backend
 
-                }
-
-                function productTotalPriceAdd(ID, productPrice) {
-                    const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
-                    document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) + Number(productPrice);
-                    totalPrice()
-                }
-
-                function productTotalPriceSubtract(ID, productPrice) {
-                    const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
-                    if (totalPrice > 0) {
-                        document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) - Number(productPrice);
-                    }
-                    totalPrice()
-
-                }
-
-                function totalPrice() {
-                    const elements = document.querySelectorAll('.cart-product-total');
-                    const productTotals = Array.from(elements);
-
-                    let totalAmmount = productTotals.reduce((acc, curr) => {
-                        return acc += parseInt(curr.textContent) || 0;
-                    }, 0)
-
-                    document.getElementById('totalAmmount').innerText = totalAmmount;
-                }
-
-
-
-
-
-            </script>
-
-            <script>
+                //delete cart Item
                 function deleteCartItem(cartItemID, event) {
                     event.preventDefault()
                     Swal.fire({
@@ -252,7 +222,7 @@
                     });
                 }
 
-
+                //update the quantity of cart items
                 function updateCart(event) {
                     event.preventDefault()
                     let arr = []
@@ -282,8 +252,6 @@
                             });
                         }
                     }
-
-                    console.log(arr);
 
                     fetch('/cart/updateCart', {
                         method: 'PUT',
