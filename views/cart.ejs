@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="">
+
+    <!-- Header -->
+    <header>
+        <%- include('./partials/header.ejs') %>
+    </header>
+
+    <div class="bg0 p-t-75 p-b-85">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-11 col-xl-8 m-lr-auto m-b-50">
+                    <div class="m-l-15 m-r--30 m-lr-0-xl">
+                        <div class="wrap-table-shopping-cart">
+                            <table class="table-shopping-cart">
+                                <tr class="table_head">
+                                    <th class="column-1">Product</th>
+                                    <th class="column-2"></th>
+                                    <th class="column-3">Price</th>
+                                    <th class="column-4">Quantity</th>
+                                    <th class="column-5">Total</th>
+                                    <th></th>
+                                </tr>
+
+                                <% cart.cartItems.forEach((cartItem)=>{%>
+
+                                    <tr class="table_row" id="cartItemRow_<%= cartItem._id %>">
+                                        <td class="column-1">
+                                            <a class="how-itemcart1 d-block" href="/shop/product/<%= cartItem.productID._id %>">
+                                                <img src="<%= cartItem.productID.productImage1 %>" alt="IMG">
+                                            </a>
+                                        </td>
+                                        <td class="column-2">
+                                            <%= cartItem.productID.productName %>
+                                        </td>
+                                        <td class="column-3">
+                                            <%= cartItem.productID.price %>
+                                        </td>
+
+
+                                        <td class="column-4">
+                                            <% if(cartItem.productID.stock>0){%>
+                                                
+                                                <p id="stock-Left_<%=cartItem._id%>"></p>
+                                                <div class="wrap-num-product flex-w m-l-auto m-r-0">
+                                                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+                                                    onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>')">
+                                                        <i class="fs-16 zmdi zmdi-minus"></i>
+                                                    </div>
+
+                                                    <input class="mtext-104 cl3 txt-center num-product " type="number"
+                                                        name="num-product1" value="<%= (cartItem.quantity <= cartItem.productID.stock)? cartItem.quantity:1 %>"
+                                                        id="productQuantity_<%= cartItem._id %>"
+                                                        oninput="productTotalPrice('<%= cartItem._id %>', '<%= cartItem.productID.price %>')" readonly>
+
+                                                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+                                                        onclick="increaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>','<%= cartItem.productID.stock %>')">
+                                                        <i class="fs-16 zmdi zmdi-plus"></i>
+                                                    </div>
+                                                </div>
+                                            <% }else{ %>
+                                                <p>Out of Stock</p>
+                                            <% } %>
+                                        </td>
+                                        <td class="column-5 cart-product-total" id="cartProductTotal_<%=cartItem._id%>">
+                                            <%=cartItem.productID.price * cartItem.quantity%>
+                                        </td>
+                                        <td class="column-2">
+
+                                            <button type="button" onclick="deleteCartItem('<%=cartItem._id%>',event)"><i
+                                                    class="fa-solid fa-trash"></i></button>
+
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+
+
+                            </table>
+                        </div>
+
+                        <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-30 p-lr-10-sm">
+
+                            <button
+                                class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10"
+                                type="submit" data-cart-items='<%= JSON.stringify(cart.cartItems) %>'
+                                onclick="updateCart( event)">
+                                Update Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-9 col-lg-6 col-xl-4 m-lr-auto m-b-50">
+                    <div class="bor10 p-lr-10 p-t-30 p-b-30 m-l-40 m-r-30 m-lr-0-xl p-lr-10-sm">
+                        <h4 class="mtext-109 cl2 p-b-30">
+                            Cart Totals
+                        </h4>
+
+                        <div class="flex-w flex-t p-t-20 p-b-33">
+                            <div class="size-208">
+                                <span class="mtext-101 cl2">
+                                    Total:
+                                </span>
+                            </div>
+
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2" id="totalAmmount">
+                                    <% cart.totalAmmount %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                            Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Footer -->
+    <footer class="bg3 p-t-75 p-b-32">
+        <%- include('./partials/footer.ejs') %>
+    </footer>
+
+
+    <%- include('./partials/backToTop.ejs') %>
+
+
+        <%- include('./partials/scriptBody.ejs') %>
+
+            <script>
+
+                // Function to decrease the number of products
+                function decreaseProduct(button,ID, productPrice) {
+                    const quantity=document.getElementById(`productQuantity_${ID}`)
+                    const quantityVal =Number(quantity.value);
+                    if (quantityVal > 1) {
+                        quantity.value = quantityVal - 1
+                        const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
+                        document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) - Number(productPrice);
+                        document.getElementById(`stock-Left_${ID}`).innerText=""
+                    };
+                }
+
+                // Function to increase the number of products
+                function increaseProduct(button,ID, productPrice,stock) {
+                    const quantity=document.getElementById(`productQuantity_${ID}`)
+                    const quantityVal =Number(quantity.value);
+                    
+                    if(quantityVal<stock){
+                        quantity.value = quantityVal + 1;
+                        const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
+                        document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) + Number(productPrice);
+                    }else{
+                        document.getElementById(`stock-Left_${ID}`).innerText="Out of Stock"
+                    }
+                    
+                }
+
+
+            </script>
+
+
+            <script>
+                totalPrice()
+                function productTotalPrice(ID, productPrice) {
+                    const quantity = document.getElementById(`productQuantity_${ID}`).value;
+                    document.getElementById(`cartProductTotal_${ID}`).innerText = quantity * productPrice;
+
+                }
+
+                function productTotalPriceAdd(ID, productPrice) {
+                    const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
+                    document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) + Number(productPrice);
+                    totalPrice()
+                }
+
+                function productTotalPriceSubtract(ID, productPrice) {
+                    const totalPrice = document.getElementById(`cartProductTotal_${ID}`).textContent;
+                    if (totalPrice > 0) {
+                        document.getElementById(`cartProductTotal_${ID}`).innerText = Number(totalPrice) - Number(productPrice);
+                    }
+                    totalPrice()
+
+                }
+
+                function totalPrice() {
+                    const elements = document.querySelectorAll('.cart-product-total');
+                    const productTotals = Array.from(elements);
+
+                    let totalAmmount = productTotals.reduce((acc, curr) => {
+                        return acc += parseInt(curr.textContent) || 0;
+                    }, 0)
+
+                    document.getElementById('totalAmmount').innerText = totalAmmount;
+                }
+
+
+
+
+
+            </script>
+
+            <script>
+                function deleteCartItem(cartItemID, event) {
+                    event.preventDefault()
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            fetch(`/cart/delete/${cartItemID}`, {
+                                method: "DELETE",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                            }).then((res) => res.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Deleted!",
+                                            text: "Your file has been deleted.",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    }
+                                })
+
+                        }
+                    });
+                }
+
+
+                function updateCart(event) {
+                    event.preventDefault()
+                    let arr = []
+                    const formElement = event.target;
+
+                    const cartItems = JSON.parse(formElement.getAttribute('data-cart-items'));
+                    let cartTotalPrice = 0;
+                    cartItems.forEach(cartItem => {
+                        let quantity = document.getElementById(`productQuantity_${cartItem._id}`).value;
+
+
+
+                        arr.push({
+                            productID: cartItem.productID._id,
+                            quantity
+                        })
+                        cartTotalPrice += cartItem.productID.price * quantity;
+
+                    });
+                    console.log(arr);
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].quantity < 0) {
+                            return Swal.fire({
+                                title: "Not updated",
+                                text: "Minimum quantity should be 0",
+                                icon: "error",
+                            });
+                        }
+                    }
+
+                    console.log(arr);
+
+                    fetch('/cart/updateCart', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            cartItems: arr,
+                            totalPrice: cartTotalPrice
+                        })
+                    }).then((res) => res.json())
+                        .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Updated",
+                                    text: "Your cart has been updated",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            }
+                        })
+
+
+                }
+            </script>
+
+
+
+</body>
+
+</html>

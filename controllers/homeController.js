@@ -9,14 +9,3 @@ exports.getHome = async (req, res) => {
         res.redirect('/error')
     }
 }
-
-exports.getProduct = async (req, res) => {
-    let _id = req.params.id;
-    try {
-        const { product, relatedProducts } = await homeServices.viewProduct(_id);
-        res.render('product', { product, relatedProducts })
-    } catch (err) {
-        console.log(err);
-        res.redirect('/error')
-    }
-}   

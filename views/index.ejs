@@ -145,13 +145,17 @@
 										<%= product.productName %>
 									</0>
 									<br>
-									<span class="fs-18 cl11">
-										<i class="zmdi zmdi-star"></i>
-										<i class="zmdi zmdi-star"></i>
-										<i class="zmdi zmdi-star"></i>
-										<i class="zmdi zmdi-star"></i>
-										<i class="zmdi zmdi-star-half"></i>
-									</span>
+									<% let sum=0 %>
+										<% product.reviews.forEach(element => { %>
+											<% sum+=element.ratingStar %>
+										<% }); %>
+										<% let average=sum/product.reviews.length %>
+										<span class="fs-18 cl11">
+											<% for(let i=0;i<average;i++){ %>
+												<i class="zmdi zmdi-star"></i>
+											<% } %>
+											
+										</span>
 									<br>
 									<span class="stext-105 cl3">
 										₹<%= product.price %>
@@ -167,8 +171,8 @@
 
 			<!-- Load more -->
 			<div class="flex-c-m flex-w w-full p-t-45">
-				<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-					Load More
+				<a href="/shop" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+					More Products
 				</a>
 			</div>
 		</div>

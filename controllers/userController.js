@@ -33,13 +33,8 @@ exports.postLogin = async(req, res) => {
         if (!isValidPassword) {
             return res.status(400).json({ error: 'Incorrect password' });
         }
-
-
-        if (userData.blocked) {
-            return res.status(400).json({ error: 'You are blocked by admin' });
-        }
-
-        const accessToken = generateAccessToken(email);
+        
+        const accessToken = generateAccessToken(email,userData._id);
 
         res.cookie('token', accessToken, { httpOnly: true, sameSite: 'Strict' });
         

@@ -31,7 +31,7 @@ const ProductsSchema = new Schema({
     reviews: [{
         comments: { type: String },
         ratingStar: { type: Number, min: 1, max: 5 },
-        userID: { type: Schema.Types.ObjectId, ref: 'User' },  
+        userID: { type: Schema.Types.ObjectId, ref: 'users' },  
     }],
 
     noOfOrders: {
@@ -80,6 +80,6 @@ const ProductsSchema = new Schema({
 
 }, { timestamps: true });  
 
-const Products = mongoose.model('Products', ProductsSchema);
+const Products = mongoose.model('products', ProductsSchema);
 
 module.exports = Products;

@@ -3374,6 +3374,11 @@ input.num-product::-webkit-inner-spin-button {
   border-color: #717fe0;
 }
 
+.click-tag1{
+  color: #717fe0;
+  border-color: #717fe0;
+}
+
 
 /*---------------------------------------------*/
 .hov-ovelay1 {
@@ -3951,3 +3956,4 @@ input.num-product::-webkit-inner-spin-button {
   background: none;
   cursor: pointer;
 }
+

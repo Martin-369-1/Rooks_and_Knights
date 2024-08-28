@@ -14,6 +14,7 @@ exports.checkAdminAuthenticated = (req, res, next) => {
             return res.status(403).redirect('/admin/login')
         }
         req.email = user.email;
+        
         next();
     })
 };

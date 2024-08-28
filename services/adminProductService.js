@@ -7,10 +7,6 @@ const mongoose=require('mongoose');
 
 const upload=require('../utils/multerUtils')
 
-
-
-
-
 exports.productList=async()=>{
     try{
         const productList = await productCollection.find({ isDeleted: false})
@@ -21,14 +17,6 @@ exports.productList=async()=>{
   .populate({
     path: 'subCategoryID',
     select: 'subCategoryName' 
-  })
-  .select({
-    _id: 1,
-    productName: 1,
-    price: 1,
-    stock: 1,
-    categoryID: 1, 
-    subCategoryID: 1
   })
   .lean();
         return productList;

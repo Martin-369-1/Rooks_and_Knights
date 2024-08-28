@@ -20,7 +20,7 @@ router.post('/logout', userController.postLogout);
 
 
 //Register
-router.get('/register', [userAuthMiddleware.checkUserAldreadyAuthenticated, OTPMiddleware.checkOTPAldreadyVerified], userController.getRegister);
+router.get('/register', userAuthMiddleware.checkUserAldreadyAuthenticated, userController.getRegister);
 router.post('/register', userController.postRegister);
 
 
@@ -40,11 +40,8 @@ router.get('/account', userAuthMiddleware.checkUserAuthenticated, (req, res) => 
 })
 
 router.get('/forgetPassword',userController.getForgetPassword)
-
 router.post('/forgetPassword',userController.postForgetPassword)
-
-router.get('/resetPassword',userController.getResetPassword)
-
+router.get('/resetPassword',OTPMiddleware.checkOTPVerified , userController.getResetPassword)
 router.post('/resetPassword',userController.postResetPassword)
 
 module.exports = router;

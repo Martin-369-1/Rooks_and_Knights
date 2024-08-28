@@ -54,13 +54,13 @@ function addProductValidation(event,imageValidation) {
     }
 
     function checkProductName() {
-        const productNameRegex = /^[A-Za-z\s]{3,}$/; // Only letters and spaces, minimum length of 3
+        const productNameRegex = /^[A-Za-z\s\d]{3,}$/; // Only letters and spaces, minimum length of 3
         if (!productName) {
             productNameError.innerText = "Product Name should not be empty";
             flag = false;
             return;
         } else if (!productNameRegex.test(productName)) {
-            productNameError.innerText = "Product Name should be at least 3 characters long and only contain letters and spaces";
+            productNameError.innerText = "Product Name should be at least 3 characters long and only contain letters, numbers and spaces";
             flag = false;
             return;
         }
@@ -153,33 +153,35 @@ function addProductValidation(event,imageValidation) {
     }
 
     function checkProductAbout() {
-        const productAboutRegex = /^[A-Za-z\s]+$/; // Only letters and spaces allowed
+        // const productAboutRegex = /^[A-Za-z\s]+$/; // Only letters and spaces allowed
         if (!productAbout) {
             productAboutError.innerText = "Product About should not be empty";
             flag = false;
             return;
-        } else if (!productAboutRegex.test(productAbout)) {
-            productAboutError.innerText = "Product About should only contain letters and spaces";
-            flag = false;
-            return;
         }
+        //  else if (!productAboutRegex.test(productAbout)) {
+        //     productAboutError.innerText = "Product About should only contain letters and spaces";
+        //     flag = false;
+        //     return;
+        // }
         productAboutError.innerText = ""; // Clear error if valid
     }
 
     function checkProductDescription() {
-        const productDescriptionRegex = /^[A-Za-z\s]+$/; // Only letters and spaces allowed
+        // const productDescriptionRegex = /^[A-Za-z\s]+$/; // Only letters and spaces allowed
         if (!productDescription) {
             productDescriptionError.innerText = "Product Description should not be empty";
             flag = false;
             return;
-        } else if (!productDescriptionRegex.test(productDescription)) {
-            productDescriptionError.innerText = "Product Description should only contain letters and spaces";
-            flag = false;
-            return;
-        }
-        productDescriptionError.innerText = ""; // Clear error if valid
+         }
+        //  else if (!productDescriptionRegex.test(productDescription)) {
+        //     productDescriptionError.innerText = "Product Description should only contain letters and spaces";
+        //     flag = false;
+        //     return;
+        // }
+        // productDescriptionError.innerText = ""; // Clear error if valid
     }
 
     // If all validations pass, you can submit the form
     
-}
+    }

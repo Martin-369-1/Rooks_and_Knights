@@ -41,6 +41,8 @@ const userRouter=require('./routers/userRoute');
 const OTPRouter=require('./routers/OTPRouter');
 const adminRouter=require('./routers/adminRouter');
 const homeRouter=require('./routers/homeRouter');
+const shopRouter=require('./routers/shopRouter');
+const cartRouter=require('./routers/cartRouter');
 
 //Database
 const connectDb=require('./config/database');
@@ -56,6 +58,8 @@ app.use('/user',userRouter);
 app.use('/OTP',OTPRouter);
 app.use('/admin',adminRouter);
 app.use('/',homeRouter);
+app.use('/shop',shopRouter);
+app.use('/cart',cartRouter);
 
 
 app.get('/error',(req,res)=>{
@@ -63,6 +67,6 @@ app.get('/error',(req,res)=>{
 })
 
 
-app.use((req,res,next)=>{
-    res.status(404).render('404')
-})
+// app.use((req,res,next)=>{
+//     res.status(404).render('404')
+// })
