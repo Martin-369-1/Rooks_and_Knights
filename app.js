@@ -43,6 +43,7 @@ const adminRouter=require('./routers/adminRouter');
 const homeRouter=require('./routers/homeRouter');
 const shopRouter=require('./routers/shopRouter');
 const cartRouter=require('./routers/cartRouter');
+const addressRouter=require('./routers/addressRouter');
 
 //Database
 const connectDb=require('./config/database');
@@ -60,6 +61,7 @@ app.use('/admin',adminRouter);
 app.use('/',homeRouter);
 app.use('/shop',shopRouter);
 app.use('/cart',cartRouter);
+app.use('/address',addressRouter);
 
 
 app.get('/error',(req,res)=>{

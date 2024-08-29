@@ -34,14 +34,15 @@ router.get('/google',passport.authenticate('google',{scope:['profile','email']})
 router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/user/login'}),userController.getGoogleCallback)
 
 
-//temp home route
-router.get('/account', userAuthMiddleware.checkUserAuthenticated, (req, res) => {
-    res.render('account', { email: req.email });
-})
+//User account route
+router.get('/account', userAuthMiddleware.checkUserAuthenticated,userController.getAccount);
+router.put('/account/updateProfile',userAuthMiddleware.validUser,userController.putAccount);
+router.post('/account/changePassword',userAuthMiddleware.validUser,userController.postAccountChangePassword)
 
 router.get('/forgetPassword',userController.getForgetPassword)
 router.post('/forgetPassword',userController.postForgetPassword)
 router.get('/resetPassword',OTPMiddleware.checkOTPVerified , userController.getResetPassword)
 router.post('/resetPassword',userController.postResetPassword)
+
 
 module.exports = router;

@@ -410,11 +410,12 @@
 									text: data.error,
 									footer: data.errorRedirect
 								});
-							} else {
+							} else if(data.authError){
 								Swal.fire({
 									icon: "error",
-									title: "Server Error",
-									text: "Error form our side",
+									title: "Oops...",
+									text: data.authError,
+									footer: data.errorRedirect
 								});
 							}
 						}).catch((err) => {

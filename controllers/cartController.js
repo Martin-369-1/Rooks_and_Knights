@@ -45,7 +45,7 @@ exports.deleteCartItem = async (req, res) => {
 exports.putUpdateCart = async (req, res) => {
     try {
         const { cartItems, totalPrice } = req.body;
-        console.log(cartItems);
+     
 
         await cartServices.updateCart(cartItems, totalPrice, req.userID);
         res.status(200).json({ success: true })

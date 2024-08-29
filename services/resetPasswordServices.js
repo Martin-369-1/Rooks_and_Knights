@@ -37,10 +37,12 @@ exports.forgetPassword = async (email, req) => {
 
 }
 
-exports.resetPassword = async (password, email) => {
+exports.resetPassword = async (password, _id) => {
     try {
+        console.log("reset password",password,_id);
+        
         const hasedPassword = await passwordHasher(password)
-        await userCollection.updateOne({ email }, { password: hasedPassword })
+        await userCollection.updateOne({ _id }, { password: hasedPassword })
     } catch (err) {
         console.log(err);
     }

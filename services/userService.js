@@ -80,3 +80,4 @@ exports.findUserByEmail = async (email) => {
 exports.validateUserCredentials = async (password, userPasswordHash) => {
     return await passwordUtils.comparePassword(password, userPasswordHash);
 };
+

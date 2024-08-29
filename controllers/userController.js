@@ -1,9 +1,17 @@
 //requring modules
-const signupFormValidataion = require('../utils/registerValidation')
-const userSevice = require('../services/userService');
-const resetPasswordServices = require('../services/resetPasswordServices');
-const generateAccessToken = require('../utils/JWTUtils')
 const passport = require('passport')
+
+//services
+const userSevice = require('../services/userService');
+const accountService=require('../services/userAccountService');
+const resetPasswordServices = require('../services/resetPasswordServices');
+const addressService=require('../services/addressServices')
+
+
+//utils
+const generateAccessToken = require('../utils/JWTUtils')
+const signupFormValidataion = require('../utils/registerValidation')
+
 
 //GET login 
 exports.getLogin = (req, res) => {
@@ -48,7 +56,7 @@ exports.postLogin = async (req, res) => {
 //POST logout
 exports.postLogout = (req, res) => {
     res.clearCookie('token');
-    res.status(200).redirect('/user/login');
+    res.status(200).json({success:true,successRedirect:'/'});
 }
 
 //GET Register
@@ -163,17 +171,61 @@ exports.postResetPassword = async (req, res) => {
     }
 
     try {
-        await resetPasswordServices.resetPassword(password, req.session.email)
+        await resetPasswordServices.resetPassword(password, req.userID || req.session.userID)
 
         req.session.destroy((err) => {
             if (err) {
                 console.log(err);
             }
-            res.clearCookie();
+            res.clearCookie('token');
             res.redirect('/user/login');
         })
     } catch (err) {
         console.log("getResetPassword Error", err);
 
+    }
+}
+
+
+exports.getAccount=async(req,res)=>{
+    try{
+        const userProfile=await accountService.viewUserProfile(req.userID);
+        const address=await addressService.viewAddress(req.userID);
+        res.render('account',{userProfile,address})
+
+    }catch(err){
+        console.log(err);     
+    }
+}
+
+exports.putAccount=async(req,res)=>{
+    try{
+        const {username,phoneNumber}=req.body;
+        let error=await accountService.updateUserProfile(username,phoneNumber,req.userID)
+        if(error){
+            return res.status(400).json({success:false,error:error.error})
+        }
+        res.status(200).json({success:true})
+    }catch(err){
+        console.log(err);
+
+    }
+}
+
+exports.postAccountChangePassword=async(req,res)=>{
+    try{
+        
+        let error = await resetPasswordServices.forgetPassword(req.email, req)
+
+        if (error) {
+            return res.json({ error })
+        }
+        req.session.userID=req.userID;
+        req.session.OTPVerificationRedirect = '/user/resetPassword';
+        res.status(200).json({redirectUrl:'/OTP/verifyOTP'})
+        
+    }catch(err){
+        console.log(err);
+        
     }
 }

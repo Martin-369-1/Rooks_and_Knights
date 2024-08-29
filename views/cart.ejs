@@ -242,7 +242,7 @@
                         cartTotalPrice += cartItem.productID.price * quantity;
 
                     });
-                    console.log(arr);
+  
                     for (let i = 0; i < arr.length; i++) {
                         if (arr[i].quantity < 0) {
                             return Swal.fire({
@@ -250,6 +250,7 @@
                                 text: "Minimum quantity should be 0",
                                 icon: "error",
                             });
+                            
                         }
                     }
 

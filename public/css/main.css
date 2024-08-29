@@ -3957,3 +3957,157 @@ input.num-product::-webkit-inner-spin-button {
   cursor: pointer;
 }
 
+.main-container {
+  max-width: 900px;
+  margin: 20px auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card,
+.address-card,
+.order-card {
+  border: none;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.profile-header {
+  background-color: #6c757d;
+  padding: 20px;
+  color: white;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-header img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.profile-body {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.profile-body label {
+  color: #343a40;
+}
+
+.form-control {
+  border-color: #ced4da;
+}
+
+.btn-primary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-primary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-dark {
+  background-color: #343a40;
+  border-color: #343a40;
+}
+
+.btn-dark:hover {
+  background-color: #23272b;
+  border-color: #1d2124;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+      flex-direction: column;
+      text-align: center;
+      padding: 15px;
+  }
+
+  .profile-header img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+  }
+
+  .profile-header .btn {
+      padding: 5px 10px;
+      font-size: 12px;
+      margin-bottom: 5px;
+  }
+
+  .profile-body {
+      padding: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-card {
+      padding: 15px;
+  }
+
+  .profile-header img {
+      width: 50px;
+      height: 50px;
+  }
+
+  .profile-header .btn {
+      padding: 4px 8px;
+      font-size: 11px;
+  }
+
+  .profile-body {
+      padding: 10px;
+  }
+}
+
+.address-card,
+.order-card {
+  background-color: transparent;
+  margin-bottom: 20px;
+}
+
+
+.btn-outline-custom {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.btn-outline-custom:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.card-header {
+  background-color: #6c757d;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 10px 20px;
+}

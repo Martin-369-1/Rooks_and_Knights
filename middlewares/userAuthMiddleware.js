@@ -50,7 +50,7 @@ exports.validUser = async (req, res, next) => {
 
             if (err) {
 
-                return res.status(403).json({ error: 'You must login first to continue', errorRedirect: `<a href="/user/login">Login here</a>` });
+                return res.status(403).json({ authError: 'You must login first to continue', errorRedirect: `<a href="/user/login">Login here</a>` });
             }
             req.email = user.email;
             console.log(user.email, user._id);
