@@ -31,7 +31,7 @@
 
                                 <% cart.cartItems.forEach((cartItem)=>{%>
 
-                                    <tr class="table_row" id="cartItemRow_<%= cartItem._id %>">
+                                    <tr class="table_row" id="cartItemRow_<%= cartItem._id %> ">
                                         <td class="column-1">
                                             <a class="how-itemcart1 d-block"
                                                 href="/shop/product/<%= cartItem.productID._id %>">
@@ -116,14 +116,15 @@
 
                             <div class="size-209 p-t-1">
                                 <span class="mtext-110 cl2" id="totalAmmount">
-                                    <% cart.totalAmmount %>
+                                    <%= cart.totalPrice %>
                                 </span>
                             </div>
                         </div>
-
-                        <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-                            Proceed to Checkout
-                        </button>
+                        <a href="/order">
+                            <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                                Proceed to Checkout
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>

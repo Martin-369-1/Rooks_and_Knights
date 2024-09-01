@@ -44,4 +44,9 @@ router.post('/categories/addCategory', adminMiddleware.checkAdminAuthenticated, 
 router.delete('/categories/deleteSubCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteSubCategory);
 router.put('/categories/editSubCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.putEditSubCategory)
 router.post('/categories/addSubCategory', adminMiddleware.checkAdminAuthenticated, adminController.addSubCategory);
+
+
+//orders
+router.get('/orders',adminMiddleware.checkAdminAuthenticated,adminController.getOrders)
+
 module.exports = router;

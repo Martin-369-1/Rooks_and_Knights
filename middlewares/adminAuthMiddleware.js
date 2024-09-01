@@ -1,39 +1,51 @@
-//requring modules
 const jwt = require('jsonwebtoken');
+const adminService = require('../services/adminService');
 
-//used whre the user should be auhtenticated aldready
-exports.checkAdminAuthenticated = (req, res, next) => {
+// Middleware to check if the user is already authenticated
+exports.checkAdminAuthenticated = async (req, res, next) => {
     const token = req.cookies.token;
-    
+
     if (!token) {
         return res.status(401).redirect('/admin/login');
     }
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).redirect('/admin/login')
-        }
-        req.email = user.email;
+    try {
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         
-        next();
-    })
+        const adminData = await adminService.findUserByEmail(user.email);
+
+        if (!adminData) {
+            return res.status(403).redirect('/admin/login');
+        }
+
+        req.email = user.email;
+        next(); 
+    } catch (err) {
+        return res.status(403).redirect('/admin/login');
+    }
 };
 
-//used where the user should not be authenticated aldready
-exports.checkAdminAldreadyAuthenticated = (req, res, next) => {
+// Middleware to check if the user is already authenticated
+exports.checkAdminAldreadyAuthenticated = async (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-        next()
-        return
+        return next();
     }
-    
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-           next()
-           return
-        }
-    })
 
-    return res.redirect('/admin')
-}
+    try {
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        req.email = user.email;
+
+        const adminData = await adminService.findUserByEmail(req.email);
+
+        if (!adminData) {
+            return next();
+        }
+
+        return res.redirect('/admin');
+    } catch (err) {
+        return next();
+    }
+};

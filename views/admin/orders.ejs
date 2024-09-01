@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+<body>
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
+
+        <div id="content" class="container-fluid">
+            <h1 class="m-b-10">Orders</h1>
+            <form action="/" class="search-bar">
+                <input type="text" class="form-control" placeholder="Search by ProductName">
+                <button class="btn-primary btn m-t-3">Search</button>
+            </form>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Email</th>
+                            <th>Sub Total Ammount</th>
+                            <th>Discount</th>
+                            <th>Total Ammount</th>
+                            <th>Status</th>
+                            <th>Payment Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orders.forEach(order => {%>
+                            <tr>
+                                <td><%=order.createdAt.toLocaleDateString()%></td>
+                                <td><%= order.userID.email %></td>
+                                <td><%= order.subTotalAmmount %></td>
+                                <td><%=order.discount %></td>
+                                <td><%=order.totalAmmount %></td>
+                                <td><%=order.orderStatus %></td>
+                                <td><%=order.paymentStatus %></td>
+                                <td>
+                                    <form action="/admin/orders/viewEditOrder/<%= order._id %>" method="get">
+                                        <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
+                                    </form>
+                                    
+                                </td
+                            </tr>
+                        <% }); %>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>  
+
+    <%- include('./partials/footer') %>
+</body>
+</html>

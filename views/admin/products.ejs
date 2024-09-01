@@ -26,7 +26,6 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>ProductID</th>
                             <th>Product Name</th>
                             <th>Price</th>
                             <th>Stock</th>
@@ -39,7 +38,6 @@
                     <tbody>
                         <% productList.forEach(product => {%>
                             <tr>
-                                <td><%= product._id %></td>
                                 <td><%= product.productName %></td>
                                 <td><%= product.price %></td>
                                 <td><%= product.stock %></td>

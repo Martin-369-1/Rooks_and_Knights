@@ -4084,7 +4084,7 @@ input.num-product::-webkit-inner-spin-button {
 
 .address-card,
 .order-card {
-  background-color: transparent;
+  background-color: #f8f9fa;
   margin-bottom: 20px;
 }
 
@@ -4111,3 +4111,4 @@ input.num-product::-webkit-inner-spin-button {
   border-top-right-radius: 10px;
   padding: 10px 20px;
 }
+

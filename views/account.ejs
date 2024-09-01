@@ -87,8 +87,9 @@
                         </div>
                         <div>
                             <button class="btn btn-dark btn-sm m-b-3"
-                                data-address-item="<%= JSON.stringify(addressItem)%>" onclick="editAddressModel(event,'<%=addressItem._id%>')"
-                                data-toggle="modal" data-target="#editAddressModel">
+                                data-address-item="<%= JSON.stringify(addressItem)%>"
+                                onclick="editAddressModel(event,'<%=addressItem._id%>')" data-toggle="modal"
+                                data-target="#editAddressModel">
                                 <i class="fa fa-edit"></i>Edit
                             </button>
 
@@ -108,53 +109,91 @@
         <!-- Orders Section -->
 
         <div class="order-card">
-            <div class="card-header text-center">
+            <div class="card-header text-center bg1 cl0 bor2">
                 <h5 class="mb-0 mtext-113">My Orders</h5>
             </div>
-            <!-- Add a wrapper div around the table -->
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col"></th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="chessbase17.jpg" alt="Chessbase 17" class="img-thumbnail"
-                                        style="width: 70px; height: 70px; margin-right: 10px;">
-                                </div>
-                            </td>
-                            <td>Chessbase 17</td>
-                            <td>15</td>
-                            <td>$36.00</td>
-                            <td>Pending</td>
-                            <td><button class="btn btn-sm btn-danger">Cancel</button></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="mega_database_2024.jpg" alt="Mega Database 2024" class="img-thumbnail"
-                                        style="width: 70px; height: 70px; margin-right: 10px;">
-                                </div>
-                            </td>
-                            <td>Mega Database 2024</td>
-                            <td>15</td>
-                            <td>$16.00</td>
-                            <td>Delivered</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
 
+            <!-- Wrapper div for each order -->
+            <div class="card-body">
+                <!-- Order 1 -->
+                <% orders.forEach((order)=>{ %>
+                    <div class="order-summary mb-4 p-3 bor2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+
+                                <p class="mtext-101 mb-1"><strong>Date:</strong>
+                                    <%=order.createdAt.toLocaleDateString()%>
+                                </p>
+                                <p class="mtext-101 mb-1"><strong>Sub Total Amount:</strong>
+                                    <%= order.subTotalAmmount %>
+                                </p>
+                                <p class="mtext-101 mb-1"><strong>Discount Amount:</strong>
+                                    <%=order.discount %>
+                                </p>
+                                <p class="mtext-101 mb-1"><strong>Total Amount:</strong>
+                                    <%=order.totalAmmount %>
+                                </p>
+                            </div>
+                            <div>
+                                <!-- Button to view order details -->
+                                <button class="btn btn-primary btn-sm" data-toggle="collapse"
+                                    onclick="collapse('<%=order._id%>')">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible order details -->
+                        <div class="collapse mt-3" id="orderDetailsCollaple_<%= order._id %>">
+                            <table class="table table-hover table-shopping-cart">
+                                <thead>
+                                    <tr class="table_head">
+                                        <th class="column-1">Product</th>
+                                        <th class="column-2">Name</th>
+                                        <th class="column-3">Quantity</th>
+                                        <th class="column-4">Amount</th>
+                                        <th class="column-5">Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% order.products.forEach((product)=>{ %>
+                                        <tr class="table_row">
+                                            <td class="column-1">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="<%= product.productID.productImage1 %>" alt="Chessbase 17"
+                                                        class="img-thumbnail"
+                                                        style="width: 70px; height: 70px; margin-right: 10px;">
+                                                </div>
+                                            </td>
+                                            <td class="column-2">
+                                                <%= product.productID.productName %>
+                                            </td>
+                                            <td class="column-3">
+                                                <%=product.quantity%>
+                                            </td>
+                                            <td class="column-4">
+                                                <%= product.price %>
+                                            </td>
+                                            <td class="column-5">
+                                                <%= product.status %>
+                                            </td>
+                                            <% if(product.status=='pending' ){ %>
+                                                <td><button class="btn btn-danger"
+                                                        onclick="cancelOrder('<%=product._id%>')">Cancel</button></td>
+                                                <% } %>
+                                        </tr>
+                                        <% }) %>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <% }) %>
+
+
+
+            </div>
         </div>
 
     </div>
@@ -360,11 +399,37 @@
                                     'Content-Type': 'application/json'
                                 },
                             }).then((res) => res.json())
-                                .then((data) => {
-                                    if (data.redirectUrl) {
-                                        window.location.href = data.redirectUrl;
-                                    }
+                            .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Updated",
+                                    text: "Your cart has been updated",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.href=data.redirectUrl;
+                                }, 2000)
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Not updated",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
                                 })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
+                            }
+                        })
+                        .catch(err => console.log(err))
 
                         }
                     });
@@ -391,15 +456,33 @@
                             if (data.success) {
                                 Swal.fire({
                                     title: "Added",
-                                    text: "New Address Added",
+                                    text: "New address has been added",
                                     icon: "success",
                                     timer: 2000
                                 });
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Not added",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
+                                })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
                             }
                         })
+                        .catch(err => console.log(err))
                 }
 
                 function editAddress(event, _id) {
@@ -410,8 +493,8 @@
                     let city = document.getElementById('cityEdit').value;
                     let pinCode = document.getElementById('pinCodeEdit').value;
                     let streetAddress = document.getElementById('streetAddressEdit').value;
-                    console.log(addressTitle,state,city);
-                    
+                    console.log(addressTitle, state, city);
+
                     fetch(`/address/edit/${_id}`, {
                         method: "PUT",
                         headers: {
@@ -431,8 +514,26 @@
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Not Edited",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
+                                })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
                             }
                         })
+                        .catch(err => console.log(err))
                 }
 
                 function removeAddress(event, ID) {
@@ -441,7 +542,7 @@
                     event.preventDefault()
                     Swal.fire({
                         title: "Are you sure?",
-                        text: "You must verify OTP to change password",
+                        text: "You want to remove this address",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#3085d6",
@@ -458,18 +559,36 @@
                             })
                                 .then((res) => res.json())
                                 .then((data) => {
-                                    if (data.success) {
-                                        Swal.fire({
-                                            title: "Deleted",
-                                            text: "Address has been deleted",
-                                            icon: "success",
-                                            timer: 2000
-                                        });
-                                        setTimeout(() => {
-                                            window.location.reload();
-                                        }, 2000)
-                                    }
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Removed",
+                                    text: "Address has been removed",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Cannot remove",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
                                 })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
+                            }
+                        })
+                        .catch(err => console.log(err))
                         }
                     });
                 }
@@ -477,6 +596,7 @@
 
 
                 function editAddressModel(e, _id) {
+
                     const addressdata = e.target;
                     const { addressTitle, state, city, pinCode, streetAddress } = JSON.parse(addressdata.getAttribute('data-address-item'));
                     document.getElementById('addressTitleEdit').value = addressTitle;
@@ -492,12 +612,85 @@
                     if (!document.getElementById('editAddressButton')) {
                         var editButton = document.createElement('button');
                         editButton.textContent = "Edit";
-                        editButton.id = 'editAddressButton'; 
+                        editButton.id = 'editAddressButton';
                         editButton.onclick = () => editAddress(event, _id);
                         editButton.classList.add('btn', 'btn-primary');
 
                         editAddressDiv.appendChild(editButton);
                     }
+                }
+
+                function collapse(ID) {
+                    console.log('fdf');
+
+                    const target = document.getElementById(`orderDetailsCollaple_${ID}`);
+                    console.log(target);
+
+                    if (target.classList.contains('show')) {
+                        target.classList.remove('show');
+                    } else {
+                        target.classList.add('show');
+                    }
+                }
+                document.querySelectorAll('[data-toggle="collapse"]').forEach(button => {
+                    button.addEventListener('click', function () {
+
+                    });
+                });
+
+                function cancelOrder(orderProductsID) {
+
+
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You want to cancel this order",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/order/cancel/${orderProductsID}`, {
+                                method: "PATCH",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                                .then(res => res.json())
+                                .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Canceled",
+                                    text: "Your order has been canceled",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Cannot cancel",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
+                                })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
+                            }
+                        })
+                        .catch(err => console.log(err))
+                        }
+                    })
                 }
 
             </script>

@@ -20,4 +20,5 @@ const signupFormValidataion = (username, email, password, confirmPassword) => {
     }
 }
 
+
 module.exports = signupFormValidataion;

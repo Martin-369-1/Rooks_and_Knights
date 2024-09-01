@@ -6,6 +6,7 @@ const userSevice = require('../services/userService');
 const accountService=require('../services/userAccountService');
 const resetPasswordServices = require('../services/resetPasswordServices');
 const addressService=require('../services/addressServices')
+const orderService=require('../services/orderServices')
 
 
 //utils
@@ -191,7 +192,8 @@ exports.getAccount=async(req,res)=>{
     try{
         const userProfile=await accountService.viewUserProfile(req.userID);
         const address=await addressService.viewAddress(req.userID);
-        res.render('account',{userProfile,address})
+        const orders=await orderService.viewOrders(req.userID)
+        res.render('account',{userProfile,address,orders})
 
     }catch(err){
         console.log(err);     
@@ -218,11 +220,11 @@ exports.postAccountChangePassword=async(req,res)=>{
         let error = await resetPasswordServices.forgetPassword(req.email, req)
 
         if (error) {
-            return res.json({ error })
+            return res.json({ success:false,error })
         }
         req.session.userID=req.userID;
         req.session.OTPVerificationRedirect = '/user/resetPassword';
-        res.status(200).json({redirectUrl:'/OTP/verifyOTP'})
+        res.status(200).json({success:true,redirectUrl:'/OTP/verifyOTP'})
         
     }catch(err){
         console.log(err);

@@ -4,6 +4,7 @@ const adminCategoryService = require('../services/adminCategoryService');
 const adminSubCategoryService = require('../services/adminSubCategoryServices')
 const adminProductService = require('../services/adminProductService');
 const adminService = require('../services/adminService');
+const adminOrderService=require('../services/adminOrderService');
 
 //Utils
 const generateAccessToken = require('../utils/JWTUtils');
@@ -325,6 +326,20 @@ exports.deleteSubCategory = async (req, res) => {
         console.log("Admin deleteSubCategory Error: " + err);
         res.redirect('/error');
 
+    }
+}
+
+//orders
+
+//getorders
+exports.getOrders=async(req,res)=>{
+    try{
+        let orders=await adminOrderService.viewOrders();
+        console.log(orders);
+        
+        res.render('admin/orders',{orders})
+    }catch(err){
+        console.log(err); 
     }
 }
 

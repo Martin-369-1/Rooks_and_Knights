@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="">
+
+    <!-- Header -->
+    <header>
+        <%- include('./partials/header.ejs') %>
+    </header>
+
+    <div class="bg0 p-t-75 p-b-85">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-11 col-xl-8 m-lr-auto m-b-50">
+                    <div class="m-l-15 m-r--30 m-lr-0-xl">
+                        <div class="wrap-table-shopping-cart">
+                            <table class="table-shopping-cart">
+                                <tr class="table_head">
+                                    <th class="column-1">Product</th>
+                                    <th class="column-2"></th>
+                                    <th class="column-3">Price</th>
+                                    <th class="column-4">Quantity</th>
+                                    <th class="column-5">Total</th>
+                                    <th></th>
+                                </tr>
+
+                                <% cart.cartItems.forEach((cartItem)=>{%>
+
+                                    <tr class="table_row cart-product-row" id="cartItemRow_<%= cartItem._id %>"
+                                        data-products="<%=JSON.stringify(cartItem)  %>">
+                                        <td class="column-1">
+                                            <a class="how-itemcart1 d-block"
+                                                href="/shop/product/<%= cartItem.productID._id %>">
+                                                <img src="<%= cartItem.productID.productImage1 %>" alt="IMG">
+                                            </a>
+                                        </td>
+                                        <td class="column-2">
+                                            <%= cartItem.productID.productName %>
+                                        </td>
+                                        <td class="column-3">
+                                            <%= cartItem.productID.price %>
+                                        </td>
+
+                                        <td class="column-4 text-center ">
+                                            <% if(cartItem.quantity<=cartItem.productID.stock) {%>
+                                                <p class="p-l-40">
+                                                    <%= cartItem.quantity %>
+                                                </p>
+                                                <% }else{%>
+                                                    <p>Out of stock</p>
+                                                    <% } %>
+
+                                        </td>
+                                        <td class="column-5 cart-product-total" id="cartProductTotal_<%=cartItem._id%>">
+                                            <%=cartItem.productID.price * cartItem.quantity%>
+                                        </td>
+                                        <td class="column-2">
+
+                                            <button type="button"
+                                                onclick="deleteProduct(event,'<%=cartItem._id%>','<%=cartItem.productID.price * cartItem.quantity%>')"><i
+                                                    class="fa-solid fa-trash"></i></button>
+
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </table>
+                        </div>
+                        <div class="card shadow-sm p-3 mb-5 bg-white rounded bor2">
+                            <div class="text-dark cl0 bor2 f-w-700 m-l-15">Shipping Address</div>
+                            <div class="card-body">
+                                <% address.address.forEach((addressItem)=>{ %>
+
+                                    <div class="address-item m-b-15 d-flex justify-content-between">
+                                        <div class="form-check">
+
+                                            <input class="form-check-input" type="radio" name="shippingAddress"
+                                                id="address_1" id="address_<%= addressItem._id %>"
+                                                value="<%= addressItem._id %>"
+                                                <%=addressItem._id===address.address[0]._id ? 'checked' : '' %>>
+                                            <label for="address_1" class="form-check-label cl8">
+                                                <%= addressItem.addressTitle %> : <%= addressItem.state %>,<%=
+                                                            addressItem.city %>,<%= addressItem.pinCode %>,<%=
+                                                                    addressItem.streetAddress %>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-dark btn-sm m-b-3"
+                                                data-address-item="<%= JSON.stringify(addressItem)%>"
+                                                onclick="editAddressModel(event,'<%=addressItem._id%>')"
+                                                data-toggle="modal" data-target="#editAddressModel">
+                                                <i class="fa fa-edit"></i>Edit
+                                            </button>
+
+                                            <button class="btn btn-danger btn-sm  m-b-3"
+                                                onclick="removeAddress(event,'<%=addressItem._id%>')"><i
+                                                    class="fa fa-trash"></i>Remove</button>
+                                        </div>
+
+                                    </div>
+                                    <% }) %>
+
+                                        <button class="btn btn-primary" data-toggle="modal"
+                                            data-target="#addAddressModel"><i class="fa fa-plus"></i> Add New
+                                            Address</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="col-sm-9 col-lg-6 col-xl-4 m-lr-auto m-b-50">
+                    <div class="bor10 p-lr-10 p-t-30 p-b-30 m-l-40 m-r-30 m-lr-0-xl p-lr-10-sm">
+                        <h4 class="mtext-109 cl2 p-b-10">
+                            Payment
+                            <hr>
+                        </h4>
+
+                        <!-- Sub Total -->
+                        <div class=" ">
+                            <div class="size-208">
+                                <span class="mtext-101 cl2">
+                                    Sub Total:
+                                </span>
+                            </div>
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2" id="subTotalAmount">
+                                    <%= cart.totalPrice %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Coupon Code -->
+                        <div class="p-t-20 p-b-33">
+                            <div class="size-208 w-full">
+                                <span class="mtext-101">
+                                    Coupon Code:
+                                </span>
+                            </div>
+                            <div class="size-200 d-flex p-t-1">
+                                <input type="text" id="couponCode" class="form-control"
+                                    placeholder="Enter your coupon code" style="float: left;">
+                                <button class="btn btn-primary" id="applyCoupon">
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Total After Coupon -->
+                        <div class=" ">
+                            <div class="size-208">
+                                <span class="mtext-101 cl2">
+                                    Total:
+                                </span>
+                            </div>
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2" id="totalAmount">
+                                    <% cart.totalPrice %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class=" p-t-20 p-b-33">
+                            <div class="size-208 w-full">
+                                <span class="mtext-101 cl2">
+                                    Payment Method:
+                                </span>
+                            </div>
+                            <div class="size-209 p-t-1">
+                                <select id="paymentMethod" class="form-control">
+                                    <option value="COD">Cash On Delivery</option>
+                                    <option value="online">online</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
+                            id="proceedCheckout" onclick="proccedToPayment(event)">
+                            Proceed to Payment
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- modal to add new address -->
+    <div class="modal fade m-t-50" id="addAddressModel" tabindex="-2" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="addressTitle" class="col-form-label">Address Title</label>
+                            <input type="text" class="form-control" id="addressTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="state" class="col-form-label">State</label>
+                            <input type="text" class="form-control" id="state">
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="col-form-label">City</label>
+                            <input type="text" class="form-control" id="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="pinCode" class="col-form-label">Pin Code</label>
+                            <input type="text" class="form-control" id="pinCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="streetAddress" class="col-form-label">Street Addrress</label>
+                            <textarea class="form-control" id="streetAddress"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addNewAddress(event)">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- modal to edit address -->
+    <div class="modal fade m-t-50" id="editAddressModel" tabindex="-2" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="addressTitle" class="col-form-label">Address Title</label>
+                            <input type="text" class="form-control" id="addressTitleEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="state" class="col-form-label">State</label>
+                            <input type="text" class="form-control" id="stateEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="col-form-label">City</label>
+                            <input type="text" class="form-control" id="cityEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="pinCode" class="col-form-label">Pin Code</label>
+                            <input type="text" class="form-control" id="pinCodeEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="streetAddress" class="col-form-label">Street Addrress</label>
+                            <textarea class="form-control" id="streetAddressEdit"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" id="editAddressDiv">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="bg3 p-t-75 p-b-32">
+        <%- include('./partials/footer.ejs') %>
+    </footer>
+
+
+    <%- include('./partials/backToTop.ejs') %>
+
+
+        <%- include('./partials/scriptBody.ejs') %>
+
+            <script>
+                function addNewAddress(event) {
+                    event.preventDefault()
+
+                    let addressTitle = document.getElementById('addressTitle').value;
+                    let state = document.getElementById('state').value;
+                    let city = document.getElementById('city').value;
+                    let pinCode = document.getElementById('pinCode').value;
+                    let streetAddress = document.getElementById('streetAddress').value;
+
+                    fetch('/address/add', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ addressTitle, state, city, pinCode, streetAddress })
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Added",
+                                    text: "New Address Added",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            }
+                        })
+                }
+
+                function editAddress(event, _id) {
+                    event.preventDefault()
+
+                    let addressTitle = document.getElementById('addressTitleEdit').value;
+                    let state = document.getElementById('stateEdit').value;
+                    let city = document.getElementById('cityEdit').value;
+                    let pinCode = document.getElementById('pinCodeEdit').value;
+                    let streetAddress = document.getElementById('streetAddressEdit').value;
+                    console.log(addressTitle, state, city);
+
+                    fetch(`/address/edit/${_id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ addressTitle, state, city, pinCode, streetAddress })
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Edited",
+                                    text: "Address has been edited",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            }
+                        })
+                }
+
+                function removeAddress(event, ID) {
+                    console.log("dfdfdf");
+
+                    event.preventDefault()
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You want to remove this address",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            fetch(`/address/delete/${ID}`, {
+                                method: "DELETE",
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                }
+                            })
+                                .then((res) => res.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Deleted",
+                                            text: "Address has been removed",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    }
+                                })
+                        }
+                    });
+                }
+
+
+
+                function editAddressModel(e, _id) {
+                    const addressdata = e.target;
+                    const { addressTitle, state, city, pinCode, streetAddress } = JSON.parse(addressdata.getAttribute('data-address-item'));
+                    document.getElementById('addressTitleEdit').value = addressTitle;
+                    document.getElementById('stateEdit').value = state;
+                    document.getElementById('cityEdit').value = city;
+                    document.getElementById('pinCodeEdit').value = pinCode;
+                    document.getElementById('streetAddressEdit').value = streetAddress;
+
+                    // Get the parent div where the button should be appended
+                    const editAddressDiv = document.getElementById('editAddressDiv');
+
+                    // Check if the edit button already exists
+                    if (!document.getElementById('editAddressButton')) {
+                        var editButton = document.createElement('button');
+                        editButton.textContent = "Edit";
+                        editButton.id = 'editAddressButton';
+                        editButton.onclick = () => editAddress(event, _id);
+                        editButton.classList.add('btn', 'btn-primary');
+
+                        editAddressDiv.appendChild(editButton);
+                    }
+                }
+
+                function deleteProduct(event, _id, productTotalPrice) {
+                    event.preventDefault()
+                    const row = document.getElementById(`cartItemRow_${_id}`)
+                    const subTotalAmmount = document.getElementById('subTotalAmount');
+                    subTotalAmmount.innerHTML = Number(subTotalAmmount.textContent) - Number(productTotalPrice)
+                    row.parentNode.removeChild(row);
+
+                }
+
+                function proccedToPayment(event) {
+                    event.preventDefault()
+                    const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
+                    const addressId = selectedAddress.value;
+
+                    const rows = document.querySelectorAll('.cart-product-row');
+                    const products = []
+                    const cartItemIds = []
+                    let outOfStock = false;
+                    rows.forEach((row) => {
+                        const cartItem = JSON.parse(row.getAttribute('data-products'))
+                        if (cartItem.quantity > cartItem.productID.stock) {
+                            outOfStock = true
+                            Swal.fire({
+                                title: "Cannot Proceed to payment",
+                                text: "Contanins out of stock",
+                                icon: "error",
+                            });
+                        }
+                        const price = cartItem.productID.price * cartItem.quantity;
+                        products.push({
+                            productID: cartItem.productID,
+                            quantity: cartItem.quantity,
+                            price
+                        })
+                        cartItemIds.push(cartItem._id)
+                    })
+
+                    if (outOfStock) {
+                        return
+                    }
+                    const paymentMethod = document.getElementById('paymentMethod').value
+                    const subTotalAmmount = document.getElementById('subTotalAmount').textContent;
+                    const totalAmmount = Number(subTotalAmmount);
+
+
+                    fetch('/order/proceedToPayment', {
+                        method: "POST",
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify({ products, addressId, paymentMethod, subTotalAmmount, cartItemIds, totalAmmount })
+                    }).then((res) => res.json())
+                        .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Edited",
+                                    text: "Address has been edited",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.href = data.successRedirect;
+                                }, 2000)
+                            }
+                        })
+                }
+
+                
+
+
+
+            </script>
+
+
+
+</body>
+
+</html>
