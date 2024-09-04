@@ -39,8 +39,6 @@ exports.cancelOrders=async(_id,userID)=>{
           );
           
         const allCanceled = order.products.every(product => product.status === 'canceled');
-        console.log(order);
-        console.log(allCanceled);
         
         
         if(allCanceled){

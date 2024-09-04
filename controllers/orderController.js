@@ -6,8 +6,6 @@ const orderService=require('../services/orderServices')
 exports.getCheckout=async(req,res)=>{
     try{
         let address=await addressService.viewAddress(req.userID)
-        console.log(address);
-        
         let cart=await cartService.viewCart(req.userID)
         res.render('checkout',{address,cart})
 
@@ -17,9 +15,9 @@ exports.getCheckout=async(req,res)=>{
 }
 
 exports.postCheckout=async(req,res)=>{
+    
     try{
         const {products,addressId,paymentMethod,subTotalAmmount,totalAmmount,cartItemIds}=req.body;
-        console.log(totalAmmount);
         
         await orderService.createOrder(products,addressId,paymentMethod,subTotalAmmount,totalAmmount,req.userID)
 

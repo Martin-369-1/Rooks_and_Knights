@@ -3,52 +3,174 @@
 
 <%- include('./partials/header') %>
 
-<body>
-    <div class="wrapper">
-        <%- include('./partials/slidebar') %>
+    <body>
+        <div class="wrapper">
+            <%- include('./partials/slidebar') %>
 
-        <div id="content" class="container-fluid">
-            <h1 class="m-b-10">Users</h1>
-            <form action="/" class="search-bar">
-                <input type="text" class="form-control" placeholder="Search by Email">
-                <button class="btn-primary btn m-t-3">Search</button>
-            </form>
+                <div id="content" class="container-fluid">
+                    <h1 class="m-b-10 admin_title">Users</h1>
 
-            <div class="table-responsive">
+                    <div class="container p-b-50">
+                        <div class="search-bar-container">
+                            <!-- Search Form -->
+                            <form action="/admin/users" method="GET" class="search-input-group">
+                                <input type="text" id="search-input" name="search" class="form-control search-input"
+                                    placeholder="<%= searchFilter || " search"%>">
+                                <a href="/admin/users?search=">
+                                    <button type="button" class="btn-clear" id="clear-btn">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </a>
+                                <button type="submit" class="btn-search">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
 
-                <table class="table table-bordered m-t-10">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>UserID</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% userList.forEach(user=> { %>
-                            <tr>
-                            <td><%=user.username%></td>
-                            <td><%=user.email%></td>
-                            <td><%=user._id%></td>
-                            <td>
-                                <%if(user.isblocked){ %>
-                                    <form action="/admin/users/blockUnblockUser/<%= user._id %>?_method=PATCH" method="POST"><button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Unblock</button></form>
-                              
-                                <% }else{ %>
-                                    <form action="/admin/users/blockUnblockUser/<%= user._id %>?_method=PATCH" method="POST"><button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> Block</button></form>
-                                <%}%>
-                                
-                            </td>
-                            </tr>
-                        <%}); %>
+                        </div>
+                    </div>
+                    
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered m-t-10">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% userList.forEach(user=> { %>
+                                    <tr>
+                                        <td>
+                                            <%=user.username%>
+                                        </td>
+                                        <td>
+                                            <%=user.email%>
+                                        </td>
+                                        <td>
+                                            <%=user.phoneNumber || 'not given' %>
+                                        </td>
+                                        <td>
+                                            <%if(user.isblocked){ %>
+                                                <button class="btn btn-success btn-sm"
+                                                    onclick="blockUnblockUser(event,'<%= user._id %>','Unblock','<%=searchFilter%>')"><i
+                                                        class="fa fa-check"></i> Unblock</button>
+
+                                                <% }else{ %>
+                                                    <button class="btn btn-dark btn-sm"
+                                                        onclick="blockUnblockUser(event,'<%= user._id %>','block','<%=searchFilter%>')"><i
+                                                            class="fa fa-ban"></i> Block</button>
+                                                    <%}%>
+
+                                        </td>
+                                    </tr>
+                                    <%}); %>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex-c-m flex-w w-full p-t-45 gap-10">
+                        <!-- Previous Button -->
+                        <a href="/admin/users?search=<%= searchFilter %>&&page=<%= (currentPage>1)? Number(currentPage)-1:1 %>" class="m-r-20 text-dark">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                        <P class="m-r-20 text-dark">page : <%= currentPage %></P>
+                        <!-- Next Button -->
+                        <a href="/admin/users?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>" class=" text-dark">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+    
+                        
+                    </div>
+
+                    
+                </div>
+
                 
-                    </tbody>
-                </table>
-            </div>
         </div>
-    </div>  
 
-    <%- include('./partials/footer') %>
-</body>
+        <%- include('./partials/footer') %>
+
+            <script>
+                
+                function blockUnblockUser(event, userID, message,search) {
+                    event.preventDefault()
+
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: `Do you want to ${message} this user`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/admin/users/blockUnblockUser/${userID}?search=${search}`, {
+                                method: "PATCH",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).then(res => res.json())
+                                .then((data) => {
+                                    if (data.validationError) {
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: "Validation Error",
+                                            html: "You will be redirected to login in <b></b> milliseconds.",
+                                            timer: 2000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            /* Read more about handling dismissals below */
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                console.log("I was closed by the timer");
+                                                window.location.href=data.redirectUrl;
+                                            }
+                                        });
+                                    }
+
+                                    if (data.success) {
+                                        const Toast = Swal.mixin({
+                                            toast: true,
+                                            position: "top-end",
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            timerProgressBar: true,
+                                            didOpen: (toast) => {
+                                                toast.onmouseenter = Swal.stopTimer;
+                                                toast.onmouseleave = Swal.resumeTimer;
+                                            }
+                                        });
+                                        Toast.fire({
+                                            icon: "success",
+                                            title: `user has been ${message}ed`
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload()
+                                        }, 2000)
+
+                                    }
+                                })
+                        }
+                    });
+                }
+
+                
+
+            </script>
+    </body>
+
 </html>

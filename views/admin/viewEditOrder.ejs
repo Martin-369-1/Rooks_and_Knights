@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+    <style>
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .content {
+            margin-left: 250px;
+            background-color: #f4f7fa;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.collapsed {
+            margin-left: 80px;
+        }
+
+        .card {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background-color: #e9ecef;
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #495057;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+    </style>
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
+            <!-- Main Content -->
+            <div id="content" class="content">
+                <!-- Order Details Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 admin_title">Order Details</h1>
+                </div>
+
+                <!-- Order Information -->
+                <div class="card">
+                    <div class="card-header">
+                        Order Information
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <%= %>
+                                    <p><strong>Order ID:</strong>
+                                        <%= order._id %>
+                                    </p>
+                                    <p><strong>Customer Name:</strong>
+                                        <%= order.userID.username %>
+                                    </p>
+                                    <p><strong>Email:</strong>
+                                        <%= order.userID.email %>
+                                    </p>
+                                    <p><strong>Order Status:</strong>
+                                        <%= order.orderStatus %></span>
+                                    </p>
+                                    <p><strong>Payment Method:</strong>
+                                        <%= order.paymentMethod %></span>
+                                    </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Order Date:</strong>
+                                    <%= order.createdAt.toLocaleDateString(); %>
+                                </p>
+                                <p><strong>No of Proudcts</strong>
+                                    <%= order.products.length %>
+                                </p>
+                                <p><strong>Sub Total Amount:</strong>
+                                    <%= order.subTotalAmmount %>
+                                </p>
+                                <p><strong>Discount:</strong>
+                                    <%= order.discount %>
+                                </p>
+                                <p><strong>Total Amount:</strong>
+                                    <%= order.totalAmmount %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="card">
+                    <div class="card-header">
+                        Shipping Address
+                    </div>
+                    <div class="card-body">
+                        <p><%= address.addressTitle %> : <%= address.state %>,<%=
+                            address.city %>,<%= address.pinCode %>,<%=
+                                    address.streetAddress %>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Items Ordered -->
+                <div class="card">
+                    <div class="card-header">
+                        Items Ordered
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Ammount</th>
+                                        <th>Status</th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% order.products.forEach(product=> {%>
+                                        <tr>
+                                            <td><img src="<%= product.productID.productImage1 %>" alt="" width="100px">
+                                            </td>
+                                            <td>
+                                                <%= product.productID.productName %>
+                                            </td>
+                                            <td>
+                                                <%= product.quantity %>
+                                            </td>
+                                            <td>
+                                                <%= product.price %>
+                                            </td>
+                                            <% if(product.status=='pending'){%>
+                                            <td>
+                                                <div class="custom-select-wrapper">
+                                                    <select class="custom-select"
+                                                        id="product_status_<%= product._id %>">
+                                                        <option value="pending" selected>pending</option>
+                                                        <option value="delivered">delivered</option>
+                                                        <option value="canceled">canceled</option>
+                                                    </select>
+
+
+                                                </div>
+                                            </td>
+                                            <td><button class="btn btn-success" onclick="updateProductStatus('<%= product._id %>','<%=order._id%>')">update</button></td>
+                                            <% }else{ %>
+                                                <td><%= product.status %></td>
+                                                <td></td>
+                                            <% } %>
+                                        </tr>
+                                        <% }) %>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+
+    </div>
+
+    <%- include('./partials/footer') %>
+
+
+        <script>
+            function updateProductStatus(_id, orderID) {
+                const status = document.getElementById(`product_status_${_id}`).value;
+                fetch(`/admin/orders/updateProductStauts/${_id}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ orderID, status })
+                })
+                    .then(res => res.json())
+                    .then((data) => {
+                        if (data.validationError) {
+                            let timerInterval;
+                            Swal.fire({
+                                title: "Validation Error",
+                                html: "You will be redirected to login in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                    window.location.href = data.redirectUrl;
+                                }
+                            });
+                        }
+
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Updated",
+                                text: "Product status has been updated",
+                                icon: "success",
+                                timer: 2000
+                            });
+
+                            setTimeout(() => {
+                                window.location.reload()
+                            }, 2000)
+
+                        }
+                    })
+            }
+        </script>
+        </body>
+
+</html>

@@ -1,14 +1,27 @@
+const { find } = require('../models/CategoryModel');
 const userCollection = require('../models/userModel')
 
-exports.userList = async () => {
+exports.userList = async (search,currentPage, noOfList, skipPages) => {
+    let findQuery = { isAdmin: false };
+
+    if (search) {
+        findQuery["$or"] = [
+            { 'username': { "$regex": new RegExp(search, 'i') } },
+            { 'email': { "$regex": new RegExp(search, 'i') } }
+        ];
+    }
+    
     try {
-        let userList = await userCollection.find({ isAdmin: false }, { _id: 1, username: 1, email: 1, isblocked: 1 });
-        return userList;
+        let totalNoOfList = await userCollection.countDocuments({ isAdmin: false })
+        let userList = await userCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList);
+        
+        return {userList,currentPage,totalNoOfList};
     } catch (err) {
         console.log(err);
-
+        throw err; // Optionally re-throw the error if you want the caller to handle it
     }
 }
+
 
 exports.blockUnblockUser = async (_id) => {
     try {

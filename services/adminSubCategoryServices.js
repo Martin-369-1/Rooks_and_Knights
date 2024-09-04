@@ -1,11 +1,19 @@
 const subCategoryCollection = require('../models/subCategoryModel')
 const productCollection = require('../models/productsModel')
 
-exports.subCategoryList = async () => {
-    try {
-        let subCategoryList = await subCategoryCollection.find({ isDeleted: false }, { _id: 1, subCategoryName: 1, subCategoryDescription: 1 })
+exports.subCategoryList = async (search,currentPage,noOfList,skipPages) => {
+    let findQuery = { isDeleted: false };
 
-        return subCategoryList;
+    if (search) {
+        findQuery.subCategoryName={
+             "$regex": new RegExp(search, 'i') 
+        }
+    }
+    try {
+        let totalNoOfList = await subCategoryCollection.countDocuments({ isDeleted: false })
+        let subCategoryList = await subCategoryCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
+
+        return {subCategoryList,currentPage,totalNoOfList};
     } catch (err) {
         console.log(err);
 

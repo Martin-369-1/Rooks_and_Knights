@@ -8,11 +8,8 @@
         <%- include('./partials/slidebar') %>
 
         <div id="content" class="container-fluid">
-            <h1 class="m-b-10">Orders</h1>
-            <form action="/" class="search-bar">
-                <input type="text" class="form-control" placeholder="Search by ProductName">
-                <button class="btn-primary btn m-t-3">Search</button>
-            </form>
+            <h1 class="m-b-10 admin_title">Orders</h1>
+
 
             <div class="table-responsive">
 
@@ -41,7 +38,7 @@
                                 <td><%=order.paymentStatus %></td>
                                 <td>
                                     <form action="/admin/orders/viewEditOrder/<%= order._id %>" method="get">
-                                        <button class="btn btn-dark btn-sm"><i class="fa fa-ban"></i> View/Edit</button>
+                                        <button class="btn btn-dark btn-sm"><i class="fas fa-pencil-alt"></i> View/Edit</button>
                                     </form>
                                     
                                 </td
@@ -51,7 +48,21 @@
                     </tbody>
                 </table>
             </div>
+            <div class="flex-c-m flex-w w-full p-t-45 gap-10">
+                <!-- Previous Button -->
+                <a href="/admin/orders?page=<%= (currentPage>1)? Number(currentPage)-1:1 %>" class="m-r-20 text-dark">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+                <P class="m-r-20 text-dark">page : <%= currentPage %></P>
+                <!-- Next Button -->
+                <a href="/admin/orders?page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>" class=" text-dark">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+    
+                
+            </div>
         </div>
+        
     </div>  
 
     <%- include('./partials/footer') %>

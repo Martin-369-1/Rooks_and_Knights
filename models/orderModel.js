@@ -10,7 +10,7 @@ const orderSchema=Schema({
     },
     addressId:{
         type:Schema.Types.ObjectId,
-        ref:'addresses',
+        ref:'address',
         required:true
     },
     subTotalAmmount:{

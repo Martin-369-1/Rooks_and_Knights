@@ -65,8 +65,15 @@ exports.getDashboard = async (req, res) => {
 //renders users list page
 exports.getUsers = async (req, res) => {
     try {
-        let userList = await adminUserService.userList();
-        res.render('admin/users.ejs', { userList })
+        const {search,page}=req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+        
+        let {userList,totalNoOfList} = await adminUserService.userList(search,currentPage,noOfList,skipPages);
+        const totalNoOfPages = totalNoOfList / noOfList;
+        
+        res.render('admin/users.ejs', { userList ,searchFilter:search || null,currentPage,totalNoOfPages})
 
     } catch (err) {
         console.log("Admin getUsers Error: " + err);
@@ -80,8 +87,9 @@ exports.getUsers = async (req, res) => {
 exports.patchBlockUnblockUser = async (req, res) => {
     _id = req.params.id;
     try {
+        
         await adminUserService.blockUnblockUser(_id)
-        res.redirect('/admin/users')
+        res.json({success:true})
 
     }
     catch (err) {
@@ -94,8 +102,13 @@ exports.patchBlockUnblockUser = async (req, res) => {
 //renderes product page
 exports.getProducts = async (req, res) => {
     try {
-        let productList = await adminProductService.productList();
-        res.render('admin/products', { productList })
+        const {search,page}=req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+        let {productList,totalNoOfList} = await adminProductService.productList(search,currentPage,noOfList,skipPages);
+        const totalNoOfPages = totalNoOfList / noOfList;
+        res.render('admin/products', { productList ,searchFilter:search || null,currentPage,totalNoOfPages})
 
     } catch (err) {
         console.log("Admin getProducts Error: " + err);
@@ -169,7 +182,7 @@ exports.deleteProduct = async (req, res) => {
     try {
         let _id = req.params.id;
         await adminProductService.deleteProduct(_id);
-        res.redirect('/admin/products')
+        res.json({success:true})
 
 
     } catch (err) {
@@ -183,9 +196,13 @@ exports.deleteProduct = async (req, res) => {
 //Categories and subCategory get
 exports.getCategories = async (req, res) => {
     try {
-        let categoryList = await adminCategoryService.categoryList();
-        let subCategoryList = await adminSubCategoryService.subCategoryList();
-        res.render('admin/categories', { categoryList, subCategoryList, categoryError: req.flash('CategoryError') || '', subCategoryError: req.flash('SubCategoryError') || '' })
+        const {search,page}=req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+        let {categoryList,totalNoOfList} = await adminCategoryService.categoryList(search,currentPage,noOfList,skipPages);
+        const totalNoOfPages = totalNoOfList / noOfList;
+        res.render('admin/categories', { categoryList,searchFilter:search || null,currentPage,totalNoOfPages})
 
 
     } catch (err) {
@@ -205,16 +222,16 @@ exports.addCategory = async (req, res) => {
         const { categoryName, categoryDescription } = req.body;
 
         if (!categoryName || !categoryDescription) {
-            req.flash('CategoryError', "category name or category name should not be empty")
-            return res.redirect('/admin/categories')
+            return res.status(400).json({error:"category name or category name should not be empty"})
         }
         let error = await adminCategoryService.addCategory(categoryName, categoryDescription)
 
         if (error) {
             req.flash('CategoryError', error)
+            return res.status(400).json({error})
         }
 
-        res.redirect('/admin/categories')
+        res.status(200).json({success:true});
 
     } catch (err) {
         console.log("Admin addCategory Error: " + err);
@@ -229,16 +246,15 @@ exports.putEditCategory = async (req, res) => {
         const { categoryName, categoryDescription } = req.body;
 
         if (!categoryName || !categoryDescription) {
-            req.flash('CategoryError', "category name or category name should not be empty")
-            return res.redirect('/admin/categories')
+            return res.status(400).json({error:"category name or category description should not be empty"})
         }
 
         let error = await adminCategoryService.editCategory(_id, categoryName, categoryDescription);
         if (error) {
-            req.flash('CategoryError', error)
+            return res.status(400).json({error})
         }
 
-        res.redirect('/admin/categories')
+        res.status(200).json({success:true})
 
     } catch (err) {
         console.log("Admin putEditCategory Error: " + err);
@@ -252,9 +268,11 @@ exports.deleteCategory = async (req, res) => {
         let _id = req.params.id;
         let error = await adminCategoryService.deleteCategory(_id);
         if (error) {
-            req.flash('CategoryError', error)
+            console.log(error);
+            
+            return res.status(400).json({error})
         }
-        res.redirect('/admin/categories')
+        res.status(200).json({success:true})
 
 
     } catch (err) {
@@ -265,22 +283,41 @@ exports.deleteCategory = async (req, res) => {
 
 //subCategory
 
+exports.getSubCategory=async(req,res)=>{
+    try {
+        const {search,page}=req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+        let {subCategoryList,totalNoOfList} = await adminSubCategoryService.subCategoryList(search,currentPage,noOfList,skipPages);
+        console.log(subCategoryList);
+        
+        const totalNoOfPages = totalNoOfList / noOfList;
+        res.render('admin/subCategories', { subCategoryList,searchFilter:search || null,currentPage,totalNoOfPages})
+
+
+    } catch (err) {
+        console.log("Admin getSubCategories Error: " + err);
+        res.redirect('/error');
+
+    }
+}
+
 exports.addSubCategory = async (req, res) => {
     try {
         const { subCategoryName, subCategoryDescription } = req.body;
 
         if (!subCategoryName || !subCategoryDescription) {
-            req.flash('SubCategoryError', "subCategory name or subCategory description should not be empty")
-            return res.redirect('/admin/categories')
+            return res.status(400).json({error:"subCategory name or subCategory description should not be empty"})
         }
 
         let error = await adminSubCategoryService.addSubCategory(subCategoryName, subCategoryDescription)
 
         if (error) {
-            req.flash('SubCategoryError', error)
+            return res.status(400).json({error})
         }
 
-        res.redirect('/admin/categories')
+        res.status(200).json({success:true})
 
     } catch (err) {
         console.log("Admin addSubCategory Error: " + err);
@@ -297,14 +334,14 @@ exports.putEditSubCategory = async (req, res) => {
 
         if (!subCategoryName || !subCategoryDescription) {
             req.flash('SubCategoryError', "subCategory name or subCategory description should not be empty")
-            return res.redirect('/admin/categories')
+            return res.status(400).json({error:"subCategory name or subCategory description should not be empty"})
         }
         let error = await adminSubCategoryService.editSubCategory(_id, subCategoryName, subCategoryDescription);
         if (error) {
-            req.flash('SubCategoryError', error)
+            return res.status(400).json({error})
         }
 
-        res.redirect('/admin/categories')
+        res.status(200).json({success:true})
 
     } catch (err) {
         console.log("Admin putEditSubCategory Error: " + err);
@@ -318,9 +355,9 @@ exports.deleteSubCategory = async (req, res) => {
         let _id = req.params.id;
         const error = await adminSubCategoryService.deleteSubCategory(_id);
         if (error) {
-            req.flash('SubCategoryError', error)
+            return res.status(400).json({error})
         }
-        res.redirect('/admin/categories')
+        res.status(200).json({success:true})
 
     } catch (err) {
         console.log("Admin deleteSubCategory Error: " + err);
@@ -334,12 +371,38 @@ exports.deleteSubCategory = async (req, res) => {
 //getorders
 exports.getOrders=async(req,res)=>{
     try{
-        let orders=await adminOrderService.viewOrders();
-        console.log(orders);
+        const {page}=req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+        let {orders,totalNoOfList}=await adminOrderService.viewOrders(currentPage,noOfList,skipPages);
+        const totalNoOfPages = totalNoOfList / noOfList;
         
-        res.render('admin/orders',{orders})
+        res.render('admin/orders', { orders ,currentPage,totalNoOfPages})
     }catch(err){
         console.log(err); 
+    }
+}
+
+exports.getViewEditOrder=async(req,res)=>{
+    try{
+        const _id=req.params.id;
+        const {order,address}=await adminOrderService.viewOrder(_id);
+        res.render('admin/viewEditOrder',{order,address});
+    }catch(err){
+        console.log(err);  
+    }
+}
+
+exports.patchChageProductStatus=async(req,res)=>{
+    try{
+        const _id=req.params.id;
+        const {orderID,status}=req.body;
+        await adminOrderService.changeProductStatus(_id,orderID,status)
+        res.json({success:true})
+    }catch(err){
+        console.log(err);
+        
     }
 }
 

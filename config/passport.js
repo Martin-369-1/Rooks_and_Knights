@@ -15,10 +15,11 @@ passport.use(
         try{
             let user=await userCollection.findOne({email:profile.emails[0].value});
 
-            if(user){
+            if(user){ //check user exist
                 return done(null,user)
             }
 
+            //if user doesnot exist in db create a new user
             const newUser=new userCollection({
                 username:profile.displayName,
                 googleID:profile.id,
@@ -43,7 +44,6 @@ passport.serializeUser((user,done)=>{
 passport.deserializeUser(async (id,done)=>{
     try{
         let user=await userCollection.findById(id);
-
         done(null,user)
     }catch(err){
         done(err,null)

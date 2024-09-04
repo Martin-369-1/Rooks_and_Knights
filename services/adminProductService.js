@@ -10,9 +10,18 @@ const path = require('node:path')
 
 const upload = require('../utils/multerUtils')
 
-exports.productList = async () => {
+exports.productList = async (search,currentPage, noOfList, skipPages) => {
+    let findQuery = { isDeleted: false };
+
+    if (search) {
+        findQuery.productName={
+             "$regex": new RegExp(search, 'i') 
+        }
+    }
+
     try {
-        const productList = await productCollection.find({ isDeleted: false })
+        let totalNoOfList = await productCollection.countDocuments({ isDeleted: false })
+        const productList = await productCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
             .populate({
                 path: 'categoryID',
                 select: 'categoryName'
@@ -22,7 +31,8 @@ exports.productList = async () => {
                 select: 'subCategoryName'
             })
             .lean();
-        return productList;
+            
+        return {productList,currentPage,totalNoOfList};
     } catch (err) {
         console.log(err);
     }
@@ -166,6 +176,7 @@ exports.editProduct = async (req, res, _id) => {
 exports.deleteProduct = async (_id) => {
     try {
         await productCollection.updateOne({ _id }, { isDeleted: true })
+        
     } catch (err) {
         console.log(err);
     }

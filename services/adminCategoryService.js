@@ -3,11 +3,19 @@ const categoryCollection = require('../models/CategoryModel')
 const productCollection = require('../models/productsModel')
 
 
-exports.categoryList = async () => {
-    try {
-        let categoryList = await categoryCollection.find({ isDeleted: false }, { _id: 1, categoryName: 1, categoryDescription: 1 })
+exports.categoryList = async (search,currentPage,noOfList,skipPages) => {
+    let findQuery = { isDeleted: false };
 
-        return categoryList;
+    if (search) {
+        findQuery.categoryName={
+             "$regex": new RegExp(search, 'i') 
+        }
+    }
+    try {
+        let totalNoOfList = await categoryCollection.countDocuments({ isDeleted: false })
+        let categoryList = await categoryCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
+
+        return {categoryList,currentPage,totalNoOfList};
     } catch (err) {
         console.log(err);
 

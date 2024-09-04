@@ -597,7 +597,9 @@
 
                 function editAddressModel(e, _id) {
 
-                    const addressdata = e.target;
+                    const addressdata = e.target.closest('button');
+                    console.log(addressdata);
+                    
                     const { addressTitle, state, city, pinCode, streetAddress } = JSON.parse(addressdata.getAttribute('data-address-item'));
                     document.getElementById('addressTitleEdit').value = addressTitle;
                     document.getElementById('stateEdit').value = state;

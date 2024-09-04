@@ -22,7 +22,7 @@ router.get('/', adminMiddleware.checkAdminAuthenticated, adminController.getDash
 
 //Users
 router.get('/users', adminMiddleware.checkAdminAuthenticated, adminController.getUsers);
-router.patch('/users/blockUnblockUser/:id', adminMiddleware.checkAdminAuthenticated, adminController.patchBlockUnblockUser);
+router.patch('/users/blockUnblockUser/:id', adminMiddleware.validAdmin, adminController.patchBlockUnblockUser);
 
 //Products
 router.get('/products', adminMiddleware.checkAdminAuthenticated, adminController.getProducts);
@@ -30,23 +30,26 @@ router.get('/products/addProduct', adminMiddleware.checkAdminAuthenticated, admi
 router.post('/products/addProduct', [adminMiddleware.checkAdminAuthenticated, upload], adminController.postAddProduct);
 router.get('/products/viewEditProduct/:id', adminMiddleware.checkAdminAuthenticated, adminController.getViewEditProduct);
 router.put('/products/viewEditProduct/:id', [adminMiddleware.checkAdminAuthenticated, upload], adminController.putViewEditProduct);
-router.delete('/products/deleteProduct/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteProduct);
+router.delete('/products/deleteProduct/:id', adminMiddleware.validAdmin, adminController.deleteProduct);
 
 
 //Categories;;
 router.get('/categories', adminMiddleware.checkAdminAuthenticated, adminController.getCategories);
-router.delete('/categories/deleteCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteCategory);
-router.put('/categories/editCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.putEditCategory)
-router.post('/categories/addCategory', adminMiddleware.checkAdminAuthenticated, adminController.addCategory);
+router.delete('/categories/deleteCategory/:id', adminMiddleware.validAdmin, adminController.deleteCategory);
+router.put('/categories/editCategory/:id', adminMiddleware.validAdmin, adminController.putEditCategory)
+router.post('/categories/addCategory', adminMiddleware.validAdmin, adminController.addCategory);
 
 
 //subCategories
-router.delete('/categories/deleteSubCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.deleteSubCategory);
-router.put('/categories/editSubCategory/:id', adminMiddleware.checkAdminAuthenticated, adminController.putEditSubCategory)
-router.post('/categories/addSubCategory', adminMiddleware.checkAdminAuthenticated, adminController.addSubCategory);
+router.get('/subCategories',adminMiddleware.checkAdminAuthenticated,adminController.getSubCategory)
+router.delete('/subCategories/deleteSubCategory/:id', adminMiddleware.validAdmin, adminController.deleteSubCategory);
+router.put('/subCategories/editSubCategory/:id', adminMiddleware.validAdmin, adminController.putEditSubCategory)
+router.post('/subCategories/addSubCategory', adminMiddleware.validAdmin, adminController.addSubCategory);
 
 
 //orders
-router.get('/orders',adminMiddleware.checkAdminAuthenticated,adminController.getOrders)
+router.get('/orders',adminMiddleware.checkAdminAuthenticated,adminController.getOrders);
+router.get('/orders/viewEditOrder/:id',adminMiddleware.checkAdminAuthenticated,adminController.getViewEditOrder);
+router.patch('/orders/updateProductStauts/:id',adminMiddleware.validAdmin,adminController.patchChageProductStatus)
 
 module.exports = router;

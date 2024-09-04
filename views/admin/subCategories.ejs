@@ -8,14 +8,14 @@
             <%- include('./partials/slidebar') %>
 
                 <div id="content" class="container-fluid">
-                    <h1 class="m-b-10 admin_title">Categories</h1>
+                    <h1 class="m-b-10 admin_title">Sub Categories</h1>
                     <div class="container p-b-50">
                         <div class="search-bar-container">
                             <!-- Search Form -->
-                            <form action="/admin/categories" method="GET" class="search-input-group">
+                            <form action="/admin/subCategories" method="GET" class="search-input-group">
                                 <input type="text" id="search-input" name="search" class="form-control search-input"
                                     placeholder="<%= searchFilter || " search"%>">
-                                <a href="/admin/categories?search=">
+                                <a href="/admin/subCategories?search=">
                                     <button type="button" class="btn-clear" id="clear-btn">
                                         <i class="fas fa-times"></i>
                                     </button>
@@ -27,8 +27,8 @@
 
                         </div>
 
-                        <button class="btn-add" data-toggle="modal" data-target="#addCategoryModel">
-                            <i class="fas fa-plus"></i> New Category
+                        <button class="btn-add" data-toggle="modal" data-target="#addSubCategoryModel">
+                            <i class="fas fa-plus"></i> New SubCategory
                         </button>
 
 
@@ -40,30 +40,30 @@
                         <table class="table table-bordered m-t-10">
                             <thead>
                                 <tr>
-                                    <th>Category Name</th>
-                                    <th>Category Description</th>
+                                    <th>SubCategory Name</th>
+                                    <th>SubCategory Description</th>
                                     <th></th>
                                     <th></th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <% categoryList.forEach(category=> { %>
+                                <% subCategoryList.forEach(subCategory=> { %>
                                     <tr>
                                         <!-- <form class=""
-                                            action="/admin/categories/editCategory/<%= category._id %>/?_method=PUT"
-                                            method="post" id="editCategoryForm_<%= category._id %>"
-                                            onsubmit="editCategoryValidation('<%= category._id %>',event)">
+                                            action="/admin/subCategories/editSubCategory/<%= subCategory._id %>/?_method=PUT"
+                                            method="post" id="editSubCategoryForm_<%= subCategory._id %>"
+                                            onsubmit="editSubCategoryValidation('<%= subCategory._id %>',event)">
                                             <td>
                                                 <input type="text" class="form-control transparent-input"
-                                                    value="<%= category.categoryName %>" name="categoryName"
-                                                    id="categoryName_<%= category._id %>">
+                                                    value="<%= subCategory.subCategoryName %>" name="subCategoryName"
+                                                    id="subCategoryName_<%= subCategory._id %>">
                                             </td>
                                             <td class="dis-flex">
                                                 <input type="text" class="form-control transparent-input"
-                                                    value="<%= category.categoryDescription %>"
-                                                    name="categoryDescription"
-                                                    id="categoryDescription_<%= category._id %>">
+                                                    value="<%= subCategory.subCategoryDescription %>"
+                                                    name="subCategoryDescription"
+                                                    id="subCategoryDescription_<%= subCategory._id %>">
                                             </td>
                                             <td>
                                                 <button class="btn btn-dark btn-sm" type="submit"><i
@@ -72,27 +72,27 @@
                                         </form>
                                         <td>
                                             <form
-                                                action="/admin/categories/deleteCategory/<%= category._id %>/?_method=DELETE"
+                                                action="/admin/subCategories/deleteSubCategory/<%= subCategory._id %>/?_method=DELETE"
                                                 method="post">
                                                 <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
                                                     </button>
                                             </form> 
                                         </td> -->
                                         <td>
-                                            <%= category.categoryName %>
+                                            <%= subCategory.subCategoryName %>
                                         </td>
                                         <td>
-                                            <%= category.categoryDescription %>
+                                            <%= subCategory.subCategoryDescription %>
                                         </td>
                                         <td><button class="btn btn-dark btn-sm" type="submit"
-                                                data-category-item="<%= JSON.stringify(category)%>"
-                                                onclick="editCategoryModel(event,'<%=category._id%>')"
-                                                data-toggle="modal" data-target="#editCategoryModel">
+                                                data-subCategory-item="<%= JSON.stringify(subCategory)%>"
+                                                onclick="editSubCategoryModel(event,'<%=subCategory._id%>')"
+                                                data-toggle="modal" data-target="#editSubCategoryModel">
                                                 <i class="fas fa-pencil-alt"></i></button>
                                         </td>
                                         <td>
                                             <button class="btn btn-danger btn-sm"><i class="fa fa-trash"
-                                                    onclick="removeCateogry('<%=category._id%>')"></i>
+                                                    onclick="removeCateogry('<%=subCategory._id%>')"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -102,14 +102,14 @@
                     </div>
                     <div class="flex-c-m flex-w w-full p-t-45 gap-10">
                         <!-- Previous Button -->
-                        <a href="/admin/categories?search=<%= searchFilter %>&&page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
+                        <a href="/admin/subCategories?search=<%= searchFilter %>&&page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
                             class="m-r-20 text-dark">
                             <i class="fas fa-chevron-left"></i> Previous
                         </a>
                         <P class="m-r-20 text-dark">page : <%= currentPage %> of <%= Math.ceil(totalNoOfPages) %>
                         </P>
                         <!-- Next Button -->
-                        <a href="/admin/categories?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
+                        <a href="/admin/subCategories?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
                             class=" text-dark">
                             Next <i class="fas fa-chevron-right"></i>
                         </a>
@@ -120,12 +120,12 @@
 
 
 
-                <!-- modal to add new Category -->
-                <div class="modal fade m-t-50" id="addCategoryModel" tabindex="-2" role="dialog">
+                <!-- modal to add new SubCategory -->
+                <div class="modal fade m-t-50" id="addSubCategoryModel" tabindex="-2" role="dialog">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">New category</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">New subCategory</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -133,19 +133,19 @@
                             <div class="modal-body">
                                 <form>
                                     <div class="form-group">
-                                        <label for="categoryName" class="col-form-label">Category Name</label>
-                                        <input type="text" class="form-control" id="categoryName">
+                                        <label for="subCategoryName" class="col-form-label">SubCategory Name</label>
+                                        <input type="text" class="form-control" id="subCategoryName">
                                     </div>
                                     <div class="form-group">
-                                        <label for="categoryDescription" class="col-form-label">Cateogry
+                                        <label for="subCategoryDescription" class="col-form-label">Cateogry
                                             Description</label>
-                                        <input type="text" class="form-control" id="categoryDescription">
+                                        <input type="text" class="form-control" id="subCategoryDescription">
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="addCategory(event)">Add</button>
+                                <button type="button" class="btn btn-primary" onclick="addSubCategory(event)">Add</button>
                             </div>
                         </div>
                     </div>
@@ -153,12 +153,12 @@
 
 
 
-                <!-- modal to edit category -->
-                <div class="modal fade m-t-50" id="editCategoryModel" tabindex="-2" role="dialog">
+                <!-- modal to edit subCategory -->
+                <div class="modal fade m-t-50" id="editSubCategoryModel" tabindex="-2" role="dialog">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Edit SubCategory</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -166,17 +166,17 @@
                             <div class="modal-body">
                                 <form>
                                     <div class="form-group">
-                                        <label for="categoryNameEdit" class="col-form-label">Category Name</label>
-                                        <input type="text" class="form-control" id="categoryNameEdit">
+                                        <label for="subCategoryNameEdit" class="col-form-label">SubCategory Name</label>
+                                        <input type="text" class="form-control" id="subCategoryNameEdit">
                                     </div>
                                     <div class="form-group">
-                                        <label for="categoryDescriptionEdit" class="col-form-label">Category
+                                        <label for="subCategoryDescriptionEdit" class="col-form-label">SubCategory
                                             Description</label>
-                                        <input type="text" class="form-control" id="categoryDescriptionEdit">
+                                        <input type="text" class="form-control" id="subCategoryDescriptionEdit">
                                     </div>
                                 </form>
                             </div>
-                            <div class="modal-footer" id="editcategoryDiv">
+                            <div class="modal-footer" id="editsubCategoryDiv">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -188,16 +188,16 @@
                 <%- include('./partials/footer') %>
                     <script src="/public/JS/checkCategorySubcategoryValid.js"></script>
                     <script>
-                        function editcategory(ID) {
+                        function editsubCategory(ID) {
 
                         }
                     </script>
                     <script>
-                        function addCategory(event) {
+                        function addSubCategory(event) {
                             event.preventDefault()
-                            const categoryName = document.getElementById('categoryName').value;
-                            const categoryDescription = document.getElementById('categoryDescription').value;
-                            let error = checkCategorySubCategoryValid(categoryName, categoryDescription)
+                            const subCategoryName = document.getElementById('subCategoryName').value;
+                            const subCategoryDescription = document.getElementById('subCategoryDescription').value;
+                            let error = checkCategorySubCategoryValid(subCategoryName, subCategoryDescription)
                             if (error) {
                                 Swal.fire({
                                     icon: "error",
@@ -206,12 +206,12 @@
                                 });
                                 return
                             }
-                            fetch('/admin/categories/addCategory', {
+                            fetch('/admin/subCategories/addSubCategory', {
                                 method: "POST",
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ categoryName, categoryDescription })
+                                body: JSON.stringify({ subCategoryName, subCategoryDescription })
                             })
                                 .then(res => res.json())
                                 .then((data) => {
@@ -255,7 +255,7 @@
                                         });
                                         Toast.fire({
                                             icon: "success",
-                                            title: `new category ${categoryName} added`
+                                            title: `new subCategory ${subCategoryName} added`
                                         });
                                         setTimeout(() => {
                                             window.location.reload()
@@ -273,39 +273,37 @@
                                 })
                         }
 
-                        function editCategoryModel(e, _id) {
+                        function editSubCategoryModel(e, _id) {
 
-                            const categorydata = e.target.closest('button');
-                            console.log(categorydata);
-                            const { categoryName, categoryDescription } = JSON.parse(categorydata.getAttribute('data-category-item'));
-                            console.log(categorydata);
+                            const subCategorydata = e.target.closest('button');
+                            const { subCategoryName, subCategoryDescription } = JSON.parse(subCategorydata.getAttribute('data-subCategory-item'));
 
-                            document.getElementById('categoryNameEdit').value = categoryName;
-                            document.getElementById('categoryDescriptionEdit').value = categoryDescription;
+                            document.getElementById('subCategoryNameEdit').value = subCategoryName;
+                            document.getElementById('subCategoryDescriptionEdit').value = subCategoryDescription;
 
                             // Get the parent div where the button should be appended
-                            const editcategoryDiv = document.getElementById('editcategoryDiv');
+                            const editsubCategoryDiv = document.getElementById('editsubCategoryDiv');
 
                             // Check if the edit button already exists
-                            if (!document.getElementById('editcategoryButton')) {
+                            if (!document.getElementById('editsubCategoryButton')) {
                                 var editButton = document.createElement('button');
                                 editButton.textContent = "Edit";
-                                editButton.id = 'editcategoryButton';
-                                editButton.onclick = () => editCategory(event, _id);
+                                editButton.id = 'editsubCategoryButton';
+                                editButton.onclick = () => editSubCategory(event, _id);
                                 editButton.classList.add('btn', 'btn-primary');
 
-                                editcategoryDiv.appendChild(editButton);
+                                editsubCategoryDiv.appendChild(editButton);
                             }
                         }
 
 
-                        function editCategory(event, ID) {
+                        function editSubCategory(event, ID) {
                             console.log("hello");
 
                             event.preventDefault();
-                            const categoryName = document.getElementById('categoryNameEdit').value;
-                            const categoryDescription = document.getElementById('categoryDescriptionEdit').value;
-                            let error = checkCategorySubCategoryValid(categoryName, categoryDescription)
+                            const subCategoryName = document.getElementById('subCategoryNameEdit').value;
+                            const subCategoryDescription = document.getElementById('subCategoryDescriptionEdit').value;
+                            let error = checkCategorySubCategoryValid(subCategoryName, subCategoryDescription)
                             if (error) {
                                 Swal.fire({
                                     icon: "error",
@@ -314,12 +312,12 @@
                                 });
                                 return
                             }
-                            fetch(`/admin/categories/editCategory/${ID}`, {
+                            fetch(`/admin/subCategories/editSubCategory/${ID}`, {
                                 method: "PUT",
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ categoryName, categoryDescription })
+                                body: JSON.stringify({ subCategoryName, subCategoryDescription })
                             })
                                 .then(res => res.json())
                                 .then((data) => {
@@ -363,7 +361,7 @@
                                         });
                                         Toast.fire({
                                             icon: "success",
-                                            title: `Category has been edited`
+                                            title: `SubCategory has been edited`
                                         });
                                         setTimeout(() => {
                                             window.location.reload()
@@ -385,7 +383,7 @@
                         function removeCateogry(ID) {
                             Swal.fire({
                                 title: "Are you sure?",
-                                text: `Do you want to delete this category`,
+                                text: `Do you want to delete this subCategory`,
                                 icon: "warning",
                                 showCancelButton: true,
                                 confirmButtonColor: "#3085d6",
@@ -393,7 +391,7 @@
                                 confirmButtonText: "Yes"
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch(`/admin/categories/deleteCategory/${ID}`, {
+                                    fetch(`/admin/subCategories/deleteSubCategory/${ID}`, {
                                         method: "DELETE",
                                         headers: {
                                             'Content-Type': 'application/json'
@@ -437,7 +435,7 @@
                                             if (data.success) {
                                                 Swal.fire({
                                                     title: "Removed!",
-                                                    text: "You removed the category",
+                                                    text: "You removed the subCategory",
                                                     icon: "success",
                                                     timer: 2000
                                                 });
