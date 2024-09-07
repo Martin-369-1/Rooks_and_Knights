@@ -32,11 +32,27 @@ exports.postCheckout=async(req,res)=>{
 
 exports.patchCancel=async(req,res)=>{
     try{
+        const {productID,productQuantity}=req.body;
         const orderProductsID=req.params.id;
-        await orderService.cancelOrders(orderProductsID,req.userID)
+        await orderService.cancelOrders(orderProductsID,req.userID,productID,productQuantity)
         res.json({success:true})
 
     }catch(err){
         console.log(err);
+    }
+}
+
+exports.patchReturn=async(req,res)=>{
+    try{
+        const {returnReason}=req.body;
+        console.log(returnReason);
+        
+        const orderProductsID=req.params.id;
+        await orderService.returnOrders(req.userID,orderProductsID,returnReason)
+
+        res.status(200).json({success:true})
+    }catch(err){
+        console.log(err);
+        
     }
 }

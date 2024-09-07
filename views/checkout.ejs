@@ -47,10 +47,13 @@
                                         </td>
 
                                         <td class="column-4 text-center ">
-                                            <% if(cartItem.quantity<=cartItem.productID.stock) {%>
-                                                <p class="p-l-40">
-                                                    <%= cartItem.quantity %>
-                                                </p>
+                                            <% if(cartItem.productID.isDeleted){%>
+                                                <p>Proudct unavaliable</p>
+                                                <% } else if(cartItem.quantity<=cartItem.productID.stock) {%>
+                                                    
+                                                    <p class="p-l-40">
+                                                        <%= cartItem.quantity %>
+                                                    </p>
                                                 <% }else{%>
                                                     <p>Out of stock</p>
                                                     <% } %>
@@ -434,14 +437,19 @@
                 }
 
                 function proccedToPayment(event) {
+                    console.log("kf");
+                    
                     event.preventDefault()
                     const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
+                    console.log(selectedAddress);
+                    
                     const addressId = selectedAddress.value;
 
                     const rows = document.querySelectorAll('.cart-product-row');
                     const products = []
                     const cartItemIds = []
                     let outOfStock = false;
+                    let unavaliableProduct=false;
                     rows.forEach((row) => {
                         const cartItem = JSON.parse(row.getAttribute('data-products'))
                         if (cartItem.quantity > cartItem.productID.stock) {
@@ -449,6 +457,15 @@
                             Swal.fire({
                                 title: "Cannot Proceed to payment",
                                 text: "Contanins out of stock",
+                                icon: "error",
+                            });
+                        }
+
+                        if(cartItem.productID.isDeleted){
+                            unavaliableProduct = true
+                            Swal.fire({
+                                title: "Cannot Proceed to payment",
+                                text: "Contanins unavaliable products",
                                 icon: "error",
                             });
                         }
@@ -461,7 +478,7 @@
                         cartItemIds.push(cartItem._id)
                     })
 
-                    if (outOfStock) {
+                    if (outOfStock || unavaliableProduct) {
                         return
                     }
                     const paymentMethod = document.getElementById('paymentMethod').value

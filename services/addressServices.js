@@ -59,7 +59,7 @@ exports.viewAddress=async(userID)=>{
 //delete an address
 exports.deleteAddress=async(addressID,userID)=>{
     try{
-        await addressCollection.updateOne({userID},{$pull:{address:{addressID}}})
+        await addressCollection.updateOne({userID},{$pull:{address:{_id:addressID}}})
     }catch(err){
         console.log(err);
     }

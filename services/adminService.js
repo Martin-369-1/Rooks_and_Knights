@@ -10,5 +10,6 @@ exports.findUserByEmail = async (email) => {
 }
 
 exports.validateUserCredentials = async (password, userPasswordHash) => {
+    //checks password and stored password same
     return await passwordUtils.comparePassword(password, userPasswordHash);
 };

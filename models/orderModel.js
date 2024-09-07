@@ -55,6 +55,14 @@ const orderSchema=Schema({
                 enum: ['pending', 'delivered', 'canceled'],
                 default: 'pending' 
             },
+            returnReason:{
+                type:String
+            },
+            returnStatus:{
+                type:String,
+                enum:['requested','approved','rejected','notRequested'],
+                default:'notRequested'
+            },
             price:{
                 type:Number,
                 required:true

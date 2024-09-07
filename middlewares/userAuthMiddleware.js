@@ -21,7 +21,7 @@ exports.checkUserAuthenticated = async (req, res, next) => {
 
             req.email = user.email;
             req.userID = user._id;
-            console.log(user.email, user._id);
+
 
             let userData = await userCollection.findOne({ email: req.email });
 
@@ -56,7 +56,7 @@ exports.validUser = async (req, res, next) => {
 
             req.email = user.email;
             req.userID = user._id;
-            console.log(user.email, user._id);
+
 
             let userData = await userCollection.findOne({ email: req.email });
             

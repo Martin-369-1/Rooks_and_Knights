@@ -1,9 +1,10 @@
-const { find } = require('../models/CategoryModel');
+//collections
 const userCollection = require('../models/userModel')
 
 exports.userList = async (search,currentPage, noOfList, skipPages) => {
     let findQuery = { isAdmin: false };
 
+    //for search user
     if (search) {
         findQuery["$or"] = [
             { 'username': { "$regex": new RegExp(search, 'i') } },
@@ -12,28 +13,19 @@ exports.userList = async (search,currentPage, noOfList, skipPages) => {
     }
     
     try {
-        let totalNoOfList = await userCollection.countDocuments({ isAdmin: false })
-        let userList = await userCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList);
+        let totalNoOfList = await userCollection.countDocuments({ isAdmin: false }) 
+        let userList = await userCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList); 
         
         return {userList,currentPage,totalNoOfList};
     } catch (err) {
         console.log(err);
-        throw err; // Optionally re-throw the error if you want the caller to handle it
     }
 }
 
 
-exports.blockUnblockUser = async (_id) => {
+exports.blockUnblockUser = async (userID) => {
     try {
-        let userdata = await userCollection.findOne({ _id })
-
-        if (userdata) {
-            await userCollection.updateOne({ _id }, { $set: { isblocked: !userdata.isblocked } })
-        } else {
-            console.log("user not found");
-
-        }
-
+        await userCollection.updateOne({ _id:userID }, { isblocked: {$not:'$isblocked'} } )
     } catch (err) {
         console.log(err);
 

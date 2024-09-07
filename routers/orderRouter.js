@@ -12,4 +12,6 @@ router.get('/',userAuthMiddleware.checkUserAuthenticated,orderController.getChec
 router.post('/proceedToPayment',userAuthMiddleware.validUser,orderController.postCheckout);
 router.patch('/cancel/:id',userAuthMiddleware.validUser,orderController.patchCancel)
 
+router.patch('/return/returnProduct/:id',userAuthMiddleware.validUser,orderController.patchReturn)
+
 module.exports=router;

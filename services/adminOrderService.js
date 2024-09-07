@@ -1,9 +1,8 @@
+//models
 const orderCollection=require('../models/orderModel')
 const addressCollection=require('../models/addressModel')
-const productsCollection=require('../models/productsModel')
-const userCollection=require('../models/userModel')
-const address = require('../models/addressModel')
 
+//list all orders
 exports.viewOrders=async(currentPage,noOfList,skipPages)=>{
     try{
         let totalNoOfList = await orderCollection.countDocuments({ isDeleted: false })
@@ -14,13 +13,12 @@ exports.viewOrders=async(currentPage,noOfList,skipPages)=>{
     }
 }
 
-exports.viewOrder=async(_id)=>{
+//get a specific order
+exports.viewOrder=async(orderID)=>{
     try{
-        const order=await orderCollection.findById(_id).populate('userID').populate('products.productID')
+        const order=await orderCollection.findById(orderID).populate('userID').populate('products.productID')
         const address = (await addressCollection.findOne({userID:order.userID._id , "address._id":order.addressId })).address[0];
-        console.log(address);
-        
-        
+
         return {order,address};
     }catch(err){
         console.log(err);
@@ -28,12 +26,13 @@ exports.viewOrder=async(_id)=>{
     }
 }
 
-exports.changeProductStatus=async(_id,orderID,status)=>{
+//change the productOrderStauts
+exports.changeProductStatus=async(productOrderID,orderID,status)=>{
     try{
         console.log(typeof(status));
         
         let order=await orderCollection.findOneAndUpdate(
-            { _id: orderID, 'products._id': _id }, 
+            { _id: orderID, 'products._id': productOrderID }, 
             { $set: { 'products.$.status': status } },
             {new:true}
           );
@@ -41,18 +40,17 @@ exports.changeProductStatus=async(_id,orderID,status)=>{
         const allCanceled=order.products.every(product => product.status=='canceled')
         const allDelivered=order.products.every(product => product.status=='delivered')
 
-        if(allCanceled){
+        if(allCanceled){ //if all products are canceled
             order.orderStatus='canceled'
             await order.save()
         }
 
-        if(allDelivered){
+        if(allDelivered){ //if all products are delivered
             order.orderStatus='delivered'
             await order.save()
         }
 
     }catch(err){
         console.log(err);
-        
     }
 }

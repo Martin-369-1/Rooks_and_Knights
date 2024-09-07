@@ -43,8 +43,10 @@ const adminRouter=require('./routers/adminRouter');
 const homeRouter=require('./routers/homeRouter');
 const shopRouter=require('./routers/shopRouter');
 const cartRouter=require('./routers/cartRouter');
+const wishlistRouter=require('./routers/wishlistRouter');
 const addressRouter=require('./routers/addressRouter');
 const orderRouter=require('./routers/orderRouter');
+
 
 //Database
 const connectDb=require('./config/database');
@@ -55,6 +57,10 @@ app.listen(process.env.PORT,()=>{
     console.log(`Server is running at http://localhost:${process.env.PORT}`);    
 })
 
+app.get('/sampleAccount',(req,res)=>{
+    res.render('sampleAccount')
+})
+
 //Using Routers
 app.use('/user',userRouter);
 app.use('/OTP',OTPRouter);
@@ -62,6 +68,7 @@ app.use('/admin',adminRouter);
 app.use('/',homeRouter);
 app.use('/shop',shopRouter);
 app.use('/cart',cartRouter);
+app.use('/wishlist',wishlistRouter);
 app.use('/address',addressRouter);
 app.use('/order',orderRouter);
 

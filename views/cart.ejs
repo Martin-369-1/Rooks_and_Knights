@@ -47,7 +47,9 @@
 
 
                                         <td class="column-4">
-                                            <% if(cartItem.productID.stock>0){%>
+                                            <% if(cartItem.productID.isDeleted){%>
+                                                <p>Product unavaliable</p>
+                                            <% }else if(cartItem.productID.stock>0){%>
 
                                                 <p id="stock-Left_<%=cartItem._id%>"></p>
                                                 <div class="wrap-num-product flex-w m-l-auto m-r-0">

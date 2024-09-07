@@ -3,6 +3,7 @@
 
 <head>
     <%- include('./partials/head.ejs') %>
+        <link rel="stylesheet" href="/public/css/account.css">
 </head>
 
 <body class="">
@@ -12,282 +13,296 @@
         <%- include('./partials/header.ejs') %>
     </header>
 
-    <div class="main-container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <% if(userProfile.profilePicture) {%>
-                            <img src="<% userProfile.profilePicture %>" alt="">
-                            <% }else{ %>
-                                <i class="fa fa-user-circle fa-3x m-r-20" aria-hidden="true"></i>
-                                <% } %>
-                    </div>
+    <div class="custon">
+        <div class="account-container">
+            <!-- Sidebar Menu -->
+            <div class="sidebar-menu">
+                <a href="#" id="profile-link" onclick="showSection('profile', this)" class="active"><i
+                        class="fa fa-user"></i> Profile</a>
+                <a href="#" id="address-link" onclick="showSection('address', this)"><i class="fa fa-home"></i>
+                    Address</a>
+                <a href="#" id="orders-link" onclick="showSection('orders', this)"><i class="fa fa-list"></i> Orders</a>
 
-                    <div>
-                        <h5>
-                            <%= userProfile.username %>
-                        </h5>
-                        <p>
-                            <%= userProfile.email %>
-                        </p>
-                    </div>
-                </div>
-                <div>
-                    <button class="btn btn-dark btn-sm"><i class="fa fa-edit"></i> Edit</button>
-                    <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</button>
-                    <button class="btn btn-success btn-sm" onclick="logout()"><i class="fa fa-sign-out-alt"></i>
-                        Logout</button>
-                </div>
+                <button onclick="changePassword()"><i class="fas fa-key"></i> Change Password </button>
+                <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
             </div>
 
-
-            <div class="profile-body">
-                <form onsubmit="updateProfile(event) ">
-                    <div class="form-row">
-                        <div class="col-md-6 mb-3">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username"
-                                value="<%= userProfile.username %>">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" value="<%= userProfile.email %>"
-                                readonly>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="phoneNumber">Phone Number</label>
-                        <input type="text" class="form-control" id="phoneNumber" value="<%= userProfile.phoneNumber %>">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
-                <button onclick="changePassword()" class="d-block mb-3">Change password?</button>
-            </div>
-        </div>
-
-        <!-- Address Section -->
-        <div class="address-card">
-            <div class="card-header text-center">
-                <h5 class="mb-0 mtext-113">Shipping Address</h5>
-            </div>
-            <div class="card-body">
-                <% address.address.forEach((addressItem)=>{ %>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <p class="mtext-112 size-40">
-                                <%= addressItem.addressTitle %>
-                            </p>
-                            <p class="mb-0 mtext-101 size-10">State: <%= addressItem.state %>, City: <%=
-                                        addressItem.city %>, PIN Code: <%= addressItem.pinCode %>
-                            </p>
-                            <p class="mb-0 mtext-101 size-10">Street Address: <%= addressItem.streetAddress %>
-                            </p>
-                        </div>
-                        <div>
-                            <button class="btn btn-dark btn-sm m-b-3"
-                                data-address-item="<%= JSON.stringify(addressItem)%>"
-                                onclick="editAddressModel(event,'<%=addressItem._id%>')" data-toggle="modal"
-                                data-target="#editAddressModel">
-                                <i class="fa fa-edit"></i>Edit
-                            </button>
-
-                            <button class="btn btn-danger btn-sm  m-b-3"
-                                onclick="removeAddress(event,'<%=addressItem._id%>')"><i
-                                    class="fa fa-trash"></i>Remove</button>
-                        </div>
-                    </div>
-                    <hr>
-                    <% })%>
-
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#addAddressModel"><i
-                                class="fa fa-plus"></i> Add New Address</button>
-            </div>
-        </div>
-
-        <!-- Orders Section -->
-
-        <div class="order-card">
-            <div class="card-header text-center bg1 cl0 bor2">
-                <h5 class="mb-0 mtext-113">My Orders</h5>
-            </div>
-
-            <!-- Wrapper div for each order -->
-            <div class="card-body">
-                <!-- Order 1 -->
-                <% orders.forEach((order)=>{ %>
-                    <div class="order-summary mb-4 p-3 bor2">
-                        <div class="d-flex justify-content-between align-items-center">
+            <!-- Content Area -->
+            <div class="main-content">
+                <!-- Profile Section -->
+                <div class="section profile-section" id="profile-section">
+                    <div class="profile-card text-center">
+                        <div class="">
                             <div>
-
-                                <p class="mtext-101 mb-1"><strong>Date:</strong>
-                                    <%=order.createdAt.toLocaleDateString()%>
-                                </p>
-                                <p class="mtext-101 mb-1"><strong>Sub Total Amount:</strong>
-                                    <%= order.subTotalAmmount %>
-                                </p>
-                                <p class="mtext-101 mb-1"><strong>Discount Amount:</strong>
-                                    <%=order.discount %>
-                                </p>
-                                <p class="mtext-101 mb-1"><strong>Total Amount:</strong>
-                                    <%=order.totalAmmount %>
-                                </p>
+                                <% if(userProfile.profilePicture) {%>
+                                    <img class="profile-image" src="<% userProfile.profilePicture %>" alt="">
+                                    <% }else{ %>
+                                        <i class="fa fa-user-circle profile-icon">
+                                        </i>
+                                        <% } %>
                             </div>
-                            <div>
-                                <!-- Button to view order details -->
-                                <button class="btn btn-primary btn-sm" data-toggle="collapse"
-                                    onclick="collapse('<%=order._id%>')">
-                                    View Details
+
+                            <button class="btn "><i class="fa fa-pencil-alt"></i></button>
+                            <button class="btn"><i class="fa fa-trash-alt"></i></button>
+                        </div>
+                        <br>
+                        <form action="" onsubmit="updateProfile(event) ">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="username"
+                                    value="<%= userProfile.username %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" value="<%= userProfile.email %>"
+                                    readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phoneNumber" value="+1234567890">
+                            </div>
+                            <button class="btn btn-save">Save Changes</button>
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Address Section -->
+                <div class="section hidden address-card-container" id="address-section">
+                    <h2>Address Book</h2>
+                    <% address.address.forEach((addressItem)=>{ %>
+                        <!-- Address Cards -->
+                        <div class="address-card">
+                            <div class="address-info">
+                                <strong>
+                                    <%= addressItem.addressTitle %>
+                                </strong><br>
+                                <%= addressItem.streetAddress %><br>
+                                    <%= addressItem.city %>, <%= addressItem.state %><br>
+                                            <%= addressItem.pinCode %>
+                            </div>
+                            <div class="address-actions">
+                                <button class="btn btn-dark btn-sm m-b-3"
+                                    data-address-item="<%= JSON.stringify(addressItem)%>"
+                                    onclick="editAddressModel(event,'<%=addressItem._id%>')" data-toggle="modal"
+                                    data-target="#editAddressModel">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm m-b-3"
+                                    onclick=" removeAddress(event,'<%=addressItem._id%>')">
+                                    <i class="fa fa-trash"></i>
                                 </button>
                             </div>
                         </div>
+                        <% }) %>
 
-                        <!-- Collapsible order details -->
-                        <div class="collapse mt-3" id="orderDetailsCollaple_<%= order._id %>">
-                            <table class="table table-hover table-shopping-cart">
-                                <thead>
-                                    <tr class="table_head">
-                                        <th class="column-1">Product</th>
-                                        <th class="column-2">Name</th>
-                                        <th class="column-3">Quantity</th>
-                                        <th class="column-4">Amount</th>
-                                        <th class="column-5">Status</th>
+
+
+
+                            <!-- Add New Address Button -->
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#addAddressModel"><i
+                                    class="fa fa-plus"></i> Add New Address</button>
+                </div>
+
+                <!-- Orders Section -->
+                <div id="orders-section" class="orders-card section hidden">
+                    <h3>My Orders</h3>
+                    <!-- When there are no orders -->
+                    <% orders.forEach((order)=>{ %>
+
+                        <div class="address-card">
+                            <div class="address-info">
+                                <strong>Date:</strong>
+                                <%=order.createdAt.toLocaleDateString()%><br>
+                                    <strong>Sub Total Amount:</strong>
+                                    <%= order.subTotalAmmount %><br>
+                                        <strong>Discount Amount:</strong>
+                                        <%=order.discount %><br>
+                                            <strong>Total Amount:</strong>
+                                            <%=order.totalAmmount %>
+                            </div>
+
+                            <div class="address-actions">
+                                <button type="button" onclick="orderViewTable(event)" data-toggle="modal"
+                                    data-target=".bd-example-modal-lg" data-order-item="<%= JSON.stringify(order) %>"><i
+                                        class="fa fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <% }) %>
+
+
+                            <!-- Returns Section -->
+                            <div id="returns-section" class="returns-card section hidden">
+                                <h3>My Returns</h3>
+                                <!-- When there are no orders -->
+                                <div class="address-card">
+                                    <div class="address-info">
+                                        <strong>John Doe</strong><br>
+                                        123 Main St, Apt 4B<br>
+                                        New York, NY 10001<br>
+                                        +1 234-567-890
+                                    </div>
+                                    <div class="address-actions">
+                                        <a href="#"><i class="fa fa-eye"></i></a>
+                                    </div>
+                                </div>
+
+                                <div class="address-card">
+                                    <div class="address-info">
+                                        <strong>Jane Smith</strong><br>
+                                        456 Elm St, Suite 5A<br>
+                                        San Francisco, CA 94102<br>
+                                        +1 987-654-3210
+                                    </div>
+                                    <div class="address-actions">
+                                        <a href="#"><i class="fa fa-edit"></i></a>
+                                    </div>
+                                </div>
+
+                                <div class="address-card">
+                                    <div class="address-info">
+                                        <strong>Emily Johnson</strong><br>
+                                        789 Oak St, Unit 2<br>
+                                        Chicago, IL 60614<br>
+                                        +1 555-555-5555
+                                    </div>
+                                    <div class="address-actions">
+                                        <a href="#"><i class="fa fa-edit"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+
+                <!-- Orders Section -->
+
+
+            </div>
+
+        </div>
+
+        <!-- modal to add new address -->
+        <div class="modal fade m-t-50" id="addAddressModel" tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="addressTitle" class="col-form-label">Address Title</label>
+                                <input type="text" class="form-control" id="addressTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="state" class="col-form-label">State</label>
+                                <input type="text" class="form-control" id="state">
+                            </div>
+                            <div class="form-group">
+                                <label for="city" class="col-form-label">City</label>
+                                <input type="text" class="form-control" id="city">
+                            </div>
+                            <div class="form-group">
+                                <label for="pinCode" class="col-form-label">Pin Code</label>
+                                <input type="text" class="form-control" id="pinCode">
+                            </div>
+                            <div class="form-group">
+                                <label for="streetAddress" class="col-form-label">Street Addrress</label>
+                                <textarea class="form-control" id="streetAddress"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="addNewAddress(event)">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- modal to edit address -->
+        <div class="modal fade m-t-50" id="editAddressModel" tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="addressTitle" class="col-form-label">Address Title</label>
+                                <input type="text" class="form-control" id="addressTitleEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="state" class="col-form-label">State</label>
+                                <input type="text" class="form-control" id="stateEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="city" class="col-form-label">City</label>
+                                <input type="text" class="form-control" id="cityEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="pinCode" class="col-form-label">Pin Code</label>
+                                <input type="text" class="form-control" id="pinCodeEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="streetAddress" class="col-form-label">Street Addrress</label>
+                                <textarea class="form-control" id="streetAddressEdit"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" id="editAddressDiv">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- order model -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="card">
+                    <div class="card-header">
+                        Items Ordered
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Ammount</th>
+                                        <th>Status</th>
                                         <th></th>
+
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <% order.products.forEach((product)=>{ %>
-                                        <tr class="table_row">
-                                            <td class="column-1">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="<%= product.productID.productImage1 %>" alt="Chessbase 17"
-                                                        class="img-thumbnail"
-                                                        style="width: 70px; height: 70px; margin-right: 10px;">
-                                                </div>
-                                            </td>
-                                            <td class="column-2">
-                                                <%= product.productID.productName %>
-                                            </td>
-                                            <td class="column-3">
-                                                <%=product.quantity%>
-                                            </td>
-                                            <td class="column-4">
-                                                <%= product.price %>
-                                            </td>
-                                            <td class="column-5">
-                                                <%= product.status %>
-                                            </td>
-                                            <% if(product.status=='pending' ){ %>
-                                                <td><button class="btn btn-danger"
-                                                        onclick="cancelOrder('<%=product._id%>')">Cancel</button></td>
-                                                <% } %>
-                                        </tr>
-                                        <% }) %>
+                                <tbody id="orderTableBody">
+
 
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
-                    <% }) %>
-
-
-
-            </div>
-        </div>
-
-    </div>
-
-
-
-    <!-- modal to add new address -->
-    <div class="modal fade m-t-50" id="addAddressModel" tabindex="-2" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="addressTitle" class="col-form-label">Address Title</label>
-                            <input type="text" class="form-control" id="addressTitle">
-                        </div>
-                        <div class="form-group">
-                            <label for="state" class="col-form-label">State</label>
-                            <input type="text" class="form-control" id="state">
-                        </div>
-                        <div class="form-group">
-                            <label for="city" class="col-form-label">City</label>
-                            <input type="text" class="form-control" id="city">
-                        </div>
-                        <div class="form-group">
-                            <label for="pinCode" class="col-form-label">Pin Code</label>
-                            <input type="text" class="form-control" id="pinCode">
-                        </div>
-                        <div class="form-group">
-                            <label for="streetAddress" class="col-form-label">Street Addrress</label>
-                            <textarea class="form-control" id="streetAddress"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addNewAddress(event)">Add</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-    <!-- modal to edit address -->
-    <div class="modal fade m-t-50" id="editAddressModel" tabindex="-2" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="addressTitle" class="col-form-label">Address Title</label>
-                            <input type="text" class="form-control" id="addressTitleEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="state" class="col-form-label">State</label>
-                            <input type="text" class="form-control" id="stateEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="city" class="col-form-label">City</label>
-                            <input type="text" class="form-control" id="cityEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="pinCode" class="col-form-label">Pin Code</label>
-                            <input type="text" class="form-control" id="pinCodeEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="streetAddress" class="col-form-label">Street Addrress</label>
-                            <textarea class="form-control" id="streetAddressEdit"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer" id="editAddressDiv">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
     <!-- Footer -->
     <footer class="bg3 p-t-75 p-b-32">
         <%- include('./partials/footer.ejs') %>
@@ -298,6 +313,53 @@
 
 
         <%- include('./partials/scriptBody.ejs') %>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <script>
+
+
+                // Function to populate table with orders
+                function orderViewTable(e) {
+                    const orderdata = e.target.closest('button');
+
+                    const { products } = JSON.parse(orderdata.getAttribute('data-order-item'));
+                    console.log(products);
+
+
+                    const tableBody = document.getElementById("orderTableBody");
+
+                    // Clear existing rows in case this function is called multiple times
+                    tableBody.innerHTML = "";
+
+                    // Loop through each order and create table rows
+                    products.forEach(order => {
+                        const row = document.createElement("tr");
+                        let actionButton = ""; // Initialize action button variable
+
+                        // Check order status and set the button accordingly
+                        if (order.status === "pending") {
+                            actionButton = `<button class="btn btn-danger" onclick="cancelOrder('${order._id}', '${order.productID._id}' , ${order.quantity})">Cancel</button>`;
+                        } else if (order.status === "delivered" && order.returnStatus=='notRequested') {
+                            actionButton = `<button class="btn btn-warning" onclick="returnOrder('${order._id}')">Return</button>`;
+                        }else if(order.status === 'delivered'){
+                            actionButton='return '+order.returnStatus
+                        }
+
+                        // Insert the row with dynamic data
+                        row.innerHTML = `
+        <td><img src="${order.productID.productImage1}" alt="${order.productName}" width="100px"></td>
+        <td>${order.productID.productName}</td>
+        <td>${order.quantity}</td>
+        <td>${order.price}</td>
+        <td>${order.status}</td>
+        <td>${actionButton}</td>
+      `;
+                        tableBody.appendChild(row);
+                    });
+                }
+
+
+            </script>
 
             <script>
                 function logout() {
@@ -399,37 +461,37 @@
                                     'Content-Type': 'application/json'
                                 },
                             }).then((res) => res.json())
-                            .then((data) => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: "Updated",
-                                    text: "Your cart has been updated",
-                                    icon: "success",
-                                    timer: 2000
-                                });
-                                setTimeout(() => {
-                                    window.location.href=data.redirectUrl;
-                                }, 2000)
-                            } else if (data.error) {
-                                Swal.fire({
-                                    title: "Not updated",
-                                    text: data.error,
-                                    icon: "error",
-                                    timer: 2000
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Updated",
+                                            text: "Your cart has been updated",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+                                        setTimeout(() => {
+                                            window.location.href = data.redirectUrl;
+                                        }, 2000)
+                                    } else if (data.error) {
+                                        Swal.fire({
+                                            title: "Not updated",
+                                            text: data.error,
+                                            icon: "error",
+                                            timer: 2000
+                                        })
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    } else if (data.authError) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Oops...",
+                                            text: data.authError,
+                                            footer: data.errorRedirect
+                                        });
+                                    }
                                 })
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 2000)
-                            } else if (data.authError) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Oops...",
-                                    text: data.authError,
-                                    footer: data.errorRedirect
-                                });
-                            }
-                        })
-                        .catch(err => console.log(err))
+                                .catch(err => console.log(err))
 
                         }
                     });
@@ -559,36 +621,36 @@
                             })
                                 .then((res) => res.json())
                                 .then((data) => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: "Removed",
-                                    text: "Address has been removed",
-                                    icon: "success",
-                                    timer: 2000
-                                });
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 2000)
-                            } else if (data.error) {
-                                Swal.fire({
-                                    title: "Cannot remove",
-                                    text: data.error,
-                                    icon: "error",
-                                    timer: 2000
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Removed",
+                                            text: "Address has been removed",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    } else if (data.error) {
+                                        Swal.fire({
+                                            title: "Cannot remove",
+                                            text: data.error,
+                                            icon: "error",
+                                            timer: 2000
+                                        })
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    } else if (data.authError) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Oops...",
+                                            text: data.authError,
+                                            footer: data.errorRedirect
+                                        });
+                                    }
                                 })
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 2000)
-                            } else if (data.authError) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Oops...",
-                                    text: data.authError,
-                                    footer: data.errorRedirect
-                                });
-                            }
-                        })
-                        .catch(err => console.log(err))
+                                .catch(err => console.log(err))
                         }
                     });
                 }
@@ -598,8 +660,7 @@
                 function editAddressModel(e, _id) {
 
                     const addressdata = e.target.closest('button');
-                    console.log(addressdata);
-                    
+
                     const { addressTitle, state, city, pinCode, streetAddress } = JSON.parse(addressdata.getAttribute('data-address-item'));
                     document.getElementById('addressTitleEdit').value = addressTitle;
                     document.getElementById('stateEdit').value = state;
@@ -622,25 +683,8 @@
                     }
                 }
 
-                function collapse(ID) {
-                    console.log('fdf');
 
-                    const target = document.getElementById(`orderDetailsCollaple_${ID}`);
-                    console.log(target);
-
-                    if (target.classList.contains('show')) {
-                        target.classList.remove('show');
-                    } else {
-                        target.classList.add('show');
-                    }
-                }
-                document.querySelectorAll('[data-toggle="collapse"]').forEach(button => {
-                    button.addEventListener('click', function () {
-
-                    });
-                });
-
-                function cancelOrder(orderProductsID) {
+                function cancelOrder(orderProductsID, productID, productQuantity) {
 
 
                     Swal.fire({
@@ -657,42 +701,130 @@
                                 method: "PATCH",
                                 headers: {
                                     'Content-Type': 'application/json'
-                                }
+                                },
+                                body: JSON.stringify({ productID, productQuantity })
                             })
                                 .then(res => res.json())
                                 .then((data) => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: "Canceled",
-                                    text: "Your order has been canceled",
-                                    icon: "success",
-                                    timer: 2000
-                                });
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 2000)
-                            } else if (data.error) {
-                                Swal.fire({
-                                    title: "Cannot cancel",
-                                    text: data.error,
-                                    icon: "error",
-                                    timer: 2000
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Canceled",
+                                            text: "Your order has been canceled",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    } else if (data.error) {
+                                        Swal.fire({
+                                            title: "Cannot cancel",
+                                            text: data.error,
+                                            icon: "error",
+                                            timer: 2000
+                                        })
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    } else if (data.authError) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Oops...",
+                                            text: data.authError,
+                                            footer: data.errorRedirect
+                                        });
+                                    }
                                 })
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 2000)
-                            } else if (data.authError) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Oops...",
-                                    text: data.authError,
-                                    footer: data.errorRedirect
-                                });
-                            }
-                        })
-                        .catch(err => console.log(err))
+                                .catch(err => console.log(err))
                         }
                     })
+                }
+
+
+                function returnOrder(orderProductsID) {
+                    Swal.fire({
+                        title: "Select a reason for return",
+                        input: "select",
+                        inputOptions: {
+                            "Return Reasons": {
+                                "wrong-item": "Received the Wrong Item",
+                                "damaged": "Item Arrived Damaged",
+                                "not-as-described": "Product is Not as Described",
+                                "size-fit": "Size or Fit Issues",
+                                "changed-mind": "Changed My Mind",
+                                "poor-quality": "Product Quality is Poor",
+                                "late-arrival": "Item Arrived Late",
+                                "better-price": "Found a Better Price Elsewhere",
+                                "wrong-product": "Ordered the Wrong Product",
+                                "missing-parts": "Missing Parts or Accessories"
+                            }
+                        },
+                        inputPlaceholder: "Select a reason",
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                            return !value ? 'You need to select a reason.' : null;
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            fetch(`/order/return/returnProduct/${orderProductsID}`, {
+                                method: "PATCH",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    returnReason: result.value
+                                })
+                            })
+                                .then(res => res.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Sent request",
+                                            text: "Your order return request has been sent",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000)
+                                    } else if (data.authError) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Oops...",
+                                            text: data.authError,
+                                            footer: data.errorRedirect
+                                        });
+                                    }
+                                })
+                        }
+                    }).catch((error) => {
+                        console.error("Error:", error);
+                    });
+
+                }
+
+
+
+            </script>
+
+            <script>
+                // JavaScript function to show different sections
+                function showSection(sectionId, element) {
+                    // Hide all sections
+                    document.querySelectorAll('.section').forEach(function (section) {
+                        section.classList.add('hidden');
+                    });
+
+                    // Remove active class from all sidebar links
+                    document.querySelectorAll('.sidebar-menu a').forEach(function (link) {
+                        link.classList.remove('active');
+                    });
+
+                    // Show the selected section
+                    document.getElementById(sectionId + '-section').classList.remove('hidden');
+
+                    // Add active class to the clicked link
+                    element.classList.add('active');
                 }
 
             </script>
