@@ -1,12 +1,24 @@
 const orderCollection=require('../models/orderModel')
 
-exports.returnsList=async()=>{
+exports.returnsList=async(currentPage,noOfList,skipPages)=>{
     try{
-        const returnList = await orderCollection.find({
-            'products.returnStatus': { $ne: 'notRequested' }
-          }).sort({createdAt:-1}).populate('userID').populate('products.productID')
+        const totalNoOfList = await orderCollection.countDocuments({'products.returnStatus': { $ne: 'notRequested' }} )
 
-        return returnList;
+        const returnList = await orderCollection.find({'products.returnStatus': { $ne: 'notRequested' }})
+        .sort({createdAt:-1}).skip(skipPages * noOfList).limit(currentPage * noOfList)
+        .populate('userID').populate('products.productID')
+
+        return {returnList,currentPage,totalNoOfList};
+
+    }catch(err){
+        console.log(err);
+        
+    }
+}
+
+exports.aproveRejectReturn=async(orderID,orderItemID,returnStatus)=>{
+    try{
+        await orderCollection.updateOne({_id:orderID,'products._id':orderItemID},{'products.$.returnStatus':returnStatus})
 
     }catch(err){
         console.log(err);

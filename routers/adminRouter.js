@@ -55,5 +55,6 @@ router.patch('/orders/updateProductStauts/:id',adminMiddleware.validAdmin,adminC
 
 //returns
 router.get('/returns',adminMiddleware.checkAdminAuthenticated,adminController.getReturns)
+router.patch('/returns/aproveRejectReturn',adminMiddleware.validAdmin,adminController.patchAproveRejectReturn);
 
 module.exports = router;

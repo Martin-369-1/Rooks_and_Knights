@@ -19,10 +19,15 @@ exports.postCheckout=async(req,res)=>{
     try{
         const {products,addressId,paymentMethod,subTotalAmmount,totalAmmount,cartItemIds}=req.body;
         
-        await orderService.createOrder(products,addressId,paymentMethod,subTotalAmmount,totalAmmount,req.userID)
+        const order=await orderService.createOrder(products,addressId,paymentMethod,subTotalAmmount,totalAmmount,req.userID)
 
-        await cartService.deleteManyCartItem(cartItemIds,subTotalAmmount,req.userID)
-        res.status(200).json({success:true,successRedirect:'/'})
+        if(paymentMethod=='COD'){
+            await cartService.deleteManyCartItem(cartItemIds,subTotalAmmount,req.userID)
+            return res.status(200).json({success:true,successRedirect:'/'})
+        }
+
+        await orderService.completePayment(req.userID,orderID)
+        
 
     }catch(err){
         console.log(err);

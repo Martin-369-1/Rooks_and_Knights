@@ -411,15 +411,33 @@ exports.patchChageProductStatus=async(req,res)=>{
 //display returns
 exports.getReturns=async(req,res)=>{
     try{
-        const returnList=await adminReturnService.returnsList();
+
+        const {page}=req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+
+        const {returnList,totalNoOfList}=await adminReturnService.returnsList(currentPage,noOfList,skipPages);
+        const totalNoOfPages = totalNoOfList / noOfList;
         
-        res.render('admin/returns',{returnList})
+        res.render('admin/returns',{returnList,currentPage,totalNoOfPages})
     }catch(err){
         console.log(err);
         
     }
 }
 
+exports.patchAproveRejectReturn=async(req,res)=>{
+    try{
+        const {orderID, orderItemID, returnStatus }=req.body;
+        await adminReturnService.aproveRejectReturn(orderID, orderItemID, returnStatus );
+        res.json({success:true})
+
+    }catch(err){
+        console.log(err);
+    }
+
+}
 
 
 

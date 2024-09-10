@@ -20,9 +20,18 @@ exports.createOrder=async(products,addressId,paymentMethod,subTotalAmmount,total
         }
 
         await newOrder.save()
+        return newOrder;
 
     }catch(err){
         console.log(err);  
+    }
+}
+
+exports.completePayment=async(userID,orderID)=>{
+    try{
+        await orderCollection.updateOne({_id:orderID},{paymentStatus:true})
+    }catch(err){
+        console.log(err);
     }
 }
 

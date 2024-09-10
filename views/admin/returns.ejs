@@ -42,7 +42,7 @@
                                         <td><%= product.returnStatus %></td>
                                         <td>
                                             <% if(product.returnStatus == 'requested') {%>
-                                            <form action="" onsubmit="changeReturnStatus('<%=returnItem.userID%>','<%=returnItem._id%>','<%=product._id%>',event)">
+                                            <form action="" onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event)">
                                                 <select id="returnStatus_<%= returnItem._id%>_<%= product._id %>" name="options" style="flex: 1; padding: 8px; margin-right: 10px;">
                                                     <option value="" disabled selected>Select an option</option>
                                                     <option value="approved">Approve</option>
@@ -62,6 +62,24 @@
                         <% }) %> 
                     </tbody>
                 </table>
+
+
+            </div>
+
+            <div class="flex-c-m flex-w w-full p-t-45 gap-10">
+                <!-- Previous Button -->
+                <a href="/admin/returns?page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
+                    class="m-r-20 text-dark">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+                <P class="m-r-20 text-dark">page : <%= currentPage %>
+                </P>
+                <!-- Next Button -->
+                <a href="/admin/returns?page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
+                    class=" text-dark">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+
             </div>
             
         </div>
@@ -73,7 +91,7 @@
 
     <script>
 
-    function changeReturnStatus(userID, orderID, orderItemID, event) {
+    function changeReturnStatus(orderID, orderItemID, event) {
         event.preventDefault(); // Prevents the form from submitting
 
         let returnStatus = document.getElementById(`returnStatus_${orderID}_${orderItemID}`).value;
@@ -88,12 +106,12 @@
             confirmButtonText: "Yes"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`/admin/returns/updateReturnStatus`, { // Ensure this URL and endpoint are correct for updating return status
+                fetch(`/admin/returns/aproveRejectReturn`, { // Ensure this URL and endpoint are correct for updating return status
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ userID, orderID, orderItemID, returnStatus }) // Pass necessary data
+                    body: JSON.stringify({orderID, orderItemID, returnStatus }) // Pass necessary data
                 }).then(res => res.json())
                     .then((data) => {
                         if (data.validationError) {
