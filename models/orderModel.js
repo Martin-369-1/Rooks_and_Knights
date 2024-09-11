@@ -1,78 +1,78 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
-const Schema=mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const orderSchema=Schema({
-    userID:{
+const orderSchema = Schema({
+    userID: {
         type: Schema.Types.ObjectId,
-        required:true,
-        ref:'users'
+        required: true,
+        ref: 'users'
     },
-    addressId:{
-        type:Schema.Types.ObjectId,
-        ref:'address',
-        required:true
+    addressId: {
+        type: Schema.Types.ObjectId,
+        ref: 'address',
+        required: true
     },
-    subTotalAmmount:{
-        type:Number,
-        required:true
+    subTotalAmmount: {
+        type: Number,
+        required: true
     },
-    orderStatus:{ 
+    orderStatus: {
         type: String,
-        default: 'pending' 
+        default: 'pending'
     },
-    discount:{
-        type:Number,
-        default:0
+    discount: {
+        type: Number,
+        default: 0
     },
-    totalAmmount:{
-        type:Number,
-        required:true
+    totalAmmount: {
+        type: Number,
+        required: true
     },
-    paymentMethod:{
-        type:String,
-        required:true
+    paymentMethod: {
+        type: String,
+        required: true
     },
-    paymentStatus:{
-        type:Boolean,
-        required:true,
-        default:false
+    paymentStatus: {
+        type: Boolean,
+        required: true,
+        default: false
     },
-    products:[
+    products: [
         {
-            productID:{
+            productID: {
                 type: Schema.Types.ObjectId,
-                required:true,
-                ref:"products"
+                required: true,
+                ref: "products"
             },
-            quantity:{
-                type:Number,
-                required:true
+            quantity: {
+                type: Number,
+                required: true
             },
-            status: 
-            { 
+            status:
+            {
                 type: String,
                 enum: ['pending', 'delivered', 'canceled'],
-                default: 'pending' 
+                default: 'pending'
             },
-            returnReason:{
-                type:String
+            returnReason: {
+                type: String
             },
-            returnStatus:{
-                type:String,
-                enum:['requested','approved','rejected','notRequested'],
-                default:'notRequested'
+            returnStatus: {
+                type: String,
+                enum: ['requested', 'approved', 'rejected', 'notRequested'],
+                default: 'notRequested'
             },
-            price:{
-                type:Number,
-                required:true
+            price: {
+                type: Number,
+                required: true
             }
         }
     ],
-},{timestamps: true});
+}, { timestamps: true });
 
 
-const orders=mongoose.model('orders',orderSchema);
+const orders = mongoose.model('orders', orderSchema);
 
-module.exports=orders;
+module.exports = orders;
 

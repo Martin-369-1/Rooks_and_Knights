@@ -11,7 +11,7 @@ exports.checkAdminAuthenticated = async (req, res, next) => {
 
     try {
         const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        
+
         const adminData = await adminService.findUserByEmail(user.email);
 
         if (!adminData) {
@@ -19,32 +19,34 @@ exports.checkAdminAuthenticated = async (req, res, next) => {
         }
 
         req.email = user.email;
-        next(); 
+        next();
     } catch (err) {
+        console.log(err);
         return res.status(403).redirect('/admin/login');
     }
 };
 
-exports.validAdmin= async (req, res, next) => {
+exports.validAdmin = async (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-        return res.status(401).json({validationError:true,redirectUrl:'/admin/login'});
+        return res.status(401).json({ validationError: true, redirectUrl: '/admin/login' });
     }
 
     try {
         const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        
+
         const adminData = await adminService.findUserByEmail(user.email);
 
         if (!adminData) {
-            return res.status(403).json({validationError:true,redirectUrl:'/admin/login'});
+            return res.status(403).json({ validationError: true, redirectUrl: '/admin/login' });
         }
 
         req.email = user.email;
-        next(); 
+        next();
     } catch (err) {
-        return res.status(403).json({validationError:true,redirectUrl:'/admin/login'});
+        console.log(err);
+        return res.status(403).json({ validationError: true, redirectUrl: '/admin/login' });
     }
 };
 
@@ -69,6 +71,7 @@ exports.checkAdminAldreadyAuthenticated = async (req, res, next) => {
 
         return res.redirect('/admin');
     } catch (err) {
+        console.log(err);
         return next();
     }
 };

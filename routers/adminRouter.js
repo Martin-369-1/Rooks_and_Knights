@@ -42,19 +42,22 @@ router.delete('/categories/deleteCategory/:id', adminMiddleware.validAdmin, admi
 
 
 //subCategories
-router.get('/subCategories',adminMiddleware.checkAdminAuthenticated,adminController.getSubCategory) //display sub categories
+router.get('/subCategories', adminMiddleware.checkAdminAuthenticated, adminController.getSubCategory) //display sub categories
 router.post('/subCategories/addSubCategory', adminMiddleware.validAdmin, adminController.addSubCategory); //add new sub category
 router.put('/subCategories/editSubCategory/:id', adminMiddleware.validAdmin, adminController.putEditSubCategory) //edit a sub category
 router.delete('/subCategories/deleteSubCategory/:id', adminMiddleware.validAdmin, adminController.deleteSubCategory); //delet a sub category
 
 
 //orders
-router.get('/orders',adminMiddleware.checkAdminAuthenticated,adminController.getOrders); //display orders
-router.get('/orders/viewEditOrder/:id',adminMiddleware.checkAdminAuthenticated,adminController.getViewEditOrder);  //display specific order
-router.patch('/orders/updateProductStauts/:id',adminMiddleware.validAdmin,adminController.patchChageProductStatus) //update product status
+router.get('/orders', adminMiddleware.checkAdminAuthenticated, adminController.getOrders); //display orders
+router.get('/orders/viewEditOrder/:id', adminMiddleware.checkAdminAuthenticated, adminController.getViewEditOrder);  //display specific order
+router.patch('/orders/updateProductStauts/:id', adminMiddleware.validAdmin, adminController.patchChageProductStatus) //update product status
 
 //returns
-router.get('/returns',adminMiddleware.checkAdminAuthenticated,adminController.getReturns)
-router.patch('/returns/aproveRejectReturn',adminMiddleware.validAdmin,adminController.patchAproveRejectReturn);
+router.get('/returns', adminMiddleware.checkAdminAuthenticated, adminController.getReturns)
+router.patch('/returns/aproveRejectReturn', adminMiddleware.validAdmin, adminController.patchAproveRejectReturn);
+
+//transations
+router.get('/transations', adminMiddleware.checkAdminAuthenticated, adminController.getTransations)
 
 module.exports = router;

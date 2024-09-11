@@ -4,12 +4,10 @@ const jwt = require('jsonwebtoken');
 // Middleware for routes where the user must be authenticated (GET requests)
 exports.checkUserAuthenticated = async (req, res, next) => {
     try {
-        console.log("inside check user auth");
 
         const token = req.cookies.token;
 
         if (!token) {
-            console.log("inside no token");
             return res.status(401).redirect('/user/login');
         }
 
@@ -27,7 +25,6 @@ exports.checkUserAuthenticated = async (req, res, next) => {
 
             // Check if the user is blocked
             if (userData && userData.isblocked) {
-                console.log("inside check user blocked");
                 return res.status(403).redirect('/user/login');
             }
 
@@ -59,9 +56,9 @@ exports.validUser = async (req, res, next) => {
 
 
             let userData = await userCollection.findOne({ email: req.email });
-            
+
             // Check if the user is blocked
-            if (userData.isblocked) {     
+            if (userData.isblocked) {
                 return res.status(403).json({ error: 'You are blocked', errorRedirect: `<a href="/user/login">Login here</a>` });
             }
 

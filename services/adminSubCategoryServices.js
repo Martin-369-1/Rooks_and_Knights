@@ -3,19 +3,19 @@ const subCategoryCollection = require('../models/subCategoryModel')
 const productCollection = require('../models/productsModel')
 
 //get category list
-exports.subCategoryList = async (search,currentPage,noOfList,skipPages) => {
+exports.subCategoryList = async (search, currentPage, noOfList, skipPages) => {
     let findQuery = { isDeleted: false };
 
     if (search) {
-        findQuery.subCategoryName={
-             "$regex": new RegExp(search, 'i') 
+        findQuery.subCategoryName = {
+            "$regex": new RegExp(search, 'i')
         }
     }
     try {
         let totalNoOfList = await subCategoryCollection.countDocuments({ isDeleted: false })
         let subCategoryList = await subCategoryCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
 
-        return {subCategoryList,currentPage,totalNoOfList};
+        return { subCategoryList, currentPage, totalNoOfList };
     } catch (err) {
         console.log(err);
 
@@ -34,7 +34,7 @@ exports.addSubCategory = async (subCategoryName, subCategoryDescription) => {
 
             //if subcategory is not deleted change deletd to false
             let oldsubCategory = await subCategoryCollection.findOneAndUpdate({ subCategoryName }, { $set: { isDeleted: false } })
-            return 
+            return
         }
 
         //create a new sub cateogry
@@ -52,14 +52,14 @@ exports.addSubCategory = async (subCategoryName, subCategoryDescription) => {
 }
 
 //edit sub category
-exports.editSubCategory = async (subCategoryID , subCategoryName, subCategoryDescription) => {
+exports.editSubCategory = async (subCategoryID, subCategoryName, subCategoryDescription) => {
     try {
-        let subCategory = await subCategoryCollection.findOne({ subCategoryName, _id: { $ne: { subCategoryID  } } })
+        let subCategory = await subCategoryCollection.findOne({ subCategoryName, _id: { $ne: { subCategoryID } } })
 
         if (subCategory) { //checks subcateogry exists
             return "subCategory already exists cannot edit"
         }
-        await subCategoryCollection.updateOne({ _id:subCategoryID }, { subCategoryName, subCategoryDescription })
+        await subCategoryCollection.updateOne({ _id: subCategoryID }, { subCategoryName, subCategoryDescription })
     } catch (err) {
         console.log(err);
 
@@ -67,14 +67,14 @@ exports.editSubCategory = async (subCategoryID , subCategoryName, subCategoryDes
 }
 
 //deleted subcategory
-exports.deleteSubCategory = async (subCategoryID ) => {
+exports.deleteSubCategory = async (subCategoryID) => {
     try {
-        const productExist = await productCollection.findOne({ subCategoryID: subCategoryID  })
+        const productExist = await productCollection.findOne({ subCategoryID: subCategoryID })
 
         if (productExist) { //if product exists aldready the subcategory cannot be deleted
             return "SubCategories with products cannot be deleted"
         }
-        await subCategoryCollection.updateOne({ _id:subCategoryID  }, { isDeleted: true })
+        await subCategoryCollection.updateOne({ _id: subCategoryID }, { isDeleted: true })
 
     } catch (err) {
 

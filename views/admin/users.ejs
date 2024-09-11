@@ -28,7 +28,7 @@
 
                         </div>
                     </div>
-                    
+
 
                     <div class="table-responsive">
 
@@ -74,29 +74,32 @@
                     </div>
                     <div class="flex-c-m flex-w w-full p-t-45 gap-10">
                         <!-- Previous Button -->
-                        <a href="/admin/users?search=<%= searchFilter %>&&page=<%= (currentPage>1)? Number(currentPage)-1:1 %>" class="m-r-20 text-dark">
+                        <a href="/admin/users?search=<%= searchFilter %>&&page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
+                            class="m-r-20 text-dark">
                             <i class="fas fa-chevron-left"></i> Previous
                         </a>
-                        <P class="m-r-20 text-dark">page : <%= currentPage %></P>
+                        <P class="m-r-20 text-dark">page : <%= currentPage %>
+                        </P>
                         <!-- Next Button -->
-                        <a href="/admin/users?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>" class=" text-dark">
+                        <a href="/admin/users?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
+                            class=" text-dark">
                             Next <i class="fas fa-chevron-right"></i>
                         </a>
-    
-                        
+
+
                     </div>
 
-                    
+
                 </div>
 
-                
+
         </div>
 
         <%- include('./partials/footer') %>
 
             <script>
-                
-                function blockUnblockUser(event, userID, message,search) {
+
+                function blockUnblockUser(event, userID, message, search) {
                     event.preventDefault()
 
                     Swal.fire({
@@ -137,7 +140,7 @@
                                             /* Read more about handling dismissals below */
                                             if (result.dismiss === Swal.DismissReason.timer) {
                                                 console.log("I was closed by the timer");
-                                                window.location.href=data.redirectUrl;
+                                                window.location.href = data.redirectUrl;
                                             }
                                         });
                                     }
@@ -168,7 +171,7 @@
                     });
                 }
 
-                
+
 
             </script>
     </body>

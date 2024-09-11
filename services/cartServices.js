@@ -108,11 +108,11 @@ exports.deleteCartItem = async (cartItemID, userID) => {
     }
 }
 
-exports.deleteManyCartItem=async(cartItemIDs,price, userID)=>{
+exports.deleteManyCartItem = async (cartItemIDs, price, userID) => {
     try {
 
-        
-        await cartCollection.updateOne({ userID }, { $pull: { cartItems: { _id: {$in:cartItemIDs} } }, $inc: { totalPrice: -price } })
+
+        await cartCollection.updateOne({ userID }, { $pull: { cartItems: { _id: { $in: cartItemIDs } } }, $inc: { totalPrice: -price } })
     } catch (err) {
         console.log(err);
     }

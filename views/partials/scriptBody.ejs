@@ -8,7 +8,7 @@
 <!--===============================================================================================-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
 <script>
-	$(".js-select2").each(function(){
+	$(".js-select2").each(function () {
 		$(this).select2({
 			minimumResultsForSearch: 20,
 			dropdownParent: $(this).next('.dropDownSelect2')
@@ -29,12 +29,12 @@
 <!--===============================================================================================-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
 <script>
-	$('.gallery-lb').each(function() { // the containers for all your galleries
+	$('.gallery-lb').each(function () { // the containers for all your galleries
 		$(this).magnificPopup({
 			delegate: 'a', // the selector for gallery item
 			type: 'image',
 			gallery: {
-				enabled:true
+				enabled: true
 			},
 			mainClass: 'mfp-fade'
 		});
@@ -46,16 +46,16 @@
 <!--===============================================================================================-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"></script>
 <script>
-	$('.js-pscroll').each(function(){
-		$(this).css('position','relative');
-		$(this).css('overflow','hidden');
+	$('.js-pscroll').each(function () {
+		$(this).css('position', 'relative');
+		$(this).css('overflow', 'hidden');
 		var ps = new PerfectScrollbar(this, {
 			wheelSpeed: 1,
 			scrollingThreshold: 1000,
 			wheelPropagation: false,
 		});
 
-		$(window).on('resize', function(){
+		$(window).on('resize', function () {
 			ps.update();
 		})
 	});

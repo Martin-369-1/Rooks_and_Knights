@@ -3,19 +3,19 @@ const categoryCollection = require('../models/CategoryModel')
 const productCollection = require('../models/productsModel')
 
 //get cateogy list
-exports.categoryList = async (search,currentPage,noOfList,skipPages) => {
+exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
     let findQuery = { isDeleted: false };
 
     if (search) {
-        findQuery.categoryName={
-             "$regex": new RegExp(search, 'i') 
+        findQuery.categoryName = {
+            "$regex": new RegExp(search, 'i')
         }
     }
     try {
         let totalNoOfList = await categoryCollection.countDocuments({ isDeleted: false })
         let categoryList = await categoryCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
 
-        return {categoryList,currentPage,totalNoOfList};
+        return { categoryList, currentPage, totalNoOfList };
     } catch (err) {
         console.log(err);
 
@@ -60,7 +60,7 @@ exports.editCategory = async (categoryID, categoryName, categoryDescription) => 
             return "category already exists cannot edit"
         }
 
-        await categoryCollection.updateOne({ _id:categoryID }, { categoryName, categoryDescription })
+        await categoryCollection.updateOne({ _id: categoryID }, { categoryName, categoryDescription })
     } catch (err) {
         console.log(err);
 
@@ -74,7 +74,7 @@ exports.deleteCategory = async (categoryId) => {
         if (productsExists) {
             return "Categories with products cannot delete"
         }
-        await categoryCollection.updateOne({ _id:categoryId }, { isDeleted: true })
+        await categoryCollection.updateOne({ _id: categoryId }, { isDeleted: true })
     } catch (err) {
 
     }

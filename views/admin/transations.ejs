@@ -8,7 +8,7 @@
             <%- include('./partials/slidebar') %>
 
                 <div id="content" class="container-fluid">
-                    <h1 class="m-b-10 admin_title">Orders</h1>
+                    <h1 class="m-b-10 admin_title">Transations</h1>
 
 
                     <div class="table-responsive">
@@ -18,60 +18,45 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Email</th>
-                                    <th>Sub Total Ammount</th>
-                                    <th>Discount</th>
-                                    <th>Total Ammount</th>
-                                    <th>Status</th>
-                                    <th>Payment Status</th>
-                                    <th></th>
+                                    <th>Ammount</th>
+                                    <th>Transation Type</th>
+                                    <th>Payment Method</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% orders.forEach(order=> {%>
+                                <% transationList.forEach((transation)=>{ %>
                                     <tr>
                                         <td>
-                                            <%=order.createdAt.toLocaleDateString()%>
+                                            <%= transation.createdAt.toLocaleDateString() %>
                                         </td>
                                         <td>
-                                            <%= order.userID.email %>
+                                            <%= transation.userID.email %>
                                         </td>
                                         <td>
-                                            <%= order.subTotalAmmount %>
+                                            <%= transation.amount %>
                                         </td>
                                         <td>
-                                            <%=order.discount %>
+                                            <%= transation.transationType %>
                                         </td>
                                         <td>
-                                            <%=order.totalAmmount %>
+                                            <%= transation.paymentMethod %>
                                         </td>
-                                        <td>
-                                            <%=order.orderStatus %>
-                                        </td>
-                                        <td>
-                                            <%=order.paymentStatus %>
-                                        </td>
-                                        <td>
-                                            <form action="/admin/orders/viewEditOrder/<%= order._id %>" method="get">
-                                                <button class="btn btn-dark btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                    View/Edit</button>
-                                            </form>
-
-                                        </td </tr>
-                                        <% }); %>
+                                    </tr>
+                                    <% }) %>
 
                             </tbody>
                         </table>
                     </div>
                     <div class="flex-c-m flex-w w-full p-t-45 gap-10">
                         <!-- Previous Button -->
-                        <a href="/admin/orders?page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
+                        <a href="/admin/transations?page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
                             class="m-r-20 text-dark">
                             <i class="fas fa-chevron-left"></i> Previous
                         </a>
                         <P class="m-r-20 text-dark">page : <%= currentPage %>
                         </P>
                         <!-- Next Button -->
-                        <a href="/admin/orders?page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
+                        <a href="/admin/transations?page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
                             class=" text-dark">
                             Next <i class="fas fa-chevron-right"></i>
                         </a>

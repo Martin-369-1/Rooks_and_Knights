@@ -1,220 +1,226 @@
-.custon{
-    display: flex;
-    justify-content: center;
+.custon {
+  display: flex;
+  justify-content: center;
 }
+
+.account-container {
+  width: 100%;
+  max-width: 1200px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  min-height: 600px;
+  margin: 20px;
+}
+
+.sidebar-menu {
+  width: 250px;
+  background-color: #343a40;
+  color: #fff;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-menu button {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  color: #ddd;
+  width: 100%;
+  text-align: start;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.sidebar-menu a {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  color: #ddd;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+
+.sidebar-menu .active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.hidden {
+  display: none;
+}
+
+.section {
+  width: 100%;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card,
+.address-card,
+.orders-card,
+.returns-card {
+  width: 100%;
+  max-width: 450px;
+  /* Increased width for better visibility */
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-icon,
+.address-icon,
+.orders-icon,
+.returns-icon {
+  font-size: 80px;
+  color: #6c63ff;
+  margin-bottom: 15px;
+}
+
+.profile-image {
+  width: 80px;
+  margin-bottom: 15px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.btn-save,
+.btn-update,
+.btn-add-address {
+  background-color: #6c63ff;
+  border-color: #6c63ff;
+  border-radius: 30px;
+  color: white;
+  margin-top: 15px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.btn-save:hover,
+.btn-update:hover,
+.btn-add-address:hover {
+  background-color: #5750e4;
+}
+
+.profile-section {
+  padding-left: 15vw;
+}
+
+.address-card-container {
+  max-width: 500px;
+  /* Increased width for address card container */
+  margin: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.address-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.address-card .address-info {
+  flex: 1;
+}
+
+.address-card .address-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.address-card .address-actions a {
+  color: #007bff;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.address-card .address-actions a:hover {
+  color: #0056b3;
+}
+
+.btn-add-address {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
   .account-container {
-    width: 100%;
-    max-width: 1200px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    min-height: 600px;
-    margin: 20px;
+    flex-direction: column;
   }
 
   .sidebar-menu {
-    width: 250px;
-    background-color: #343a40;
-    color: #fff;
-    padding: 20px;
-    flex-shrink: 0;
-  }
-
-  .sidebar-menu button{
-    display: block;
-    padding: 12px;
-    margin-bottom: 10px;
-    color: #ddd;
     width: 100%;
-    text-align: start;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s;
-  }
-
-  .sidebar-menu a {
-    display: block;
-    padding: 12px;
-    margin-bottom: 10px;
-    color: #ddd;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s;
-  }
-
-  .sidebar-menu a:hover,.sidebar-menu button:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
-
-
-  .sidebar-menu .active {
-    background-color: #007bff;
-    color: #fff;
+    padding: 10px;
   }
 
   .main-content {
-    flex-grow: 1;
-    padding: 30px;
-    background-color: #f8f9fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .section {
-    width: 100%;
-  }
-
-  .card {
-    background-color: #fff;
-    border: 1px solid #ddd;
     padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  
-  .profile-card,
-  .address-card,
-  .orders-card,
-  .returns-card {
-    width: 100%;
-    max-width: 450px; /* Increased width for better visibility */
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
+
+  .address-card-container {
+    padding: 15px;
   }
+}
+
+@media (max-width: 480px) {
 
   .profile-icon,
   .address-icon,
   .orders-icon,
   .returns-icon {
-    font-size: 80px;
-    color: #6c63ff;
-    margin-bottom: 15px;
-  }
-
-  .profile-image {
-    width: 80px;
-    margin-bottom: 15px;
-    border-radius: 50%;
-    object-fit: cover; 
-  }
-
-  .btn-save,
-  .btn-update,
-  .btn-add-address {
-    background-color: #6c63ff;
-    border-color: #6c63ff;
-    border-radius: 30px;
-    color: white;
-    margin-top: 15px;
-    width: 100%;
-    transition: background-color 0.3s;
-  }
-
-  .btn-save:hover,
-  .btn-update:hover,
-  .btn-add-address:hover {
-    background-color: #5750e4;
+    font-size: 60px;
   }
 
   .profile-section {
-    padding-left: 15vw;
+    padding-left: 0;
   }
-
-  .address-card-container {
-    max-width: 500px; /* Increased width for address card container */
-    margin: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .address-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .address-card .address-info {
-    flex: 1;
-  }
-
-  .address-card .address-actions {
-    display: flex;
-    gap: 15px;
-  }
-
-  .address-card .address-actions a {
-    color: #007bff;
-    font-size: 18px;
-    transition: color 0.3s;
-  }
-
-  .address-card .address-actions a:hover {
-    color: #0056b3;
-  }
-
-  .btn-add-address {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-    margin-top: 20px;
-    font-size: 16px;
-  }
-
-  /* Responsive Styles */
-  @media (max-width: 768px) {
-    .account-container {
-      flex-direction: column;
-    }
-
-    .sidebar-menu {
-      width: 100%;
-      padding: 10px;
-    }
-
-    .main-content {
-      padding: 15px;
-    }
-
-    .address-card-container {
-      padding: 15px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .profile-icon,
-    .address-icon,
-    .orders-icon,
-    .returns-icon {
-      font-size: 60px;
-    }
-    .profile-section {
-      padding-left: 0;
-    }
-  }
+}

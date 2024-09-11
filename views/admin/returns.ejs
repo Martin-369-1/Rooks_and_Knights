@@ -3,169 +3,192 @@
 
 <%- include('./partials/header') %>
 
-<body>
-    <div class="wrapper">
-        <%- include('./partials/slidebar') %>
+    <body>
+        <div class="wrapper">
+            <%- include('./partials/slidebar') %>
 
-        <div id="content" class="container-fluid">
-            <h1 class="m-b-10 admin_title">Returns</h1>
+                <div id="content" class="container-fluid">
+                    <h1 class="m-b-10 admin_title">Returns</h1>
 
 
-            <div class="table-responsive">
+                    <div class="table-responsive">
 
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>email</th>
-                            <th>Order Date</th>
-                            <th>ProductName</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total Ammount</th>
-                            <th>Return Reason</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% returnList.forEach((returnItem)=>{ %>
-                            <% returnItem.products.forEach((product)=>{ %>
-                                <% if(product.returnStatus!='notRequested') {%>
-                                    <tr>
-                                        <td><%= returnItem.userID.email %></td>
-                                        <td><%= returnItem.createdAt.toLocaleDateString() %></td>
-                                        <td><%= product.productID.productName %></td>
-                                        <td><%= product.quantity %></td>
-                                        <td><%= product.price %></td>
-                                        <td><%= product.quantity * product.price %></td>
-                                        <td><%= product.returnReason %></td>
-                                        <td><%= product.returnStatus %></td>
-                                        <td>
-                                            <% if(product.returnStatus == 'requested') {%>
-                                            <form action="" onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event)">
-                                                <select id="returnStatus_<%= returnItem._id%>_<%= product._id %>" name="options" style="flex: 1; padding: 8px; margin-right: 10px;">
-                                                    <option value="" disabled selected>Select an option</option>
-                                                    <option value="approved">Approve</option>
-                                                    <option value="rejected">Reject</option>
-                                                  </select>
-                                                  <button type="submit" style="padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer;">
-                                                    Save
-                                                  </button>
-                                            </form>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>email</th>
+                                    <th>Order Date</th>
+                                    <th>ProductName</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total Ammount</th>
+                                    <th>Return Reason</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% returnList.forEach((returnItem)=>{ %>
+                                    <% returnItem.products.forEach((product)=>{ %>
+                                        <% if(product.returnStatus!='notRequested' ) {%>
+                                            <tr>
+                                                <td>
+                                                    <%= returnItem.userID.email %>
+                                                </td>
+                                                <td>
+                                                    <%= returnItem.createdAt.toLocaleDateString() %>
+                                                </td>
+                                                <td>
+                                                    <%= product.productID.productName %>
+                                                </td>
+                                                <td>
+                                                    <%= product.quantity %>
+                                                </td>
+                                                <td>
+                                                    <%= product.price %>
+                                                </td>
+                                                <td>
+                                                    <%= product.quantity * product.price %>
+                                                </td>
+                                                <td>
+                                                    <%= product.returnReason %>
+                                                </td>
+                                                <td>
+                                                    <%= product.returnStatus %>
+                                                </td>
+                                                <td>
+                                                    <% if(product.returnStatus=='requested' ) {%>
+                                                        <form action=""
+                                                            onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event , '<%=returnItem.userID._id%>','<%=product.price%>' ,'<%=returnItem.paymentMethod%>')">
+                                                            <select
+                                                                id="returnStatus_<%= returnItem._id%>_<%= product._id %>"
+                                                                name="options"
+                                                                style="flex: 1; padding: 8px; margin-right: 10px;">
+                                                                <option value="" disabled selected>Select an option
+                                                                </option>
+                                                                <option value="approved">Approve</option>
+                                                                <option value="rejected">Reject</option>
+                                                            </select>
+                                                            <button type="submit"
+                                                                style="padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                                                Save
+                                                            </button>
+                                                        </form>
+                                                        <% } %>
+                                                </td>
+                                            </tr>
                                             <% } %>
-                                        </td>
-                                    </tr>
-                                <% } %>
-                                
-                            <% }) %>
-                            
-                        <% }) %> 
-                    </tbody>
-                </table>
+
+                                                <% }) %>
+
+                                                    <% }) %>
+                            </tbody>
+                        </table>
 
 
-            </div>
+                    </div>
 
-            <div class="flex-c-m flex-w w-full p-t-45 gap-10">
-                <!-- Previous Button -->
-                <a href="/admin/returns?page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
-                    class="m-r-20 text-dark">
-                    <i class="fas fa-chevron-left"></i> Previous
-                </a>
-                <P class="m-r-20 text-dark">page : <%= currentPage %>
-                </P>
-                <!-- Next Button -->
-                <a href="/admin/returns?page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
-                    class=" text-dark">
-                    Next <i class="fas fa-chevron-right"></i>
-                </a>
+                    <div class="flex-c-m flex-w w-full p-t-45 gap-10">
+                        <!-- Previous Button -->
+                        <a href="/admin/returns?page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
+                            class="m-r-20 text-dark">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                        <P class="m-r-20 text-dark">page : <%= currentPage %>
+                        </P>
+                        <!-- Next Button -->
+                        <a href="/admin/returns?page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
+                            class=" text-dark">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
 
-            </div>
-            
+                    </div>
+
+                </div>
+
         </div>
-        
-    </div>  
 
-    <%- include('./partials/footer') %>
+        <%- include('./partials/footer') %>
 
 
-    <script>
+            <script>
 
-    function changeReturnStatus(orderID, orderItemID, event) {
-        event.preventDefault(); // Prevents the form from submitting
+                function changeReturnStatus(orderID, orderItemID, event, userID, amount, paymentMethod) {
+                    event.preventDefault(); // Prevents the form from submitting
 
-        let returnStatus = document.getElementById(`returnStatus_${orderID}_${orderItemID}`).value;
+                    let returnStatus = document.getElementById(`returnStatus_${orderID}_${orderItemID}`).value;
 
-        Swal.fire({
-            title: "Are you sure?",
-            text: `Do you want to ${(returnStatus == 'approved') ? 'approve' : 'reject'} this request?`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/admin/returns/aproveRejectReturn`, { // Ensure this URL and endpoint are correct for updating return status
-                    method: "PATCH",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({orderID, orderItemID, returnStatus }) // Pass necessary data
-                }).then(res => res.json())
-                    .then((data) => {
-                        if (data.validationError) {
-                            let timerInterval;
-                            Swal.fire({
-                                title: "Validation Error",
-                                html: "You will be redirected to login in <b></b> milliseconds.",
-                                timer: 2000,
-                                timerProgressBar: true,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                    const timer = Swal.getPopup().querySelector("b");
-                                    timerInterval = setInterval(() => {
-                                        timer.textContent = `${Swal.getTimerLeft()}`;
-                                    }, 100);
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: `Do you want to ${(returnStatus == 'approved') ? 'approve' : 'reject'} this request?`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/admin/returns/aproveRejectReturn`, { // Ensure this URL and endpoint are correct for updating return status
+                                method: "PATCH",
+                                headers: {
+                                    'Content-Type': 'application/json'
                                 },
-                                willClose: () => {
-                                    clearInterval(timerInterval);
-                                }
-                            }).then((result) => {
-                                if (result.dismiss === Swal.DismissReason.timer) {
-                                    console.log("I was closed by the timer");
-                                    window.location.href = data.redirectUrl;
-                                }
-                            });
-                        }
+                                body: JSON.stringify({ orderID, orderItemID, returnStatus, userID, amount, paymentMethod }) // Pass necessary data
+                            }).then(res => res.json())
+                                .then((data) => {
+                                    if (data.validationError) {
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: "Validation Error",
+                                            html: "You will be redirected to login in <b></b> milliseconds.",
+                                            timer: 2000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                console.log("I was closed by the timer");
+                                                window.location.href = data.redirectUrl;
+                                            }
+                                        });
+                                    }
 
-                        if (data.success) {
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 2000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                            });
-                            Toast.fire({
-                                icon: "success",
-                                title: `Return status has been ${returnStatus}`
-                            });
-                            setTimeout(() => {
-                                window.location.reload()
-                            }, 2000)
+                                    if (data.success) {
+                                        const Toast = Swal.mixin({
+                                            toast: true,
+                                            position: "top-end",
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            timerProgressBar: true,
+                                            didOpen: (toast) => {
+                                                toast.onmouseenter = Swal.stopTimer;
+                                                toast.onmouseleave = Swal.resumeTimer;
+                                            }
+                                        });
+                                        Toast.fire({
+                                            icon: "success",
+                                            title: `Return status has been ${returnStatus}`
+                                        });
+                                        setTimeout(() => {
+                                            window.location.reload()
+                                        }, 2000)
+                                    }
+                                })
                         }
                     })
-            }
-        })
-    }
-    
+                }
 
 
-    </script>
-</body>
+
+            </script>
+    </body>
+
 </html>

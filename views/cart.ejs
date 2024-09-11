@@ -49,30 +49,30 @@
                                         <td class="column-4">
                                             <% if(cartItem.productID.isDeleted){%>
                                                 <p>Product unavaliable</p>
-                                            <% }else if(cartItem.productID.stock>0){%>
+                                                <% }else if(cartItem.productID.stock>0){%>
 
-                                                <p id="stock-Left_<%=cartItem._id%>"></p>
-                                                <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
-                                                        onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>')">
-                                                        <i class="fs-16 zmdi zmdi-minus"></i>
+                                                    <p id="stock-Left_<%=cartItem._id%>"></p>
+                                                    <div class="wrap-num-product flex-w m-l-auto m-r-0">
+                                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+                                                            onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>')">
+                                                            <i class="fs-16 zmdi zmdi-minus"></i>
+                                                        </div>
+
+                                                        <input class="mtext-104 cl3 txt-center num-product "
+                                                            type="number" name="num-product1"
+                                                            value="<%= (cartItem.quantity <= cartItem.productID.stock)? cartItem.quantity:1 %>"
+                                                            id="productQuantity_<%= cartItem._id %>"
+                                                            oninput="productTotalPrice('<%= cartItem._id %>', '<%= cartItem.productID.price %>')"
+                                                            readonly>
+
+                                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+                                                            onclick="increaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>','<%= cartItem.productID.stock %>')">
+                                                            <i class="fs-16 zmdi zmdi-plus"></i>
+                                                        </div>
                                                     </div>
-
-                                                    <input class="mtext-104 cl3 txt-center num-product " type="number"
-                                                        name="num-product1"
-                                                        value="<%= (cartItem.quantity <= cartItem.productID.stock)? cartItem.quantity:1 %>"
-                                                        id="productQuantity_<%= cartItem._id %>"
-                                                        oninput="productTotalPrice('<%= cartItem._id %>', '<%= cartItem.productID.price %>')"
-                                                        readonly>
-
-                                                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
-                                                        onclick="increaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>','<%= cartItem.productID.stock %>')">
-                                                        <i class="fs-16 zmdi zmdi-plus"></i>
-                                                    </div>
-                                                </div>
-                                                <% }else{ %>
-                                                    <p>Out of Stock</p>
-                                                    <% } %>
+                                                    <% }else{ %>
+                                                        <p>Out of Stock</p>
+                                                        <% } %>
                                         </td>
                                         <td class="column-5 cart-product-total" id="cartProductTotal_<%=cartItem._id%>">
                                             <%=cartItem.productID.price * cartItem.quantity%>
@@ -245,7 +245,7 @@
                         cartTotalPrice += cartItem.productID.price * quantity;
 
                     });
-  
+
                     for (let i = 0; i < arr.length; i++) {
                         if (arr[i].quantity < 0) {
                             return Swal.fire({
@@ -253,7 +253,7 @@
                                 text: "Minimum quantity should be 0",
                                 icon: "error",
                             });
-                            
+
                         }
                     }
 

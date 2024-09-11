@@ -50,13 +50,13 @@
                                             <% if(cartItem.productID.isDeleted){%>
                                                 <p>Proudct unavaliable</p>
                                                 <% } else if(cartItem.quantity<=cartItem.productID.stock) {%>
-                                                    
+
                                                     <p class="p-l-40">
                                                         <%= cartItem.quantity %>
                                                     </p>
-                                                <% }else{%>
-                                                    <p>Out of stock</p>
-                                                    <% } %>
+                                                    <% }else{%>
+                                                        <p>Out of stock</p>
+                                                        <% } %>
 
                                         </td>
                                         <td class="column-5 cart-product-total" id="cartProductTotal_<%=cartItem._id%>">
@@ -110,6 +110,9 @@
                                         <button class="btn btn-primary" data-toggle="modal"
                                             data-target="#addAddressModel"><i class="fa fa-plus"></i> Add New
                                             Address</button>
+
+
+
                             </div>
                         </div>
 
@@ -181,7 +184,9 @@
                             <div class="size-209 p-t-1">
                                 <select id="paymentMethod" class="form-control">
                                     <option value="COD">Cash On Delivery</option>
-                                    <option value="Razopay">Razopay</option>
+                                    <option value="Razorpay">Razorpay</option>
+                                    <option value="Wallet">Wallet</option>
+
                                 </select>
                             </div>
                         </div>
@@ -295,7 +300,7 @@
 
 
         <%- include('./partials/scriptBody.ejs') %>
-
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <script>
                 function addNewAddress(event) {
                     event.preventDefault()
@@ -437,19 +442,18 @@
                 }
 
                 function proccedToPayment(event) {
-                    console.log("kf");
-                    
+
                     event.preventDefault()
                     const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
                     console.log(selectedAddress);
-                    
+
                     const addressId = selectedAddress.value;
 
                     const rows = document.querySelectorAll('.cart-product-row');
                     const products = []
                     const cartItemIds = []
                     let outOfStock = false;
-                    let unavaliableProduct=false;
+                    let unavaliableProduct = false;
                     rows.forEach((row) => {
                         const cartItem = JSON.parse(row.getAttribute('data-products'))
                         if (cartItem.quantity > cartItem.productID.stock) {
@@ -461,7 +465,7 @@
                             });
                         }
 
-                        if(cartItem.productID.isDeleted){
+                        if (cartItem.productID.isDeleted) {
                             unavaliableProduct = true
                             Swal.fire({
                                 title: "Cannot Proceed to payment",
@@ -505,10 +509,37 @@
                                     window.location.href = data.successRedirect;
                                 }, 2000)
                             }
+
+                            if (data.error) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: data.error,
+                                    icon: "error",
+                                });
+                            }
+
+                            if (data.razorpayOrder) {
+                                console.log(data.razorpayOrder);
+                                var options = {
+                                    "key": "rzp_test_iPUiBGfQqstcsI", // Enter the Key ID generated from the Dashboard
+                                    "name": "Rook & Knights",
+                                    "description": "Test Transaction",
+                                    "image": "https://imgs.search.brave.com/jsPXFiH4YxTvzVbUvQMILb4V32Y6I0DxlC2p3CaqAfA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ibG9n/LnBob3RvYWRraW5n/LmNvbS93cC1jb250/ZW50L3VwbG9hZHMv/MjAyMy8wNS8xNjgy/OTQ2NDIzMzgxLTEu/anBn",
+                                    "order_id": data.razorpayOrder.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                    "callback_url": "/order/completePayment",
+                                    "theme": {
+                                        "color": "#454545"
+                                    }
+                                };
+                                var rzp1 = new Razorpay(options);
+
+                                rzp1.open();
+
+                            }
                         })
                 }
 
-                
+
 
 
 

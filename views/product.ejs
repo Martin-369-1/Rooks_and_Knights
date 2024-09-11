@@ -411,7 +411,7 @@
 									text: data.error,
 									footer: data.errorRedirect
 								});
-							} else if(data.authError){
+							} else if (data.authError) {
 								Swal.fire({
 									icon: "error",
 									title: "Oops...",
@@ -441,7 +441,7 @@
 
 				}
 
-				function addToWishlist(event,productID){
+				function addToWishlist(event, productID) {
 					event.preventDefault()
 					fetch(`/wishlist/addToWishlist/${productID}`, {
 						method: 'POST',
@@ -464,7 +464,7 @@
 									text: data.error,
 									footer: data.errorRedirect
 								});
-							} else if(data.authError){
+							} else if (data.authError) {
 								Swal.fire({
 									icon: "error",
 									title: "Oops...",

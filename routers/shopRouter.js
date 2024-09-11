@@ -1,16 +1,16 @@
 //requiring modules
-const express=require('express');
-const router=express();
+const express = require('express');
+const router = express();
 
 //controllers
-const shopController=require('../controllers/shopController')
+const shopController = require('../controllers/shopController')
 
 //middlewares
-const userAuthMiddleware=require('../middlewares/userAuthMiddleware');
+const userAuthMiddleware = require('../middlewares/userAuthMiddleware');
 
-router.get('/',shopController.getProductList)
-router.get('/product/:id',shopController.getProduct);
-router.post('/product/addReview/:id',userAuthMiddleware.checkUserAuthenticated,shopController.postReview);
+router.get('/', shopController.getProductList)
+router.get('/product/:id', shopController.getProduct);
+router.post('/product/addReview/:id', userAuthMiddleware.checkUserAuthenticated, shopController.postReview);
 
 
-module.exports=router;
+module.exports = router;

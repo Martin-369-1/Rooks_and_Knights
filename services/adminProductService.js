@@ -9,23 +9,23 @@ const path = require('node:path')
 
 
 //get product list
-exports.productList = async (search,currentPage, noOfList, skipPages) => {
+exports.productList = async (search, currentPage, noOfList, skipPages) => {
     const findQuery = { isDeleted: false };
 
     if (search) {
-        findQuery.productName={
-             "$regex": new RegExp(search, 'i') 
+        findQuery.productName = {
+            "$regex": new RegExp(search, 'i')
         }
     }
 
     try {
         const totalNoOfList = await productCollection.countDocuments({ isDeleted: false })
         const productList = await productCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
-            .populate( 'categoryID')
-            .populate( 'subCategoryID')
+            .populate('categoryID')
+            .populate('subCategoryID')
             .lean();
-        
-        return {productList,currentPage,totalNoOfList};
+
+        return { productList, currentPage, totalNoOfList };
     } catch (err) {
         console.log(err);
     }
@@ -73,7 +73,7 @@ exports.viewProduct = async (productID) => {
     try {
         const product = await productCollection.findById(ProductID).populate('categoryID').populate('subCategoryName')
         console.log(product);
-        
+
         return product;
     } catch (err) {
         console.log(err);
@@ -152,8 +152,8 @@ exports.editProduct = async (req, res, productID) => {
 //delete a product
 exports.deleteProduct = async (productID) => {
     try {
-        await productCollection.updateOne({ _id :productID}, { isDeleted: true })
-        
+        await productCollection.updateOne({ _id: productID }, { isDeleted: true })
+
     } catch (err) {
         console.log(err);
     }

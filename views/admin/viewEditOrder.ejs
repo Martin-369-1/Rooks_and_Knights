@@ -100,9 +100,9 @@
                         Shipping Address
                     </div>
                     <div class="card-body">
-                        <p><%= address.addressTitle %> : <%= address.state %>,<%=
-                            address.city %>,<%= address.pinCode %>,<%=
-                                    address.streetAddress %>
+                        <p>
+                            <%= address.addressTitle %> : <%= address.state %>,<%= address.city %>,<%= address.pinCode
+                                            %>,<%= address.streetAddress %>
                         </p>
                     </div>
                 </div>
@@ -141,24 +141,28 @@
                                             <td>
                                                 <%= product.price %>
                                             </td>
-                                            <% if(product.status=='pending'){%>
-                                            <td>
-                                                <div class="custom-select-wrapper">
-                                                    <select class="custom-select"
-                                                        id="product_status_<%= product._id %>">
-                                                        <option value="pending" selected>pending</option>
-                                                        <option value="delivered">delivered</option>
-                                                        <option value="canceled">canceled</option>
-                                                    </select>
+                                            <% if(product.status=='pending' ){%>
+                                                <td>
+                                                    <div class="custom-select-wrapper">
+                                                        <select class="custom-select"
+                                                            id="product_status_<%= product._id %>">
+                                                            <option value="pending" selected>pending</option>
+                                                            <option value="delivered">delivered</option>
+                                                            <option value="canceled">canceled</option>
+                                                        </select>
 
 
-                                                </div>
-                                            </td>
-                                            <td><button class="btn btn-success" onclick="updateProductStatus('<%= product._id %>','<%=order._id%>')">update</button></td>
-                                            <% }else{ %>
-                                                <td><%= product.status %></td>
-                                                <td></td>
-                                            <% } %>
+                                                    </div>
+                                                </td>
+                                                <td><button class="btn btn-success"
+                                                        onclick="updateProductStatus('<%= product._id %>','<%=order._id%>')">update</button>
+                                                </td>
+                                                <% }else{ %>
+                                                    <td>
+                                                        <%= product.status %>
+                                                    </td>
+                                                    <td></td>
+                                                    <% } %>
                                         </tr>
                                         <% }) %>
 

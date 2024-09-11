@@ -87,13 +87,14 @@ h6 {
 [ Slick2 ]*/
 .slick-slide {
 
-  display: flex !important; 
+  display: flex !important;
   flex-wrap: wrap !important;
-  gap: 20px !important; 
+  gap: 20px !important;
 }
 
 .slick2 .isotope-item {
-  margin: 0 30px; /* Add margin for spacing */
+  margin: 0 30px;
+  /* Add margin for spacing */
 }
 
 .related-products-container {
@@ -101,11 +102,13 @@ h6 {
   align-items: center;
   overflow: hidden;
   position: relative;
-  padding: 16px; /* Space around the container */
+  padding: 16px;
+  /* Space around the container */
 }
 
 /* Buttons for scrolling */
-.prev-btn, .next-btn {
+.prev-btn,
+.next-btn {
   background-color: #007bff;
   color: white;
   border: none;
@@ -129,8 +132,10 @@ h6 {
 .related-products {
   display: flex;
   overflow-x: auto;
-  scroll-behavior: smooth; /* Smooth scrolling */
-  gap: 16px; /* Space between items */
+  scroll-behavior: smooth;
+  /* Smooth scrolling */
+  gap: 16px;
+  /* Space between items */
 }
 
 /* Style for each product item */
@@ -139,15 +144,20 @@ h6 {
   flex-direction: column;
   text-decoration: none;
   color: inherit;
-  width: 200px; /* Fixed width for each product item */
-  border: 1px solid #ddd; /* Light border around items */
-  border-radius: 8px; /* Rounded corners */
-  overflow: hidden; /* Ensure rounded corners work */
+  width: 200px;
+  /* Fixed width for each product item */
+  border: 1px solid #ddd;
+  /* Light border around items */
+  border-radius: 8px;
+  /* Rounded corners */
+  overflow: hidden;
+  /* Ensure rounded corners work */
   transition: box-shadow 0.3s;
 }
 
 .product-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Shadow on hover */
 }
 
 /* Style for the product image */
@@ -2151,7 +2161,7 @@ input.num-product::-webkit-inner-spin-button {
 
 /*//////////////////////////////////////////////////////////////////
 [ Block2 ]*/
-.block2{
+.block2 {
   width: 250px;
 }
 
@@ -3374,7 +3384,7 @@ input.num-product::-webkit-inner-spin-button {
   border-color: #717fe0;
 }
 
-.click-tag1{
+.click-tag1 {
   color: #717fe0;
   border-color: #717fe0;
 }
@@ -3944,7 +3954,8 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .password-container input {
-  padding-right: 40px; /* space for the eye icon */
+  padding-right: 40px;
+  /* space for the eye icon */
 }
 
 .password-container button {
@@ -4040,45 +4051,45 @@ input.num-product::-webkit-inner-spin-button {
 
 @media (max-width: 768px) {
   .profile-header {
-      flex-direction: column;
-      text-align: center;
-      padding: 15px;
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
   }
 
   .profile-header img {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
   }
 
   .profile-header .btn {
-      padding: 5px 10px;
-      font-size: 12px;
-      margin-bottom: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-bottom: 5px;
   }
 
   .profile-body {
-      padding: 15px;
+    padding: 15px;
   }
 }
 
 @media (max-width: 576px) {
   .profile-card {
-      padding: 15px;
+    padding: 15px;
   }
 
   .profile-header img {
-      width: 50px;
-      height: 50px;
+    width: 50px;
+    height: 50px;
   }
 
   .profile-header .btn {
-      padding: 4px 8px;
-      font-size: 11px;
+    padding: 4px 8px;
+    font-size: 11px;
   }
 
   .profile-body {
-      padding: 10px;
+    padding: 10px;
   }
 }
 
@@ -4113,52 +4124,219 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .custom-select-wrapper {
-            position: relative;
-            display: inline-block;
-            width: 250px;
-            margin: 20px;
-        }
+  position: relative;
+  display: inline-block;
+  width: 250px;
+  margin: 20px;
+}
 
-        /* Styling for the select element */
-        .custom-select {
-            width: 100%;
-            height: 45px;
-            padding: 0 15px;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #fff;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            position: relative;
-            outline: none;
-            cursor: pointer;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
+/* Styling for the select element */
+.custom-select {
+  width: 100%;
+  height: 45px;
+  padding: 0 15px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .custom-select:focus {
-            border-color: #17a2b8;
-            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
-        }
+.custom-select:focus {
+  border-color: #17a2b8;
+  box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+}
 
-        /* Styling for the dropdown arrow */
-        .custom-select::after {
-            content: '\f107';
-            font-family: 'FontAwesome';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: #666;
-            font-size: 1rem;
-        }
+/* Styling for the dropdown arrow */
+.custom-select::after {
+  content: '\f107';
+  font-family: 'FontAwesome';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
+  font-size: 1rem;
+}
 
-        /* Custom dropdown option styling */
-        .custom-select option {
-            padding: 10px;
-        }
+/* Custom dropdown option styling */
+.custom-select option {
+  padding: 10px;
+}
 
+
+.wallet-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wallet-amount-section {
+  text-align: center;
+  padding: 20px;
+  background-color: #eee;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.amount-display {
+  margin-bottom: 20px;
+}
+
+.amount-display h3 {
+  font-size: 20px;
+  margin: 0;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amount-display h3 i {
+  margin-right: 10px;
+  color: #777;
+}
+
+.amount {
+  font-size: 36px;
+  font-weight: 600;
+  color: #333;
+  margin: 10px 0;
+}
+
+.add-money-btn {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.add-money-btn i {
+  margin-right: 8px;
+}
+
+.add-money-btn:hover {
+  background-color: #333;
+}
+
+.transaction-history {
+  margin-top: 20px;
+}
+
+.transaction-history h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #555;
+  font-weight: 600;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.transaction-table th {
+  background-color: #f8f8f8;
+  color: #666;
+}
+
+.transaction-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.transaction-table td .status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.status-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-failed {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .wallet-container {
+    padding: 15px;
+    margin: 20px;
+  }
+
+  .amount-display h3 {
+    font-size: 18px;
+  }
+
+  .amount {
+    font-size: 28px;
+  }
+
+  .add-money-btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .transaction-history h3 {
+    font-size: 20px;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .amount-display h3 {
+    font-size: 16px;
+  }
+
+  .amount {
+    font-size: 24px;
+  }
+
+  .add-money-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .transaction-history h3 {
+    font-size: 18px;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 8px;
+  }
+
+  .wallet-amount-section {
+    padding: 15px;
+  }
+}

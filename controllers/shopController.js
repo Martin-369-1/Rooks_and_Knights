@@ -10,10 +10,11 @@ exports.getProductList = async (req, res) => {
         const skipPages = currentPage - 1
         const { productList, categoryList, subCategoryList, totalNoOfProducts } = await shopServices.productList(category, sortby, price, subCategory, search, currentPage, noOfProducts, skipPages);
         const totalNoOfPages = totalNoOfProducts / noOfProducts;
+       
         res.render('shop', { productList, categoryList, subCategoryList, categoryFilter: category || null, sortbyFilter: sortby || null, priceFilter: price || null, subCategoryFilter: subCategory || null, searchFilter: search || null, currentPage, totalNoOfPages })
     } catch (err) {
         console.log(err);
-
+        res.redirect('/error')
     }
 }
 
@@ -48,5 +49,6 @@ exports.postReview = async (req, res) => {
         res.redirect(`/shop/product/${_id}`)
     } catch (err) {
         console.log(err);
+        res.status(500).json({ error: "Server Error" });
     }
 }

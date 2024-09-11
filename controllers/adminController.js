@@ -4,8 +4,10 @@ const adminCategoryService = require('../services/adminCategoryService');
 const adminSubCategoryService = require('../services/adminSubCategoryServices')
 const adminProductService = require('../services/adminProductService');
 const adminService = require('../services/adminService');
-const adminOrderService=require('../services/adminOrderService');
-const adminReturnService=require('../services/adminReturnService')
+const adminOrderService = require('../services/adminOrderService');
+const adminReturnService = require('../services/adminReturnService')
+const walletService = require('../services/walletService');
+const transationService = require('../services/transationService')
 
 //Utils
 const generateAccessToken = require('../utils/JWTUtils');
@@ -44,7 +46,7 @@ exports.postLogin = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
     }
 }
 
@@ -62,15 +64,15 @@ exports.getDashboard = async (req, res) => {
 //renders users list page
 exports.getUsers = async (req, res) => {
     try {
-        const {search,page}=req.query;
+        const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1
-        
-        const {userList,totalNoOfList} = await adminUserService.userList(search,currentPage,noOfList,skipPages);
+
+        const { userList, totalNoOfList } = await adminUserService.userList(search, currentPage, noOfList, skipPages);
         const totalNoOfPages = totalNoOfList / noOfList;
 
-        res.render('admin/users.ejs', { userList ,searchFilter:search || null,currentPage,totalNoOfPages})
+        res.render('admin/users.ejs', { userList, searchFilter: search || null, currentPage, totalNoOfPages })
 
     } catch (err) {
         console.log(err);
@@ -82,16 +84,16 @@ exports.getUsers = async (req, res) => {
 
 //Block or Unblock user 
 exports.patchBlockUnblockUser = async (req, res) => {
-    
+
     try {
         userID = req.params.id;
         await adminUserService.blockUnblockUser(userID)
-        res.json({success:true})
+        res.json({ success: true })
 
     }
     catch (err) {
-        console.log( err);
-        res.status(500).json({error:"Server Error"})
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
 
     }
 }
@@ -99,15 +101,15 @@ exports.patchBlockUnblockUser = async (req, res) => {
 //renderes product page
 exports.getProducts = async (req, res) => {
     try {
-        const {search,page}=req.query;
+        const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1
 
-        const {productList,totalNoOfList} = await adminProductService.productList(search,currentPage,noOfList,skipPages);
+        const { productList, totalNoOfList } = await adminProductService.productList(search, currentPage, noOfList, skipPages);
         const totalNoOfPages = totalNoOfList / noOfList;
 
-        res.render('admin/products', { productList ,searchFilter:search || null,currentPage,totalNoOfPages})
+        res.render('admin/products', { productList, searchFilter: search || null, currentPage, totalNoOfPages })
 
     } catch (err) {
         console.log(err);
@@ -180,7 +182,7 @@ exports.deleteProduct = async (req, res) => {
     try {
         const userID = req.params.id;
         await adminProductService.deleteProduct(userID);
-        res.json({success:true})
+        res.json({ success: true })
 
 
     } catch (err) {
@@ -194,13 +196,13 @@ exports.deleteProduct = async (req, res) => {
 //Categories and subCategory get
 exports.getCategories = async (req, res) => {
     try {
-        const {search,page}=req.query;
+        const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1
-        const {categoryList,totalNoOfList} = await adminCategoryService.categoryList(search,currentPage,noOfList,skipPages);
+        const { categoryList, totalNoOfList } = await adminCategoryService.categoryList(search, currentPage, noOfList, skipPages);
         const totalNoOfPages = totalNoOfList / noOfList;
-        res.render('admin/categories', { categoryList,searchFilter:search || null,currentPage,totalNoOfPages})
+        res.render('admin/categories', { categoryList, searchFilter: search || null, currentPage, totalNoOfPages })
 
 
     } catch (err) {
@@ -213,27 +215,26 @@ exports.getCategories = async (req, res) => {
 
 
 //categories
-
 //add new category
 exports.addCategory = async (req, res) => {
     try {
         const { categoryName, categoryDescription } = req.body;
 
         if (!categoryName || !categoryDescription) { //check categoryName and description are empty
-            return res.status(400).json({error:"category name or category name should not be empty"})
+            return res.status(400).json({ error: "category name or category name should not be empty" })
         }
         const error = await adminCategoryService.addCategory(categoryName, categoryDescription)
 
         if (error) {
             req.flash('CategoryError', error)
-            return res.status(400).json({error})
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true});
+        res.status(200).json({ success: true });
 
     } catch (err) {
-        console.log( err);
-        res.status(500).json({error:"Server Error"})
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
     }
 }
 
@@ -244,19 +245,19 @@ exports.putEditCategory = async (req, res) => {
         const { categoryName, categoryDescription } = req.body;
 
         if (!categoryName || !categoryDescription) {
-            return res.status(400).json({error:"category name or category description should not be empty"})
+            return res.status(400).json({ error: "category name or category description should not be empty" })
         }
 
         const error = await adminCategoryService.editCategory(categoryID, categoryName, categoryDescription);
         if (error) {
-            return res.status(400).json({error})
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true})
+        res.status(200).json({ success: true })
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
     }
 }
 
@@ -266,30 +267,30 @@ exports.deleteCategory = async (req, res) => {
         const categoryID = req.params.id;
         const error = await adminCategoryService.deleteCategory(categoryID);
 
-        if (error) {       
-            return res.status(400).json({error})
+        if (error) {
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true})
+        res.status(200).json({ success: true })
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
     }
 }
 
 //subCategory
 //list sub categories
-exports.getSubCategory=async(req,res)=>{
+exports.getSubCategory = async (req, res) => {
     try {
-        const {search,page}=req.query;
+        const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1
-        const {subCategoryList,totalNoOfList} = await adminSubCategoryService.subCategoryList(search,currentPage,noOfList,skipPages);
-        
+        const { subCategoryList, totalNoOfList } = await adminSubCategoryService.subCategoryList(search, currentPage, noOfList, skipPages);
+
         const totalNoOfPages = totalNoOfList / noOfList;
-        res.render('admin/subCategories', { subCategoryList,searchFilter:search || null,currentPage,totalNoOfPages})
+        res.render('admin/subCategories', { subCategoryList, searchFilter: search || null, currentPage, totalNoOfPages })
 
 
     } catch (err) {
@@ -299,25 +300,26 @@ exports.getSubCategory=async(req,res)=>{
     }
 }
 
+//add new subCategory
 exports.addSubCategory = async (req, res) => {
     try {
         const { subCategoryName, subCategoryDescription } = req.body;
 
         if (!subCategoryName || !subCategoryDescription) {
-            return res.status(400).json({error:"subCategory name or subCategory description should not be empty"})
+            return res.status(400).json({ error: "subCategory name or subCategory description should not be empty" })
         }
 
         const error = await adminSubCategoryService.addSubCategory(subCategoryName, subCategoryDescription)
 
         if (error) {
-            return res.status(400).json({error})
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true})
+        res.status(200).json({ success: true })
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
 
     }
 }
@@ -330,113 +332,142 @@ exports.putEditSubCategory = async (req, res) => {
 
         if (!subCategoryName || !subCategoryDescription) {
             req.flash('SubCategoryError', "subCategory name or subCategory description should not be empty")
-            return res.status(400).json({error:"subCategory name or subCategory description should not be empty"})
+            return res.status(400).json({ error: "subCategory name or subCategory description should not be empty" })
         }
-        const error = await adminSubCategoryService.editSubCategory(subCategoryID , subCategoryName, subCategoryDescription);
+        const error = await adminSubCategoryService.editSubCategory(subCategoryID, subCategoryName, subCategoryDescription);
         if (error) {
-            return res.status(400).json({error})
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true})
+        res.status(200).json({ success: true })
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
     }
 }
 
 //delete specific subcategory
 exports.deleteSubCategory = async (req, res) => {
     try {
-        const subCategoryID  = req.params.id;
-        const error = await adminSubCategoryService.deleteSubCategory(subCategoryID );
+        const subCategoryID = req.params.id;
+        const error = await adminSubCategoryService.deleteSubCategory(subCategoryID);
         if (error) {
-            return res.status(400).json({error})
+            return res.status(400).json({ error })
         }
-        res.status(200).json({success:true})
+        res.status(200).json({ success: true })
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
 
     }
 }
 
 //orders
-
 //getorders
-exports.getOrders=async(req,res)=>{
-    try{
-        const {page}=req.query;
+exports.getOrders = async (req, res) => {
+    try {
+        const { page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1
-        const {orders,totalNoOfList}=await adminOrderService.viewOrders(currentPage,noOfList,skipPages);
+        const { orders, totalNoOfList } = await adminOrderService.viewOrders(currentPage, noOfList, skipPages);
         const totalNoOfPages = totalNoOfList / noOfList;
-        
-        res.render('admin/orders', { orders ,currentPage,totalNoOfPages})
-    }catch(err){
-        console.log(err); 
+
+        res.render('admin/orders', { orders, currentPage, totalNoOfPages })
+    } catch (err) {
+        console.log(err);
         res.redirect('/error')
     }
 }
 
 //get specific order
-exports.getViewEditOrder=async(req,res)=>{
-    try{
-        const orderID=req.params.id;
-        const {order,address}=await adminOrderService.viewOrder(orderID);
-        res.render('admin/viewEditOrder',{order,address});
+exports.getViewEditOrder = async (req, res) => {
+    try {
+        const orderID = req.params.id;
+        const { order, address } = await adminOrderService.viewOrder(orderID);
 
-    }catch(err){
+        res.render('admin/viewEditOrder', { order, address });
+
+    } catch (err) {
         console.log(err);
-        res.redirect('/error')  
+        res.redirect('/error')
     }
 }
 
 //change product status
-exports.patchChageProductStatus=async(req,res)=>{
-    try{
-        const productOrderID=req.params.id;
-        const {orderID,status}=req.body;
-        await adminOrderService.changeProductStatus(productOrderID,orderID,status)
-        res.json({success:true})
-    }catch(err){
+exports.patchChageProductStatus = async (req, res) => {
+    try {
+        const productOrderID = req.params.id;
+        const { orderID, status } = req.body;
+        await adminOrderService.changeProductStatus(productOrderID, orderID, status)
+
+        res.json({ success: true })
+
+    } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Server Error"})
+        res.status(500).json({ error: "Server Error" })
     }
 }
 
 //returns
 //display returns
-exports.getReturns=async(req,res)=>{
-    try{
+exports.getReturns = async (req, res) => {
+    try {
 
-        const {page}=req.query;
+        const { page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1
 
-        const {returnList,totalNoOfList}=await adminReturnService.returnsList(currentPage,noOfList,skipPages);
+        const { returnList, totalNoOfList } = await adminReturnService.returnsList(currentPage, noOfList, skipPages);
         const totalNoOfPages = totalNoOfList / noOfList;
-        
-        res.render('admin/returns',{returnList,currentPage,totalNoOfPages})
-    }catch(err){
+
+        res.render('admin/returns', { returnList, currentPage, totalNoOfPages })
+    } catch (err) {
         console.log(err);
-        
+        res.redirect('/error')
+
     }
 }
 
-exports.patchAproveRejectReturn=async(req,res)=>{
-    try{
-        const {orderID, orderItemID, returnStatus }=req.body;
-        await adminReturnService.aproveRejectReturn(orderID, orderItemID, returnStatus );
-        res.json({success:true})
+exports.patchAproveRejectReturn = async (req, res) => {
+    try {
+        const { orderID, orderItemID, returnStatus, userID, amount, paymentMethod } = req.body;
+        await adminReturnService.aproveRejectReturn(orderID, orderItemID, returnStatus);
 
-    }catch(err){
+        if (returnStatus == 'approved' && (paymentMethod == "Wallet" || paymentMethod == "Razorpay")) {
+            await walletService.addToWallet(userID, amount)
+            await transationService.completeTransation(userID, amount, 'refund')
+        }
+
+        res.json({ success: true })
+
+    } catch (err) {
         console.log(err);
+        res.status(500).json({ error: "Server Error" })
     }
 
+}
+
+//transations
+exports.getTransations = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
+
+        const { transationList, totalNoOfList } = await transationService.allTransationsList(currentPage, noOfList, skipPages);
+        const totalNoOfPages = totalNoOfList / noOfList;
+
+        res.render('admin/transations', { transationList, currentPage, totalNoOfPages })
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/error')
+    }
 }
 
 

@@ -6,16 +6,8 @@ exports.checkOTPVerified = (req, res, next) => {
     next()
 }
 
-// //Used where the user should not be aldready verfied OTP
-// exports.checkOTPAldreadyVerified = (req, res, next) => {
-//     if (req.session.isOTPVerified) {
-//         return res.redirect('/user/completeRegister')
-//     }
-//     next()
-// }
-
-exports.isEmailEntered=(req,res,next)=>{
-    if(!req.session.email){
+exports.isEmailEntered = (req, res, next) => {
+    if (!req.session.email) {
         return res.redirect('/user/login')
     }
     next()
