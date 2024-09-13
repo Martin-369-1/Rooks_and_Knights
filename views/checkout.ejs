@@ -65,8 +65,7 @@
                                         <td class="column-2">
 
                                             <button type="button" data-cartItem="<%= JSON.stringify(cartItem) %>"
-                                                onclick="deleteProduct(this)"><i
-                                                    class="fa-solid fa-trash"></i></button>
+                                                onclick="deleteProduct(this)"><i class="fa-solid fa-trash"></i></button>
 
                                         </td>
                                     </tr>
@@ -133,28 +132,33 @@
                         <!-- Sub Total -->
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Sub Total: <span id="subTotalAmount">
-                                <%= cart.totalPrice %>
-                            </span></p>
-                            
+                                    <%= cart.totalPrice %>
+                                </span></p>
+
                         </div>
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Offer: <span id="OfferAmount">
-                                <% let offer = 0 %>
-                                <% cart.cartItems.forEach((product) => { %>
-                                    <% if (product.productID.offer) { %>
-                                        <% offer +=  parseInt((product.productID.price * product.productID.offer / 100)*product.quantity) %>
-                                    <% } else if (product.categoryID && product.categoryID.offer) { %>
-                                        <% offer +=  parseInt((product.productID.price * product.categoryID.offer / 100)*product.quantity); %>
-                                    <% } else if (product.subCategoryID && product.subCategoryID.offer) { %>
-                                        <% offer +=  parseInt((product.productID.price * product.subCategoryID.offer / 100)*product.quantity); %>
-                                    <% } %>
-                                <% }) %>
-                                <%= offer %>
+                                    <% let offer=0 %>
+                                        <% cart.cartItems.forEach((product)=> { %>
+                                            <% if (product.productID.offer) { %>
+                                                <% offer +=parseInt((product.productID.price * product.productID.offer /
+                                                    100)*product.quantity) %>
+                                                    <% } else if (product.categoryID && product.categoryID.offer) { %>
+                                                        <% offer +=parseInt((product.productID.price *
+                                                            product.categoryID.offer / 100)*product.quantity); %>
+                                                            <% } else if (product.subCategoryID &&
+                                                                product.subCategoryID.offer) { %>
+                                                                <% offer +=parseInt((product.productID.price *
+                                                                    product.subCategoryID.offer /
+                                                                    100)*product.quantity); %>
+                                                                    <% } %>
+                                                                        <% }) %>
+                                                                            <%= offer %>
 
-                            </span></p>
-                            
+                                </span></p>
+
                         </div>
-                        
+
                         <!-- Coupon Code -->
                         <div class="p-t-20 p-b-10">
                             <div class="size-208 w-full">
@@ -163,9 +167,9 @@
                                 </span>
                             </div>
                             <div class="size-200 d-flex p-t-1">
-                                <input type="text" id="couponCode" class="form-control"
+                                <input type="text" id="couponCodeInput" class="form-control"
                                     placeholder="Enter your coupon code" style="float: left;">
-                                <button class="btn btn-primary" id="applyCoupon">
+                                <button class="btn btn-primary" id="applyCoupon" onclick="addCouponDiscount()">
                                     Apply
                                 </button>
                             </div>
@@ -173,15 +177,19 @@
 
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Coupon Discount: <span id="couponDiscountAmount">
-                                0
-                            </span></p>
-                            <p class="cl2 mtext-101 m-t-5">Total Discount Amount: 
-                                <span id="discountAmount"><%= offer %></span>
+                                    0
+                                </span></p>
+                            <p class="cl2 mtext-101 m-t-5">Total Discount Amount:
+                                <span id="discountAmount">
+                                    <%= offer %>
+                                </span>
                             </p>
-                            <p class="cl2 mtext-101 m-t-5">Total Amount: 
-                                <span id="totalAmount"><%= cart.totalPrice-offer %></span>
+                            <p class="cl2 mtext-101 m-t-5">Total Amount:
+                                <span id="totalAmount">
+                                    <%= cart.totalPrice-offer %>
+                                </span>
                             </p>
-                            
+
                         </div>
 
                         <!-- Payment Method -->
@@ -443,29 +451,29 @@
                 }
 
                 function deleteProduct(button) {
-                    const cartItem=JSON.parse(button.getAttribute('data-cartItem')) 
+                    const cartItem = JSON.parse(button.getAttribute('data-cartItem'))
                     console.log(cartItem);
-                    
+
                     const row = document.getElementById(`cartItemRow_${cartItem._id}`)
                     const subTotalAmmount = document.getElementById('subTotalAmount');
-                    const OfferAmount= document.getElementById('OfferAmount');
-                    const totalAmount=document.getElementById('totalAmount');
-                    const couponDiscountAmount=document.getElementById('couponDiscountAmount');
-                    const discountAmount=document.getElementById('discountAmount');
-                    
-                    let offer=0;
-                    if(cartItem.productID.offer){
-                        offer=parseInt(cartItem.productID.offer * cartItem.productID.price * cartItem.quantity /100 )
-                    }else if(cartItem.categoryID.offer){
-                        offer=parseInt(cartItem.categoryID.offer * cartItem.productID.price * cartItem.quantity /100 )
-                    }else if(cartItem.subCategoryID.offer){
-                        offer=parseInt(cartItem.subcategoryID.offer * cartItem.productID.price * cartItem.quantity /100 )
+                    const OfferAmount = document.getElementById('OfferAmount');
+                    const totalAmount = document.getElementById('totalAmount');
+                    const couponDiscountAmount = document.getElementById('couponDiscountAmount');
+                    const discountAmount = document.getElementById('discountAmount');
+
+                    let offer = 0;
+                    if (cartItem.productID.offer) {
+                        offer = parseInt(cartItem.productID.offer * cartItem.productID.price * cartItem.quantity / 100)
+                    } else if (cartItem.categoryID.offer) {
+                        offer = parseInt(cartItem.categoryID.offer * cartItem.productID.price * cartItem.quantity / 100)
+                    } else if (cartItem.subCategoryID.offer) {
+                        offer = parseInt(cartItem.subcategoryID.offer * cartItem.productID.price * cartItem.quantity / 100)
                     }
 
                     subTotalAmmount.innerHTML = Number(subTotalAmmount.textContent) - Number(cartItem.productID.price * cartItem.quantity);
-                    OfferAmount.innerText=Number(OfferAmount.textContent)-offer
-                    totalAmount.innerText=Number(totalAmount.textContent)-((cartItem.productID.price * cartItem.quantity) - offer)
-                    discountAmount.innerText=Number(discountAmount.textContent)- offer - Number(couponDiscountAmount.textContent)
+                    OfferAmount.innerText = Number(OfferAmount.textContent) - offer
+                    totalAmount.innerText = Number(totalAmount.textContent) - ((cartItem.productID.price * cartItem.quantity) - offer)
+                    discountAmount.innerText = Number(discountAmount.textContent) - offer - Number(couponDiscountAmount.textContent)
 
 
                     row.parentNode.removeChild(row);
@@ -519,7 +527,7 @@
                     const paymentMethod = document.getElementById('paymentMethod').value
                     const subTotalAmmount = document.getElementById('subTotalAmount').textContent;
                     const totalAmmount = document.getElementById('totalAmount').textContent;
-                    const discount=document.getElementById('discountAmount').textContent;
+                    const discount = document.getElementById('discountAmount').textContent;
 
 
                     fetch('/order/proceedToPayment', {
@@ -527,12 +535,12 @@
                         headers: {
                             'Content-type': 'application/json'
                         },
-                        body: JSON.stringify({ products, addressId, paymentMethod, subTotalAmmount, cartItemIds, totalAmmount ,discount})
+                        body: JSON.stringify({ products, addressId, paymentMethod, subTotalAmmount, cartItemIds, totalAmmount, discount })
                     }).then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
                                 Swal.fire({
-                                    title: "Edited",
+                                    title: "Ordered",
                                     text: "Order Placed successfully",
                                     icon: "success",
                                     timer: 2000
@@ -567,6 +575,43 @@
 
                                 rzp1.open();
 
+                            }
+                        })
+                }
+
+
+                function addCouponDiscount() {
+                    const subTotalAmmount = document.getElementById('subTotalAmount').value
+                    const couponCode = document.getElementById('couponCodeInput').value
+                    const totalAmount = document.getElementById('totalAmount');
+                    const couponDiscountAmount = document.getElementById('couponDiscountAmount');
+                    const discountAmount = document.getElementById('discountAmount');
+
+                    fetch(`/order/addCoupon`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ subTotalAmmount, couponCode })
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.success) {
+                                if(couponDiscountAmount.textContent>0){
+                                    discountAmount.innerText=Number(discountAmount.textContent)-Number(couponDiscountAmount.textContent)
+                                totalAmount.innerText=Number(totalAmount.textContent)+Number(couponDiscountAmount.textContent)
+                                }
+                                couponDiscountAmount.innerText = data.couponDiscount;
+                                discountAmount.innerText=Number(discountAmount.textContent)+data.couponDiscount
+                                totalAmount.innerText=Number(totalAmount.textContent)-data.couponDiscount
+                            }
+
+                            else if (data.error) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: data.error,
+                                    icon: "error",
+                                });
                             }
                         })
                 }

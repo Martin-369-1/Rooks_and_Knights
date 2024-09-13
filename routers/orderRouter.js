@@ -15,4 +15,7 @@ router.patch('/return/returnProduct/:id', userAuthMiddleware.validUser, orderCon
 
 router.post('/completePayment', userAuthMiddleware.checkUserAuthenticated, orderController.completePayment)
 
+//add coupon
+router.post('/addCoupon',userAuthMiddleware.validUser,orderController.postAddCouponDiscount)
+
 module.exports = router;

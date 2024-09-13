@@ -4,6 +4,7 @@ const cartService = require('../services/cartServices')
 const orderService = require('../services/orderServices')
 const walletService = require('../services/walletService')
 const transationService = require('../services/transationService')
+const couponService=require('../services/couponServices')
 
 //utils
 const { verifyPayment } = require('../utils/razorpayPaymentVerify')
@@ -92,7 +93,7 @@ exports.completePayment = async (req, res) => {
 
         const isValid = verifyPayment(razorpay_order_id, razorpay_payment_id, razorpay_signature, process.env.RAZORPAY_KEY_SECRET);
         if (!isValid) {
-            res.json({ error: 'payment not valid' })
+            res.status(400).json({ error: 'payment not valid' })
         }
 
         await orderService.completePayment(_id)
@@ -102,6 +103,25 @@ exports.completePayment = async (req, res) => {
 
 
     } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
+
+//apply coupon
+exports.postAddCouponDiscount=async(req,res)=>{
+    try{
+        const {subTotalAmmount,couponCode}=req.body;
+        
+        const coupon=await couponService.addCouponDiscount(subTotalAmmount,couponCode)
+
+        if(coupon.error){
+            return res.status(400).json({ error:coupon.error})
+        }
+        
+        return res.status(200).json({success:true,couponDiscount:coupon.discount})
+
+    }catch(err){
         console.log(err);
         res.status(500).json({ error: "Server Error" })
     }
@@ -142,3 +162,5 @@ exports.patchReturn = async (req, res) => {
         res.status(500).json({ error: "Server Error" })
     }
 }
+
+
