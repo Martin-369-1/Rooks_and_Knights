@@ -41,6 +41,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>Product</th>
                                     <th>Product Name</th>
                                     <th>Price</th>
                                     <th>Stock</th>
@@ -53,6 +54,7 @@
                             <tbody>
                                 <% productList.forEach(product=> {%>
                                     <tr>
+                                        <td><img src="<%= product.productImage1 %>" alt="" style="width: 50px;"></td>
                                         <td>
                                             <%= product.productName %>
                                         </td>

@@ -17,15 +17,16 @@ exports.getCart = async (req, res) => {
 exports.addToCart = async (req, res) => {
     try {
         const productID = req.params.id;
-        const { quantity } = req.body;
+        const { quantity ,categoryID ,subCategoryID} = req.body;
+        
         const userID = req.userID;
 
-        const { error } = await cartServices.addToCart(userID, productID, quantity)
+        const { error } = await cartServices.addToCart(userID, productID, quantity,categoryID ,subCategoryID)
         if (error) {
             return res.status(200).json({ error, errorRedirect: `<a href="/cart">Check cart</a>` })
         }
 
-        res.status(200).json({ success: "Item added to cart" })
+        res.status(200).json({ success: true })
 
     } catch (err) {
         console.log(err);

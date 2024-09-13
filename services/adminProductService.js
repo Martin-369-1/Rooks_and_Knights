@@ -35,7 +35,7 @@ exports.productList = async (search, currentPage, noOfList, skipPages) => {
 exports.addProduct = async (req, res) => {
 
     try {
-        const { productName, productDescription, productAbout, stock, price, category, subCategory, offers } = req.body;
+        const { productName, productDescription, productAbout, stock, price, category, subCategory, offer } = req.body;
 
         const product = await productCollection.findOne({ productName })
 
@@ -54,7 +54,7 @@ exports.addProduct = async (req, res) => {
             stock,
             categoryID,
             subCategoryID,
-            offers,
+            offer,
             productImage1: `/public/upload/${req.files['img1'][0].filename}`,
             productImage2: `/public/upload/${req.files['img2'][0].filename}`,
             productImage3: `/public/upload/${req.files['img3'][0].filename}`,
@@ -71,7 +71,7 @@ exports.addProduct = async (req, res) => {
 //view specif product
 exports.viewProduct = async (productID) => {
     try {
-        const product = await productCollection.findById(ProductID).populate('categoryID').populate('subCategoryName')
+        const product = await productCollection.findById(productID).populate('categoryID').populate('subCategoryID')
         console.log(product);
 
         return product;
@@ -85,7 +85,7 @@ exports.viewProduct = async (productID) => {
 exports.editProduct = async (req, res, productID) => {
     try {
 
-        const { productName, productDescription, productAbout, stock, price, category, subCategory, offers } = req.body;
+        const { productName, productDescription, productAbout, stock, price, category, subCategory, offer } = req.body;
 
         const categoryID = await categoryCollection.findOne({ categoryName: category });
         const subCategoryID = await subCategoryCollection.findOne({ subCategoryName: subCategory });
@@ -129,7 +129,7 @@ exports.editProduct = async (req, res, productID) => {
 
         }
 
-        await productCollection.updateOne({ _id }, {
+        await productCollection.updateOne({ _id :productID }, {
             productName,
             productAbout,
             productDescription,
@@ -137,7 +137,7 @@ exports.editProduct = async (req, res, productID) => {
             stock,
             categoryID,
             subCategoryID,
-            offers,
+            offer,
             productImage1,
             productImage2,
             productImage3,

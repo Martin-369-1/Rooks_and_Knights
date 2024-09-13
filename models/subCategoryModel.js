@@ -17,6 +17,11 @@ const subCategorySchema = new Schema({
     type: Boolean,
     required: true,
     default: false
+  },
+
+  offer:{
+    type:Number,
+    default:0
   }
 
 }, { timestamps: true });

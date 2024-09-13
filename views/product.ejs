@@ -87,9 +87,11 @@
 						</h4>
 
 						<p class="mtext-106 cl2">
-							<span style="text-decoration: line-through">₹<%= product.price %></span> ₹<%= product.price
-								- product.offers %>
-
+							<% if(product.offer>0) {%>
+								<span style="text-decoration: line-through">₹<%= product.price %></span> ₹<%= product.price- product.price * product.offer/100 %>
+							<% }else{ %>
+								₹<%= product.price %>
+							<% } %>
 						</p>
 
 						<p class="stext-102 cl3 p-t-23">
@@ -105,8 +107,8 @@
 
 
 								<% if(product.stock>0){%>
-									<form action="/cart/addToCart/<%= product._id %>" method="post" id="addToCartForm"
-										onsubmit="addToCart('<%= product._id %>',event)">
+									<form id="addToCartForm"
+										onsubmit="addToCart('<%= product._id %>','<%= product.categoryID._id%>','<%= product.subCategoryID._id%>' ,event )">
 										<p id="stock-Left"></p>
 										<div class="wrap-num-product flex-w  m-tb-10">
 
@@ -384,7 +386,7 @@
 				//sending request to server
 
 				//function ot add prouduct to cart
-				function addToCart(productID, event) {
+				function addToCart(productID,categoryID,subCategoryID , event ) {
 					event.preventDefault();
 					let quantity = document.getElementById('productQuantity').value;
 					fetch(`/cart/addToCart/${productID}`, {
@@ -393,7 +395,7 @@
 							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify({
-							quantity
+							quantity,categoryID,subCategoryID
 						})
 					}).then((res) => res.json())
 						.then((data) => {

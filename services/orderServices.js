@@ -1,7 +1,7 @@
 const orderCollection = require('../models/orderModel');
 const productCollection = require('../models/productsModel');
 
-exports.createOrder = async (products, addressId, paymentMethod, subTotalAmmount, totalAmmount, userID) => {
+exports.createOrder = async (products, addressId, paymentMethod, subTotalAmmount, totalAmmount,discount, userID) => {
     try {
         const newOrder = new orderCollection({
             userID,
@@ -10,6 +10,7 @@ exports.createOrder = async (products, addressId, paymentMethod, subTotalAmmount
             paymentMethod,
             subTotalAmmount,
             totalAmmount,
+            discount
         })
 
         for (const product of products) {
@@ -79,8 +80,6 @@ exports.returnOrders = async (userID, orderProductId, returnReason) => {
             { userID, 'products._id': orderProductId },
             { $set: { 'products.$.returnStatus': 'requested', 'products.$.returnReason': returnReason } },
         );
-        let myorder = await orderCollection.findOne({ userID, _id: '66db1302d1441e3f0f2eb12f' })
-        console.log(myorder.products);
 
 
     } catch (err) {

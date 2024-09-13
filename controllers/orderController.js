@@ -32,12 +32,12 @@ exports.getCheckout = async (req, res) => {
 exports.postCheckout = async (req, res) => {
 
     try {
-        const { products, addressId, paymentMethod, subTotalAmmount, totalAmmount, cartItemIds } = req.body;
+        const { products, addressId, paymentMethod, subTotalAmmount, totalAmmount, cartItemIds ,discount} = req.body;
 
         //if cash on delivery
         if (paymentMethod == 'COD') {
             await cartService.deleteManyCartItem(cartItemIds, subTotalAmmount, req.userID)
-            await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount, req.userID)
+            await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount, discount, req.userID)
             return res.status(200).json({ success: true, successRedirect: '/' })
         }
 
@@ -50,7 +50,7 @@ exports.postCheckout = async (req, res) => {
             }
 
             await cartService.deleteManyCartItem(cartItemIds, subTotalAmmount, req.userID)
-            const order = await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount, req.userID)
+            const order = await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount,discount, req.userID)
             await orderService.completePayment(order._id)
             await transationService.completeTransation(req.userID, totalAmmount, 'purchase', paymentMethod)
 
@@ -58,7 +58,8 @@ exports.postCheckout = async (req, res) => {
         }
 
         //if razorpay
-        const order = await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount, req.userID)
+        
+        const order = await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount,discount, req.userID)
 
         const options = {
             amount: order.totalAmmount * 100,

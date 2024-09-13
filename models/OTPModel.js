@@ -17,7 +17,7 @@ const OTPSchema = Schema({
     },
 
 
-}, { timeStamp: true })
+}, { timeStamps: true })
 
 OTPSchema.index({ expires: 1 }, { expireAfterSeconds: 0 })
 

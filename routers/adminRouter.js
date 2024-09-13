@@ -30,7 +30,7 @@ router.get('/products', adminMiddleware.checkAdminAuthenticated, adminController
 router.get('/products/addProduct', adminMiddleware.checkAdminAuthenticated, adminController.getAddProduct); //display page to add a new product
 router.post('/products/addProduct', [adminMiddleware.checkAdminAuthenticated, upload], adminController.postAddProduct); //add a new product
 router.get('/products/viewEditProduct/:id', adminMiddleware.checkAdminAuthenticated, adminController.getViewEditProduct); //view specif product
-router.put('/products/viewEditProduct/:id', [adminMiddleware.checkAdminAuthenticated, upload], adminController.putViewEditProduct);//edit a product
+router.post('/products/viewEditProduct/:id', [adminMiddleware.checkAdminAuthenticated, upload], adminController.putViewEditProduct);//edit a product
 router.delete('/products/deleteProduct/:id', adminMiddleware.validAdmin, adminController.deleteProduct); //delete a product
 
 
@@ -60,4 +60,14 @@ router.patch('/returns/aproveRejectReturn', adminMiddleware.validAdmin, adminCon
 //transations
 router.get('/transations', adminMiddleware.checkAdminAuthenticated, adminController.getTransations)
 
+//offers
+router.get('/offers',adminMiddleware.checkAdminAuthenticated,adminController.getOffers)
+router.post('/offers/addOffer',adminMiddleware.validAdmin,adminController.postAddOffer);
+router.delete('/offers/deleteOffer/:id',adminMiddleware.validAdmin,adminController.deleteOffer)
+
+//coupons
+router.get('/coupons',adminMiddleware.checkAdminAuthenticated,adminController.getCoupons);
+router.post('/coupons/addCoupon',adminMiddleware.validAdmin,adminController.postAddCoupon)
+router.delete('/coupons/deleteCoupon/:id',adminMiddleware.validAdmin,adminController.deleteCoupon);
+router.put('/coupons/editCoupon/:id',adminMiddleware.validAdmin,adminController.putEditCoupon);
 module.exports = router;

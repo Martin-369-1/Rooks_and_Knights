@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header') %>
+
+    <body>
+        <div class="wrapper">
+            <%- include('./partials/slidebar') %>
+
+                <div id="content" class="container-fluid">
+                    <h1 class="m-b-10 admin_title">Coupons</h1>
+                    <div class="container p-b-50">
+                        <div class="search-bar-container">
+                            <!-- Search Form -->
+                            <form action="/admin/coupons" method="GET" class="search-input-group">
+                                <input type="text" id="search-input" name="search" class="form-control search-input"
+                                    placeholder="<%= searchFilter || " search"%>">
+                                <a href="/admin/coupons?search=">
+                                    <button type="button" class="btn-clear" id="clear-btn">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </a>
+                                <button type="submit" class="btn-search">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+
+                        </div>
+
+                        <button class="btn-add" data-toggle="modal" data-target="#addCouponModel">
+                            <i class="fas fa-plus"></i> New Cupon
+                        </button>
+
+
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered m-t-10">
+                            <thead>
+                                <tr>
+                                    <th>Coupon Name</th>
+                                    <th>Coupon Code</th>
+                                    <th>Discount Amount</th>
+                                    <th>Minimum Order Amount</th>
+                                    <th>Expiry Date</th>
+                                    <th></th>
+                                    <th></th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% couponList.forEach((coupon)=>{ %>
+                                    <tr>
+                                        <td>
+                                            <%= coupon.couponName %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.couponCode %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.discountAmount %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.minimumOrderAmount %>
+                                        </td>
+                                        <td>
+                                            <% const now=new Date() %>
+                                                <%= (coupon.expiryDate < now.setHours(0,0,0,0))? 'expired' :
+                                                    coupon.expiryDate.toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-dark btn-sm"data-coupon-item="<%= JSON.stringify(coupon) %>"
+                                                onclick="editCouponModel(event,'<%=coupon._id%>')"
+                                            data-toggle="modal" data-target="#editCouponModel">
+                                            <i class="fas fa-pencil-alt" ></i></button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm"
+                                                onclick="deleteCoupon('<%= coupon._id %>')"><i
+                                                    class="fa fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    
+                    <div class="flex-c-m flex-w w-full p-t-45 gap-10">
+                        <!-- Previous Button -->
+                        <a href="/admin/coupons?search=<%= searchFilter %>&&page=<%= (currentPage>1)? Number(currentPage)-1:1 %>"
+                            class="m-r-20 text-dark">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                        <P class="m-r-20 text-dark">page : <%= currentPage %> of <%= Math.ceil(totalNoOfPages) %>
+                        </P>
+                        <!-- Next Button -->
+                        <a href="/admin/coupons?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
+                            class=" text-dark">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+
+        </div>
+
+        <div class="modal fade m-t-50" id="addCouponModel" tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Coupon</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="couponName" class="col-form-label">Coupon Name</label>
+                                <input type="text" class="form-control" id="couponName">
+                            </div>
+                            <div class="form-group">
+                                <label for="couponCode" class="col-form-label">Coupon Code</label>
+                                <input type="text" class="form-control" id="couponCode">
+                            </div>
+                            <div class="form-group">
+                                <label for="discountAmount" class="col-form-label">Discount Amount</label>
+                                <input type="number" class="form-control" id="discountAmount">
+                            </div>
+                            <div class="form-group">
+                                <label for="minimumOrderAmount" class="col-form-label">Minimum Order
+                                    Amount</label>
+                                <input type="number" class="form-control" id="minimumOrderAmount">
+                            </div>
+                            <div class="form-group">
+                                <label for="expiryDate" class="col-form-label">Expiry Date</label>
+                                <input type="date" class="form-control" id="expiryDate">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary"
+                            onclick="addCoupon(event)">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade m-t-50" id="editCouponModel" tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Coupon</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="couponNameEdit" class="col-form-label">Coupon Name</label>
+                                <input type="text" class="form-control" id="couponNameEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="couponCodeEdit" class="col-form-label">Coupon Code</label>
+                                <input type="text" class="form-control" id="couponCodeEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="discountAmount" class="col-form-label">Discount Amount</label>
+                                <input type="number" class="form-control" id="discountAmountEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="minimumOrderAmountEdit" class="col-form-label">Minimum Order
+                                    Amount</label>
+                                <input type="number" class="form-control" id="minimumOrderAmountEdit">
+                            </div>
+                            <div class="form-group">
+                                <label for="expiryDateEdit" class="col-form-label">Expiry Date</label>
+                                <input type="date" class="form-control" id="expiryDateEdit">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" id="editcouponDiv">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('./partials/footer') %>
+
+
+
+            <script>
+                function addCoupon(event) {
+                    event.preventDefault()
+                    const couponName = document.getElementById('couponName').value;
+                    const couponCode = document.getElementById('couponCode').value;
+                    const discountAmount = document.getElementById('discountAmount').value;
+                    const minimumOrderAmount = document.getElementById('minimumOrderAmount').value;
+                    const expiryDate = document.getElementById('expiryDate').value;
+
+
+                    const error = couponValidation(couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
+
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
+
+                    fetch('/admin/coupons/addCoupon', {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate })
+                    })
+                        .then(res => res.json())
+                        .then((data) => {
+                            if (data.validationError) {
+                                let timerInterval;
+                                Swal.fire({
+                                    title: "Validation Error",
+                                    html: "You will be redirected to login in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                            timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                    }
+                                }).then((result) => {
+                                    /* Read more about handling dismissals below */
+                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                        console.log("I was closed by the timer");
+                                        window.location.href = data.redirectUrl;
+                                    }
+                                });
+                            }
+
+                            if (data.success) {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                });
+                                Toast.fire({
+                                    icon: "success",
+                                    title: `new coupon ${couponName} added`
+                                });
+                                setTimeout(() => {
+                                    window.location.reload()
+                                }, 2000)
+
+                            }
+
+                            if (data.error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Validation Error",
+                                    text: data.error,
+                                });
+                            }
+                        })
+
+                }
+
+                function deleteCoupon(couponID) {
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: `Do you want to delete this coupon`,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/admin/coupons/deleteCoupon/${couponID}`, {
+                                method: "DELETE",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }).then(res => res.json())
+                                .then((data) => {
+                                    if (data.validationError) {
+                                        let timerInterval;
+                                        Swal.fire({
+                                            title: "Validation Error",
+                                            html: "You will be redirected to login in <b></b> milliseconds.",
+                                            timer: 2000,
+                                            timerProgressBar: true,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                                const timer = Swal.getPopup().querySelector("b");
+                                                timerInterval = setInterval(() => {
+                                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                                }, 100);
+                                            },
+                                            willClose: () => {
+                                                clearInterval(timerInterval);
+                                            }
+                                        }).then((result) => {
+                                            /* Read more about handling dismissals below */
+                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                console.log("I was closed by the timer");
+                                                window.location.href = data.redirectUrl;
+                                            }
+                                        });
+                                    }
+
+                                    if (data.error) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Validation Error",
+                                            text: data.error,
+                                        });
+                                    }
+
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: "Removed!",
+                                            text: "You removed the coupon",
+                                            icon: "success",
+                                            timer: 2000
+                                        });
+
+                                        setTimeout(() => {
+                                            window.location.reload()
+                                        }, 2000)
+
+                                    }
+                                })
+                        }
+                    });
+
+                }
+
+                function editCouponModel(e, _id) {
+
+                    const coupondata = e.target.closest('button');
+                    const { couponName, couponCode, discountAmount ,minimumOrderAmount,expiryDate } = JSON.parse(coupondata.getAttribute('data-coupon-item'));
+                    
+                    document.getElementById('couponNameEdit').value = couponName;
+                    document.getElementById('couponCodeEdit').value = couponCode;
+                    document.getElementById('discountAmountEdit').value= discountAmount;
+                    document.getElementById('minimumOrderAmountEdit').value=minimumOrderAmount;
+                    document.getElementById('expiryDateEdit').value=expiryDate.split('T')[0]
+                    
+                    
+
+                    // Get the parent div where the button should be appended
+                    const editcouponDiv = document.getElementById('editcouponDiv');
+
+                    // Check if the edit button already exists
+                    if (!document.getElementById('editcouponButton')) {
+                        var editButton = document.createElement('button');
+                        editButton.textContent = "Edit";
+                        editButton.id = 'editcouponButton';
+                        editButton.onclick = () => editCoupon(event, _id);
+                        editButton.classList.add('btn', 'btn-primary');
+
+                        editcouponDiv.appendChild(editButton);
+                    }
+                }
+
+
+                function editCoupon(event, ID) {
+                    console.log("hello");
+
+                    event.preventDefault();
+
+                    const couponName = document.getElementById('couponNameEdit').value 
+                    const couponCode = document.getElementById('couponCodeEdit').value 
+                    const discountAmount = document.getElementById('discountAmountEdit').value
+                    const minimumOrderAmount= document.getElementById('minimumOrderAmountEdit').value
+                    const expiryDate = document.getElementById('expiryDateEdit').value
+
+
+                    let error = couponValidation(couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
+                    fetch(`/admin/coupons/editCoupon/${ID}`, {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate })
+                    })
+                        .then(res => res.json())
+                        .then((data) => {
+                            if (data.validationError) {
+                                let timerInterval;
+                                Swal.fire({
+                                    title: "Validation Error",
+                                    html: "You will be redirected to login in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                            timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                    }
+                                }).then((result) => {
+                                    /* Read more about handling dismissals below */
+                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                        console.log("I was closed by the timer");
+                                        window.location.href = data.redirectUrl;
+                                    }
+                                });
+                            }
+
+                            if (data.success) {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                });
+                                Toast.fire({
+                                    icon: "success",
+                                    title: `Coupon has been edited`
+                                });
+                                setTimeout(() => {
+                                    window.location.reload()
+                                }, 2000)
+
+                            }
+
+                            if (data.error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Validation Error",
+                                    text: data.error,
+                                });
+                            }
+                        })
+                }
+
+
+
+
+
+                function couponValidation(couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate) {
+                    console.log("hello");
+
+                    if (!(couponCode && couponName && discountAmount && minimumOrderAmount && expiryDate)) {
+                        console.log("ged");
+
+                        return "All fields are required"
+                    }
+
+                    if (! /^[A-Za-z\s]{3,}$/.test(couponName)) {
+                        return "Name must be at least 3 characters long and contain only letters."
+                    }
+
+                    if (! /^[A-Za-z\d]{6,8}$/.test(couponCode)) {
+                        return "Code mulst be between 6 and 8 character contail only letters and numbers"
+                    }
+
+                    if (discountAmount <= 0 || minimumOrderAmount <= 0) {
+                        return "discount amount and miminum order amount should be greater than 0"
+                    }
+
+                    if (expiryDate < Date.now()) {
+                        return "exipry date should not be less than date today"
+                    }
+
+                    if (minimumOrderAmount < discountAmount * 2) {
+                        return "minimum order amount should be greater or equal to double of discount amount"
+                    }
+
+                    return false
+                }
+            </script>
+    </body>
+
+</html>

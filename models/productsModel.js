@@ -67,7 +67,7 @@ const ProductsSchema = new Schema({
         required: true
     },
 
-    offers: {
+    offer: {
         type: Number,
         default: 0
     },

@@ -50,34 +50,6 @@
                             <tbody>
                                 <% subCategoryList.forEach(subCategory=> { %>
                                     <tr>
-                                        <!-- <form class=""
-                                            action="/admin/subCategories/editSubCategory/<%= subCategory._id %>/?_method=PUT"
-                                            method="post" id="editSubCategoryForm_<%= subCategory._id %>"
-                                            onsubmit="editSubCategoryValidation('<%= subCategory._id %>',event)">
-                                            <td>
-                                                <input type="text" class="form-control transparent-input"
-                                                    value="<%= subCategory.subCategoryName %>" name="subCategoryName"
-                                                    id="subCategoryName_<%= subCategory._id %>">
-                                            </td>
-                                            <td class="dis-flex">
-                                                <input type="text" class="form-control transparent-input"
-                                                    value="<%= subCategory.subCategoryDescription %>"
-                                                    name="subCategoryDescription"
-                                                    id="subCategoryDescription_<%= subCategory._id %>">
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-dark btn-sm" type="submit"><i
-                                                        class="fas fa-pencil-alt"></i></button>
-                                            </td>
-                                        </form>
-                                        <td>
-                                            <form
-                                                action="/admin/subCategories/deleteSubCategory/<%= subCategory._id %>/?_method=DELETE"
-                                                method="post">
-                                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
-                                                    </button>
-                                            </form> 
-                                        </td> -->
                                         <td>
                                             <%= subCategory.subCategoryName %>
                                         </td>

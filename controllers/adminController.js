@@ -6,9 +6,12 @@ const adminProductService = require('../services/adminProductService');
 const adminService = require('../services/adminService');
 const adminOrderService = require('../services/adminOrderService');
 const adminReturnService = require('../services/adminReturnService')
+const adminOfferService=require('../services/adminOfferService')
 const walletService = require('../services/walletService');
 const transationService = require('../services/transationService')
+const adminCouponService=require('../services/adminCouponServices');
 
+const mongoose=require('mongoose')
 //Utils
 const generateAccessToken = require('../utils/JWTUtils');
 
@@ -147,12 +150,11 @@ exports.postAddProduct = async (req, res) => {
 exports.getViewEditProduct = async (req, res) => {
     try {
         const productID = req.params.id;
-
+        
 
         const categories = await adminProductService.categories();
         const subCategories = await adminProductService.subCategories();
         const product = await adminProductService.viewProduct(productID);
-
 
         res.render('admin/viewEditProduct', { product, categories, subCategories })
 
@@ -471,4 +473,109 @@ exports.getTransations = async (req, res) => {
 }
 
 
+//offers
+exports.getOffers = async(req,res)=>{
+    try{
+        const { search} = req.query;
+        
+        const {productList,categoryList,subCategoryList}=await adminOfferService.displayOffers(search)
+        res.render('admin/offers',{productList,categoryList,subCategoryList,searchFilter:search || null})
+    }catch(err){
+        console.log(err);
+        res.redirect('/error')
+    }
+}
 
+exports.postAddOffer=async(req,res)=>{
+    try{
+        const {type,ID,offer}=req.body;
+        
+        await adminOfferService.addOffer(type,ID,offer)
+        res.status(200).json({success:true})
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
+
+exports.deleteOffer=async(req,res)=>{
+    try{
+        const ID=req.params.id;
+        const {type}=req.body;
+        await adminOfferService.deleteOffer(type,ID)
+        res.status(200).json({success:true})
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
+
+
+//coupons
+exports.getCoupons=async(req,res)=>{
+    try{
+        const { search , page } = req.query;
+        
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1;
+
+        const {couponList, totalNoOfList}=await adminCouponService.couponList(search ,currentPage, noOfList, skipPages)
+
+        const totalNoOfPages = totalNoOfList / noOfList;
+        res.render('admin/coupons',{couponList, currentPage, totalNoOfPages ,searchFilter:search || null})
+
+    }catch(err){
+        console.log(err);
+        res.redirect('/error')
+    }
+}
+
+exports.postAddCoupon=async(req,res)=>{
+    try{
+        const {couponName,couponCode,discountAmount,minimumOrderAmount,expiryDate}=req.body;
+        const error=await adminCouponService.addCoupon(couponName,couponCode,discountAmount,minimumOrderAmount,expiryDate)
+
+        if(error){
+            return res.status(400).json({error})
+        }
+
+        res.status(200).json({success:true})
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
+
+exports.deleteCoupon=async(req,res)=>{
+    try{
+        
+        const couponID=req.params.id;
+        await adminCouponService.deleteCoupon(couponID)
+        return res.status(200).json({success:true})
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
+
+exports.putEditCoupon=async(req,res)=>{
+    try{
+        const couponID=req.params.id;
+        const {couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate}=req.body;
+
+        const error=await adminCouponService.editCoupon(couponID,couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
+        if(error){
+            return res.status(400).json({error})
+        }
+
+        res.status(200).json({success:true})
+        
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
