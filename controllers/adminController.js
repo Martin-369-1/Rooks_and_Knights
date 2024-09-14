@@ -1,3 +1,7 @@
+//modules
+const exceljs = require('exceljs')
+const pdfkit = require('pdfkit')
+
 //Services
 const adminUserService = require('../services/adminUserService');
 const adminCategoryService = require('../services/adminCategoryService');
@@ -6,13 +10,13 @@ const adminProductService = require('../services/adminProductService');
 const adminService = require('../services/adminService');
 const adminOrderService = require('../services/adminOrderService');
 const adminReturnService = require('../services/adminReturnService')
-const adminOfferService=require('../services/adminOfferService')
+const adminOfferService = require('../services/adminOfferService')
 const walletService = require('../services/walletService');
 const transationService = require('../services/transationService')
-const adminCouponService=require('../services/adminCouponServices');
-const adminSalesService=require('../services/adminSalesService')
+const adminCouponService = require('../services/adminCouponServices');
+const adminSalesService = require('../services/adminSalesService')
 
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 //Utils
 const generateAccessToken = require('../utils/JWTUtils');
 
@@ -151,7 +155,7 @@ exports.postAddProduct = async (req, res) => {
 exports.getViewEditProduct = async (req, res) => {
     try {
         const productID = req.params.id;
-        
+
 
         const categories = await adminProductService.categories();
         const subCategories = await adminProductService.subCategories();
@@ -475,38 +479,38 @@ exports.getTransations = async (req, res) => {
 
 
 //offers
-exports.getOffers = async(req,res)=>{
-    try{
-        const { search} = req.query;
-        
-        const {productList,categoryList,subCategoryList}=await adminOfferService.displayOffers(search)
-        res.render('admin/offers',{productList,categoryList,subCategoryList,searchFilter:search || null})
-    }catch(err){
+exports.getOffers = async (req, res) => {
+    try {
+        const { search } = req.query;
+
+        const { productList, categoryList, subCategoryList } = await adminOfferService.displayOffers(search)
+        res.render('admin/offers', { productList, categoryList, subCategoryList, searchFilter: search || null })
+    } catch (err) {
         console.log(err);
         res.redirect('/error')
     }
 }
 
-exports.postAddOffer=async(req,res)=>{
-    try{
-        const {type,ID,offer}=req.body;
-        
-        await adminOfferService.addOffer(type,ID,offer)
-        res.status(200).json({success:true})
+exports.postAddOffer = async (req, res) => {
+    try {
+        const { type, ID, offer } = req.body;
 
-    }catch(err){
+        await adminOfferService.addOffer(type, ID, offer)
+        res.status(200).json({ success: true })
+
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Server Error" })
     }
 }
 
-exports.deleteOffer=async(req,res)=>{
-    try{
-        const ID=req.params.id;
-        const {type}=req.body;
-        await adminOfferService.deleteOffer(type,ID)
-        res.status(200).json({success:true})
-    }catch(err){
+exports.deleteOffer = async (req, res) => {
+    try {
+        const ID = req.params.id;
+        const { type } = req.body;
+        await adminOfferService.deleteOffer(type, ID)
+        res.status(200).json({ success: true })
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Server Error" })
     }
@@ -514,68 +518,68 @@ exports.deleteOffer=async(req,res)=>{
 
 
 //coupons
-exports.getCoupons=async(req,res)=>{
-    try{
-        const { search , page } = req.query;
-        
+exports.getCoupons = async (req, res) => {
+    try {
+        const { search, page } = req.query;
+
         const currentPage = page || 1;
         const noOfList = 6;
         const skipPages = currentPage - 1;
 
-        const {couponList, totalNoOfList}=await adminCouponService.couponList(search ,currentPage, noOfList, skipPages)
+        const { couponList, totalNoOfList } = await adminCouponService.couponList(search, currentPage, noOfList, skipPages)
 
         const totalNoOfPages = totalNoOfList / noOfList;
-        res.render('admin/coupons',{couponList, currentPage, totalNoOfPages ,searchFilter:search || null})
+        res.render('admin/coupons', { couponList, currentPage, totalNoOfPages, searchFilter: search || null })
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.redirect('/error')
     }
 }
 
-exports.postAddCoupon=async(req,res)=>{
-    try{
-        const {couponName,couponCode,discountAmount,minimumOrderAmount,expiryDate}=req.body;
-        const error=await adminCouponService.addCoupon(couponName,couponCode,discountAmount,minimumOrderAmount,expiryDate)
+exports.postAddCoupon = async (req, res) => {
+    try {
+        const { couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate } = req.body;
+        const error = await adminCouponService.addCoupon(couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
 
-        if(error){
-            return res.status(400).json({error})
+        if (error) {
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true})
+        res.status(200).json({ success: true })
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Server Error" })
     }
 }
 
-exports.deleteCoupon=async(req,res)=>{
-    try{
-        
-        const couponID=req.params.id;
+exports.deleteCoupon = async (req, res) => {
+    try {
+
+        const couponID = req.params.id;
         await adminCouponService.deleteCoupon(couponID)
-        return res.status(200).json({success:true})
+        return res.status(200).json({ success: true })
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Server Error" })
     }
 }
 
-exports.putEditCoupon=async(req,res)=>{
-    try{
-        const couponID=req.params.id;
-        const {couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate}=req.body;
+exports.putEditCoupon = async (req, res) => {
+    try {
+        const couponID = req.params.id;
+        const { couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate } = req.body;
 
-        const error=await adminCouponService.editCoupon(couponID,couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
-        if(error){
-            return res.status(400).json({error})
+        const error = await adminCouponService.editCoupon(couponID, couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
+        if (error) {
+            return res.status(400).json({ error })
         }
 
-        res.status(200).json({success:true})
-        
-    }catch(err){
+        res.status(200).json({ success: true })
+
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Server Error" })
     }
@@ -583,16 +587,140 @@ exports.putEditCoupon=async(req,res)=>{
 
 
 //sales
-exports.getSales=async(req,res)=>{
-    try{
-        const {reportType,startDate,endDate}=req.query;
-        
-        const {orderList,salesList}=await adminSalesService.salesList(reportType,startDate,endDate)
+exports.getSales = async (req, res) => {
+    try {
+        const { page, reportType, startDate, endDate } = req.query;
+        const currentPage = page || 1;
+        const noOfList = 6;
+        const skipPages = currentPage - 1
 
-        res.render('admin/sales',{salesList,orderList,reportType,startDate,endDate})
+        const { orderList, salesList, totalNoOfList } = await adminSalesService.salesList(reportType, startDate, endDate, currentPage, noOfList, skipPages)
 
-    }catch(err){
+        const totalNoOfPages = totalNoOfList / noOfList;
+
+        res.render('admin/sales', { salesList, orderList, reportType, startDate, endDate, currentPage, totalNoOfPages })
+
+    } catch (err) {
         console.log(err);
         res.status('/error')
     }
 }
+
+exports.getDownloadSalesExcel = async (req, res) => {
+    try {
+        const { reportType, startDate, endDate } = req.query;
+
+        const salesList = await adminSalesService.downloadSalesReport(reportType, startDate, endDate)
+
+        const workbook = new exceljs.Workbook();
+        const worksheet = workbook.addWorksheet('Sales_Report')
+
+        worksheet.columns = [
+            { header: 'Date', key: 'date', width: 15 },
+            { header: 'Product Name', key: 'productName', width: 20 },
+            { header: 'Quantity', key: 'quantity', width: 10 },
+            { header: 'Email', key: 'email', width: 30 },
+            { header: 'Price', key: 'price', width: 15 },
+            { header: 'Discount', key: 'discount', width: 15 },
+            { header: 'Amount Paid', key: 'amountPaid', width: 15 },
+            { header: 'Payment Method', key: 'paymentMethod', width: 15 },
+        ]
+
+        salesList.forEach((sale) => {
+            worksheet.addRow({
+                date: sale.createdAt.toLocaleDateString(),
+                productName: sale.productDetails.productName,
+                quantity: sale.products.quantity,
+                email: sale.userDetails.email,
+                price: sale.products.price,
+                discount: sale.products.discount,
+                amountPaid: sale.products.amountPaid,
+                paymentMethod: sale.paymentMethod
+            })
+        })
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename=sales_report_${(reportType != 'custom') ? reportType : startDate + '_' + endDate}.xlsx`);
+
+        await workbook.xlsx.write(res);
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/error')
+    }
+}
+
+exports.getDownloadSalesPdf = async (req, res) => {
+    try {
+        const { reportType, startDate, endDate } = req.query;
+
+        const salesList = await adminSalesService.downloadSalesReport(reportType, startDate, endDate);
+
+        const doc = new pdfkit();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=sales_report_${(reportType !== 'custom') ? reportType : startDate + '_' + endDate}.pdf`);
+
+        doc.pipe(res);
+
+        doc.fontSize(18).text('Sales Report', { align: 'center' });
+
+        const columnWidths = {
+            date: 50,
+            productName: 90,
+            quantity: 40,
+            email: 120,
+            price: 50,
+            discount: 50,
+            amountPaid: 60,
+            paymentMethod: 60,
+        };
+
+        const tableTop = 100;
+        const rowHeight = 16;
+        let y = tableTop;
+
+        function drawTableHeader() {
+            doc.fontSize(8).text('Date', 50, y, { width: columnWidths.date });
+            doc.text('Product Name', 100, y, { width: columnWidths.productName });
+            doc.text('Quantity', 190, y, { width: columnWidths.quantity, align: 'center' });
+            doc.text('Email', 230, y, { width: columnWidths.email });
+            doc.text('Price', 350, y, { width: columnWidths.price, align: 'center' });
+            doc.text('Discount', 400, y, { width: columnWidths.discount, align: 'center' });
+            doc.text('Amount Paid', 450, y, { width: columnWidths.amountPaid, align: 'center' });
+            doc.text('Payment Method', 510, y, { width: columnWidths.paymentMethod, align: 'center' });
+
+            y += rowHeight;
+            doc.moveTo(50, y).lineTo(620, y).stroke();
+            y += 5;
+        }
+
+        drawTableHeader();
+
+        salesList.forEach((sale) => {
+            doc.fontSize(6).text(sale.createdAt.toLocaleDateString(), 50, y, { width: columnWidths.date });
+            doc.text(sale.productDetails.productName, 100, y, { width: columnWidths.productName });
+            doc.text(sale.products.quantity, 190, y, { width: columnWidths.quantity, align: 'center' });
+            doc.text(sale.userDetails.email, 230, y, { width: columnWidths.email });
+            doc.text(sale.products.price, 350, y, { width: columnWidths.price, align: 'center' });
+            doc.text(sale.products.discount, 400, y, { width: columnWidths.discount, align: 'center' });
+            doc.text(sale.products.amountPaid, 450, y, { width: columnWidths.amountPaid, align: 'center' });
+            doc.text(sale.paymentMethod, 510, y, { width: columnWidths.paymentMethod, align: 'center' });
+
+            y += rowHeight;
+
+            if (y > doc.page.height - doc.page.margins.bottom) {
+                doc.addPage();
+                y = tableTop;
+                drawTableHeader();
+            }
+        });
+
+        doc.end();
+
+    } catch (err) {
+        console.error(err);
+        res.redirect('/error');
+    }
+};
+

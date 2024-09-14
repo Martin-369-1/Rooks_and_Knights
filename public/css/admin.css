@@ -12,7 +12,7 @@ body {
 }
 
 .wrapper {
-
+    background-color: #f1f2f5;
     align-items: stretch;
     width: 100%;
 }
@@ -369,6 +369,7 @@ body {
 }
 
 .container {/* Light grey background for the container */
+    background-color: #f1f2f5;
     padding: 20px;
     border-radius: 8px;
 }

@@ -73,5 +73,7 @@ router.put('/coupons/editCoupon/:id',adminMiddleware.validAdmin,adminController.
 
 //sales
 router.get('/sales',adminMiddleware.checkAdminAuthenticated,adminController.getSales)
+router.get('/sales/downloadExcel',adminMiddleware.checkAdminAuthenticated,adminController.getDownloadSalesExcel)
+router.get('/sales/downloadPdf',adminMiddleware.checkAdminAuthenticated,adminController.getDownloadSalesPdf)
 
 module.exports = router;
