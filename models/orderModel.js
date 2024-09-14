@@ -66,7 +66,17 @@ const orderSchema = Schema({
             price: {
                 type: Number,
                 required: true
+            },
+            discount:{
+                type:Number,
+                required:true,
+                default:0
+            },
+            amountPaid:{
+                type:Number,
+                required:true,
             }
+
         }
     ],
 }, { timestamps: true });

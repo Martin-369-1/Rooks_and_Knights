@@ -20,8 +20,7 @@
                                     <th>Order Date</th>
                                     <th>ProductName</th>
                                     <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Total Ammount</th>
+                                    <th>Amount Paid</th>
                                     <th>Return Reason</th>
                                     <th>Status</th>
                                     <th></th>
@@ -45,10 +44,7 @@
                                                     <%= product.quantity %>
                                                 </td>
                                                 <td>
-                                                    <%= product.price %>
-                                                </td>
-                                                <td>
-                                                    <%= product.quantity * product.price %>
+                                                    <%= product.amountPaid %>
                                                 </td>
                                                 <td>
                                                     <%= product.returnReason %>
@@ -59,7 +55,7 @@
                                                 <td>
                                                     <% if(product.returnStatus=='requested' ) {%>
                                                         <form action=""
-                                                            onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event , '<%=returnItem.userID._id%>','<%=product.price%>' ,'<%=returnItem.paymentMethod%>')">
+                                                            onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event , '<%=returnItem.userID._id%>','<%=product.amountPaid%>' ,'<%=returnItem.paymentMethod%>')">
                                                             <select
                                                                 id="returnStatus_<%= returnItem._id%>_<%= product._id %>"
                                                                 name="options"

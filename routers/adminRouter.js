@@ -70,4 +70,8 @@ router.get('/coupons',adminMiddleware.checkAdminAuthenticated,adminController.ge
 router.post('/coupons/addCoupon',adminMiddleware.validAdmin,adminController.postAddCoupon)
 router.delete('/coupons/deleteCoupon/:id',adminMiddleware.validAdmin,adminController.deleteCoupon);
 router.put('/coupons/editCoupon/:id',adminMiddleware.validAdmin,adminController.putEditCoupon);
+
+//sales
+router.get('/sales',adminMiddleware.checkAdminAuthenticated,adminController.getSales)
+
 module.exports = router;

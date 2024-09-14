@@ -143,17 +143,13 @@
                                             <% if (product.productID.offer) { %>
                                                 <% offer +=parseInt((product.productID.price * product.productID.offer /
                                                     100)*product.quantity) %>
-                                                    <% } else if (product.categoryID && product.categoryID.offer) { %>
-                                                        <% offer +=parseInt((product.productID.price *
-                                                            product.categoryID.offer / 100)*product.quantity); %>
-                                                            <% } else if (product.subCategoryID &&
-                                                                product.subCategoryID.offer) { %>
-                                                                <% offer +=parseInt((product.productID.price *
-                                                                    product.subCategoryID.offer /
-                                                                    100)*product.quantity); %>
-                                                                    <% } %>
-                                                                        <% }) %>
-                                                                            <%= offer %>
+                                            <% } else if (product.categoryID && product.categoryID.offer) { %>
+                                                <% offer +=parseInt((product.productID.price *product.categoryID.offer / 100)*product.quantity); %>
+                                            <% } else if (product.subCategoryID && product.subCategoryID.offer) { %>
+                                                <% offer +=parseInt((product.productID.price * product.subCategoryID.offer /100)*product.quantity); %>
+                                            <% } %>
+                                        <% }) %>
+                                    <%= offer %>
 
                                 </span></p>
 
@@ -462,6 +458,8 @@
                     const discountAmount = document.getElementById('discountAmount');
 
                     let offer = 0;
+                    
+                    
                     if (cartItem.productID.offer) {
                         offer = parseInt(cartItem.productID.offer * cartItem.productID.price * cartItem.quantity / 100)
                     } else if (cartItem.categoryID.offer) {
@@ -495,6 +493,7 @@
                     let unavaliableProduct = false;
                     rows.forEach((row) => {
                         const cartItem = JSON.parse(row.getAttribute('data-products'))
+                        
                         if (cartItem.quantity > cartItem.productID.stock) {
                             outOfStock = true
                             Swal.fire({
@@ -512,11 +511,30 @@
                                 icon: "error",
                             });
                         }
+                        console.log(cartItem);
                         const price = cartItem.productID.price * cartItem.quantity;
+                        let discount=0;
+
+                        if(cartItem.productID.offer){
+                            
+                            discount=(cartItem.productID.price * cartItem.productID.offer / 100)*cartItem.quantity
+                            
+                        }else if(cartItem.categoryID.offer){
+                            discount=(cartItem.productID.price * cartItem.categoryID.offer / 100)*cartItem.quantity
+                        }else if(cartItem.subCategoryID.offer){
+                            discount=(cartItem.productID.price * cartItem.subCategoryID.offer / 100)*cartItem.quantity
+                        }
+
+                        const couponDiscount=Number(document.getElementById(couponDiscountAmount))
+                        
+                        discount+=(couponDiscount)? couponDiscount/cartItem.length:0;
+
                         products.push({
                             productID: cartItem.productID,
                             quantity: cartItem.quantity,
-                            price
+                            price,
+                            discount,
+                            amountPaid:price - discount
                         })
                         cartItemIds.push(cartItem._id)
                     })

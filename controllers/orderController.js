@@ -130,13 +130,13 @@ exports.postAddCouponDiscount=async(req,res)=>{
 //cancel an order
 exports.patchCancel = async (req, res) => {
     try {
-        const { productID, productQuantity, price } = req.body;
+        const { productID, productQuantity, amountPaid } = req.body;
         const orderProductsID = req.params.id;
         const paymentMethod = await orderService.cancelOrders(orderProductsID, req.userID, productID, productQuantity)
-        await transationService.completeTransation(req.userID, price * productQuantity, 'refund')
+        await transationService.completeTransation(req.userID, amountPaid, 'refund')
 
         if (paymentMethod == "Razorpay" || paymentMethod == "Wallet") {
-            await walletService.addToWallet(req.userID, price)
+            await walletService.addToWallet(req.userID, amountPaid)
         }
         res.json({ success: true })
 

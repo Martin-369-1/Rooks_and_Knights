@@ -7,7 +7,7 @@ exports.addToCart = async (userID, productID, quantity,categoryID,subCategoryID)
     try {
         const product = await productCollection.findById(productID)
         const cart = await cartCollection.findOne({ userID })
-
+        
         if (!cart) {
             //if cart doesnot exist create a new cart
             const newCart = new cartCollection({
@@ -22,6 +22,7 @@ exports.addToCart = async (userID, productID, quantity,categoryID,subCategoryID)
                 ],
                 totalPrice: product.price * quantity
             })
+            
             return await newCart.save()
         }
 
@@ -54,7 +55,7 @@ exports.addToCart = async (userID, productID, quantity,categoryID,subCategoryID)
             cart.cartItems.push({ productID, quantity ,categoryID,subCategoryID });
             cart.totalPrice += product.price * Number(quantity);
         }
-
+        
         return await cart.save();
     } catch (err) {
         console.log(err);
@@ -86,6 +87,7 @@ exports.viewCart = async (userID) => {
             await newCart.save()
             return newCart;
         }
+        console.log(cart);
         
         //if cart exist return cart
         return cart;

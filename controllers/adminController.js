@@ -10,6 +10,7 @@ const adminOfferService=require('../services/adminOfferService')
 const walletService = require('../services/walletService');
 const transationService = require('../services/transationService')
 const adminCouponService=require('../services/adminCouponServices');
+const adminSalesService=require('../services/adminSalesService')
 
 const mongoose=require('mongoose')
 //Utils
@@ -577,5 +578,21 @@ exports.putEditCoupon=async(req,res)=>{
     }catch(err){
         console.log(err);
         res.status(500).json({ error: "Server Error" })
+    }
+}
+
+
+//sales
+exports.getSales=async(req,res)=>{
+    try{
+        const {reportType,startDate,endDate}=req.query;
+        
+        const {orderList,salesList}=await adminSalesService.salesList(reportType,startDate,endDate)
+
+        res.render('admin/sales',{salesList,orderList,reportType,startDate,endDate})
+
+    }catch(err){
+        console.log(err);
+        res.status('/error')
     }
 }

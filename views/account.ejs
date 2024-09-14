@@ -338,7 +338,7 @@
 
                         // Check order status and set the button accordingly
                         if (order.status === "pending") {
-                            actionButton = `<button class="btn btn-danger" onclick="cancelOrder('${order._id}', '${order.productID._id}' , ${order.quantity} ,${order.price})">Cancel</button>`;
+                            actionButton = `<button class="btn btn-danger" onclick="cancelOrder('${order._id}', '${order.productID._id}' , ${order.quantity} ,${order.amountPaid})">Cancel</button>`;
                         } else if (order.status === "delivered" && order.returnStatus == 'notRequested') {
                             actionButton = `<button class="btn btn-warning" onclick="returnOrder('${order._id}')">Return</button>`;
                         } else if (order.status === 'delivered') {
@@ -350,7 +350,7 @@
         <td><img src="${order.productID.productImage1}" alt="${order.productName}" width="100px"></td>
         <td>${order.productID.productName}</td>
         <td>${order.quantity}</td>
-        <td>${order.price}</td>
+        <td>${order.amountPaid}</td>
         <td>${order.status}</td>
         <td>${actionButton}</td>
       `;
@@ -684,7 +684,7 @@
                 }
 
 
-                function cancelOrder(orderProductsID, productID, productQuantity, price) {
+                function cancelOrder(orderProductsID, productID, productQuantity, amountPaid) {
 
 
                     Swal.fire({
@@ -702,7 +702,7 @@
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ productID, productQuantity, price })
+                                body: JSON.stringify({ productID, productQuantity, amountPaid })
                             })
                                 .then(res => res.json())
                                 .then((data) => {

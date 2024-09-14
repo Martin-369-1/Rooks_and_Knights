@@ -367,3 +367,107 @@ body {
 .custom-select option {
     padding: 10px;
 }
+
+.container {/* Light grey background for the container */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.report-select {
+    max-width: 200px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #495057;
+}
+
+.file-format-select {
+    max-width: 120px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #495057;
+}
+
+.report-date-picker {
+    width: 150px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #495057;
+}
+
+.report-date-picker + .report-date-picker {
+    margin-left: 10px; /* Space between start date and end date */
+}
+
+.btn-dark {
+    background-color: #343a40;
+    border: none;
+}
+
+.btn-dark:hover {
+    background-color: #23272b;
+}
+
+.btn-download {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.btn-download:hover {
+    background-color: #d6d6d6;
+    color: #343a40;
+}
+
+.card-summary {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card-summary:hover {
+    transform: translateY(-5px);
+}
+
+.card-summary .card-body {
+    padding: 15px;
+}
+
+.card-summary .card-body h4 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.card-summary .card-body p {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.bg-dark {
+    background-color: #343a40 !important;
+}
+
+.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.bg-light {
+    background-color: #e9ecef !important;
+}
+
+.text-light {
+    color: #f8f9fa !important;
+}
+
+.text-dark {
+    color: #343a40 !important;
+}

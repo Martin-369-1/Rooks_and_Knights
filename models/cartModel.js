@@ -19,11 +19,13 @@ const cartSchema = Schema({
             },
             categoryID:{
                 type: Schema.Types.ObjectId,
-                ref: 'categories'
+                ref: 'categories',
+                required:true
             },
             subCategoryID:{
                 type: Schema.Types.ObjectId,
-                ref: 'subCategories'
+                ref: 'subCategories',
+                required:true
             }
         }
     ],
