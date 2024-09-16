@@ -3,10 +3,12 @@ const passport = require('passport')
 
 //services
 const userSevice = require('../services/userService');
-const accountService=require('../services/userAccountService');
+const accountService = require('../services/userAccountService');
 const resetPasswordServices = require('../services/resetPasswordServices');
-const addressService=require('../services/addressServices')
-const orderService=require('../services/orderServices')
+const addressService = require('../services/addressServices')
+const orderService = require('../services/orderServices')
+const walletService = require('../services/walletService')
+const transationService = require('../services/transationService')
 
 
 //utils
@@ -57,11 +59,14 @@ exports.postLogin = async (req, res) => {
 //POST logout
 exports.postLogout = (req, res) => {
     res.clearCookie('token');
-    res.status(200).json({success:true,successRedirect:'/'});
+    res.status(200).json({ success: true, successRedirect: '/' });
 }
 
 //GET Register
 exports.getRegister = (req, res) => {
+
+    req.session.referalID = req.query.referalID
+
     res.render('user/register')
 }
 
@@ -98,9 +103,20 @@ exports.getCompleteRegister = (req, res) => {
 
 //POST complete register
 exports.postCompleteRegister = async (req, res) => {
-    const { username, email, phoneNumber, password } = req.session;
+    const { username, email, phoneNumber, password, referalID } = req.session;
 
     const result = await userSevice.saveUserToDB(username, email, phoneNumber, password)
+
+
+    if (referalID) {
+        const referedUserID = await userSevice.findUserByReferenceID(referalID)
+
+        if (referedUserID) {
+            await walletService.referal(referedUserID)
+            await transationService.completeTransation(referedUserID, 50, 'referal')
+        }
+
+    }
 
     if (result.success) {
         req.session.destroy((err) => {
@@ -188,46 +204,46 @@ exports.postResetPassword = async (req, res) => {
 }
 
 
-exports.getAccount=async(req,res)=>{
-    try{
-        const userProfile=await accountService.viewUserProfile(req.userID);
-        const address=await addressService.viewAddress(req.userID);
-        const orders=await orderService.viewOrders(req.userID)
-        res.render('account',{userProfile,address,orders})
+exports.getAccount = async (req, res) => {
+    try {
+        const userProfile = await accountService.viewUserProfile(req.userID);
+        const address = await addressService.viewAddress(req.userID);
+        const orders = await orderService.viewOrders(req.userID)
+        res.render('account', { userProfile, address, orders })
 
-    }catch(err){
-        console.log(err);     
+    } catch (err) {
+        console.log(err);
     }
 }
 
-exports.putAccount=async(req,res)=>{
-    try{
-        const {username,phoneNumber}=req.body;
-        let error=await accountService.updateUserProfile(username,phoneNumber,req.userID)
-        if(error){
-            return res.status(400).json({success:false,error:error.error})
+exports.putAccount = async (req, res) => {
+    try {
+        const { username, phoneNumber } = req.body;
+        let error = await accountService.updateUserProfile(username, phoneNumber, req.userID)
+        if (error) {
+            return res.status(400).json({ success: false, error: error.error })
         }
-        res.status(200).json({success:true})
-    }catch(err){
+        res.status(200).json({ success: true })
+    } catch (err) {
         console.log(err);
 
     }
 }
 
-exports.postAccountChangePassword=async(req,res)=>{
-    try{
-        
+exports.postAccountChangePassword = async (req, res) => {
+    try {
+
         let error = await resetPasswordServices.forgetPassword(req.email, req)
 
         if (error) {
-            return res.json({ success:false,error })
+            return res.json({ success: false, error })
         }
-        req.session.userID=req.userID;
+        req.session.userID = req.userID;
         req.session.OTPVerificationRedirect = '/user/resetPassword';
-        res.status(200).json({success:true,redirectUrl:'/OTP/verifyOTP'})
-        
-    }catch(err){
+        res.status(200).json({ success: true, redirectUrl: '/OTP/verifyOTP' })
+
+    } catch (err) {
         console.log(err);
-        
+
     }
 }

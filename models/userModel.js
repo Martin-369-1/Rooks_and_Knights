@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { referal } = require('../services/walletService');
 
 const Schema = mongoose.Schema;
 
@@ -35,12 +36,14 @@ const userShema = Schema({
 
     isblocked: {
         type: Boolean,
-        required: true,
         default: false
     },
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    referalID: {
+        type: String
     }
 }, { timestamps: true })
 

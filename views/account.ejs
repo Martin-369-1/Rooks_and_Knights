@@ -62,6 +62,11 @@
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control" id="phoneNumber" value="+1234567890">
                             </div>
+
+                            <div class="form-group">
+                                <label for="referalLink">Referal Link</label>
+                                <input type="text" class="form-control" id="referalLink" readonly value="http://localhost:3000/user/register?referalID=<%= userProfile.referalID %>">
+                            </div>
                             <button class="btn btn-save">Save Changes</button>
                         </form>
 

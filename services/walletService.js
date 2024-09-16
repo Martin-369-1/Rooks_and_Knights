@@ -1,5 +1,6 @@
 //models
 const walletCollection = require('../models/walletModel')
+const userCollection = require('../models/userModel')
 
 //render walletList
 exports.walletList = async (userID) => {
@@ -55,5 +56,17 @@ exports.payFromWallet = async (userID, amount) => {
         await wallet.save()
     } catch (err) {
         console.log(err);
+    }
+}
+
+
+//add referal amount to user wallet
+exports.referal = async (referedUserID) => {
+    try {
+        await walletCollection.updateOne({ userID: referedUserID }, { $inc: { balance: 50 } })
+
+    } catch (err) {
+        console.log(err);
+
     }
 }

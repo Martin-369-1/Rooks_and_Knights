@@ -13,7 +13,7 @@ const transationSchema = Schema({
     },
     transationType: {
         type: String,
-        enum: ['purchase', 'walletRecharge', 'walletDeduction', 'refund'],
+        enum: ['purchase', 'walletRecharge', 'walletDeduction', 'refund', 'referal'],
         required: true
     },
     paymentMethod: {

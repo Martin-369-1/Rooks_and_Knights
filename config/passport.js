@@ -1,5 +1,6 @@
 const passport = require('passport');
 const googleStrategy = require('passport-google-oauth20').Strategy;
+const crypto = require('crypto')
 require('dotenv').config()
 
 const userCollection = require('../models/userModel')
@@ -23,7 +24,8 @@ passport.use(
                 const newUser = new userCollection({
                     username: profile.displayName,
                     googleID: profile.id,
-                    email: profile.emails && profile.emails[0].value
+                    email: profile.emails && profile.emails[0].value,
+                    referalID: crypto.randomBytes(16).toString('hex')
                 })
 
                 await newUser.save()

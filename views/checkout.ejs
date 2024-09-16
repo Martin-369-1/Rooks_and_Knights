@@ -484,6 +484,14 @@
                     const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
                     console.log(selectedAddress);
 
+                    if(!selectedAddress){
+                        Swal.fire({
+                                title: "Address not selected ",
+                                icon: "error",
+                            });
+                        return
+                    }
+
                     const addressId = selectedAddress.value;
 
                     const rows = document.querySelectorAll('.cart-product-row');
@@ -491,6 +499,15 @@
                     const cartItemIds = []
                     let outOfStock = false;
                     let unavaliableProduct = false;
+
+                    if(!rows.length){
+                        Swal.fire({
+                                title: "No product to checkout ",
+                                icon: "error",
+                            });
+                        return
+                    }
+
                     rows.forEach((row) => {
                         const cartItem = JSON.parse(row.getAttribute('data-products'))
                         

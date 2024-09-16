@@ -1,7 +1,8 @@
 //Requiring modules
 const userCollection = require('../models/userModel')
 const OTPUtils = require("../utils/OTPUtils")
-const passwordUtils = require('../utils/passwordUtils')
+const passwordUtils = require('../utils/passwordUtils');
+const crypto = require('crypto')
 
 exports.registerUser = async (username, email, phoneNumber, password, req) => {
     try {
@@ -59,7 +60,8 @@ exports.saveUserToDB = async (username, email, phoneNumber, password) => {
             username,
             password: hashedPassword,
             email,
-            phoneNumber
+            phoneNumber,
+            referalID: crypto.randomBytes(16).toString('hex')
         });
 
         // Save the user to the database
@@ -81,3 +83,10 @@ exports.validateUserCredentials = async (password, userPasswordHash) => {
     return await passwordUtils.comparePassword(password, userPasswordHash);
 };
 
+exports.findUserByReferenceID = async (referalID) => {
+    try {
+        return await userCollection.findOne({ referalID })
+    } catch (err) {
+        console.log(err);
+    }
+}

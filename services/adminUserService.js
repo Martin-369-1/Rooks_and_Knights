@@ -25,7 +25,8 @@ exports.userList = async (search, currentPage, noOfList, skipPages) => {
 
 exports.blockUnblockUser = async (userID) => {
     try {
-        await userCollection.updateOne({ _id: userID }, { isblocked: { $not: '$isblocked' } })
+        const user = await userCollection.findById(userID)
+        await userCollection.updateOne({ _id: userID }, { isblocked: !user.isblocked })
     } catch (err) {
         console.log(err);
 
