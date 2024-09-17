@@ -89,7 +89,7 @@ exports.salesList = async (reportType, startDate, endDate,currentPage, noOfList,
             {$limit:currentPage * noOfList}
             
         ])
-
+        
         return { salesList, orderList , currentPage, totalNoOfList};
 
     } catch (err) {
@@ -169,13 +169,12 @@ exports.downloadSalesReport=async(reportType, startDate, endDate)=>{
                     as: 'userDetails'
                 }
             },
-            { $unwind: '$userDetails' },
             {$sort:{
                 createdAt:-1
             }},
             
         ])
-
+        
         return salesList;
 
     }catch(err){

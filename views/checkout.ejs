@@ -541,10 +541,12 @@
                         }else if(cartItem.subCategoryID.offer){
                             discount=(cartItem.productID.price * cartItem.subCategoryID.offer / 100)*cartItem.quantity
                         }
-
-                        const couponDiscount=Number(document.getElementById(couponDiscountAmount))
+                        console.log(discount);
                         
-                        discount+=(couponDiscount)? couponDiscount/cartItem.length:0;
+                        const couponDiscount=Number(document.getElementById('couponDiscountAmount').innerText)
+                        console.log(discount,couponDiscount);
+                        
+                        discount+=couponDiscount;
 
                         products.push({
                             productID: cartItem.productID,
@@ -553,6 +555,8 @@
                             discount,
                             amountPaid:price - discount
                         })
+                        console.log(discount);
+                        
                         cartItemIds.push(cartItem._id)
                     })
 

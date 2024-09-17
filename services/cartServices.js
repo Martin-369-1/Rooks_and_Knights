@@ -87,7 +87,6 @@ exports.viewCart = async (userID) => {
             await newCart.save()
             return newCart;
         }
-        console.log(cart);
         
         //if cart exist return cart
         return cart;

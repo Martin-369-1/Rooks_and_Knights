@@ -48,7 +48,7 @@
                                         <% if(wishlistItem.productID.stock>0){%>
                                             <form action="/cart/addToCart/<%= wishlistItem.productID._id %>"
                                                 method="post" id="addToCartForm"
-                                                onsubmit="addToCart('<%= wishlistItem.productID._id %>',event)">
+                                                onsubmit="addToCart('<%= wishlistItem.productID._id %>','<%=wishlistItem.productID.categoryID%>','<%=wishlistItem.productID.subCategoryID%>',event)">
                                                 <td class="column-3">
                                                     <div class="wrap-num-product flex-w  m-tb-10">
 
@@ -177,7 +177,7 @@
 
                 }
 
-                function addToCart(productID, event) {
+                function addToCart(productID,categoryID,subCategoryID, event) {
                     event.preventDefault();
                     let quantity = document.getElementById('productQuantity').value;
                     fetch(`/cart/addToCart/${productID}`, {
@@ -186,7 +186,7 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            quantity
+                            quantity,categoryID,subCategoryID
                         })
                     }).then((res) => res.json())
                         .then((data) => {

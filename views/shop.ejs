@@ -220,24 +220,23 @@
 								<div class="block2-txt-child1 flex-col-l ">
 									<p class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 										<%= product.productName %>
-									</p>
-									<br>
+											</0>
+											<br>
+											<% let sum=0 %>
+												<% product.reviews.forEach(element=> { %>
+													<% sum+=element.ratingStar %>
+														<% }); %>
+															<% let average=sum/product.reviews.length %>
+																<span class="fs-18 cl11">
+																	<% for(let i=0;i<average;i++){ %>
+																		<i class="zmdi zmdi-star"></i>
+																		<% } %>
 
-									<% let sum=0 %>
-										<% product.reviews.forEach(element=> { %>
-											<% sum+=element.ratingStar %>
-												<% }); %>
-													<% let average=sum/product.reviews.length %>
-														<span class="fs-18 cl11">
-															<% for(let i=0;i<average;i++){ %>
-																<i class="zmdi zmdi-star"></i>
-																<% } %>
-
-														</span>
-														<br>
-														<span class="stext-105 cl3">
-															₹<%= product.price %>
-														</span>
+																</span>
+																<br>
+																<span class="stext-105 cl3">
+																	₹<%= product.price %>
+																</span>
 
 								</div>
 							</div>
