@@ -179,7 +179,7 @@
                                 });
                                 return
                             }
-                            fetch('/admin/subCategories/addSubCategory', {
+                            fetch('/admin/subCategories', {
                                 method: "POST",
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -285,7 +285,7 @@
                                 });
                                 return
                             }
-                            fetch(`/admin/subCategories/editSubCategory/${ID}`, {
+                            fetch(`/admin/subCategories/${ID}`, {
                                 method: "PUT",
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -364,7 +364,7 @@
                                 confirmButtonText: "Yes"
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch(`/admin/subCategories/deleteSubCategory/${ID}`, {
+                                    fetch(`/admin/subCategories/${ID}`, {
                                         method: "DELETE",
                                         headers: {
                                             'Content-Type': 'application/json'

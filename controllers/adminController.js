@@ -335,6 +335,7 @@ exports.addSubCategory = async (req, res) => {
 exports.putEditSubCategory = async (req, res) => {
     try {
         const subCategoryID = req.params.id;
+        
         const { subCategoryName, subCategoryDescription } = req.body;
 
         if (!subCategoryName || !subCategoryDescription) {

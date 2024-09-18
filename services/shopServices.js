@@ -1,8 +1,7 @@
 const productCollection = require('../models/productsModel');
 const categoryCollection = require('../models/CategoryModel');
 const subCategoryCollection = require('../models/subCategoryModel');
-const userCollection = require('../models/userModel')
-const { objectID } = require('mongoose')
+const wishlistCollection=require('../models/wishlistModel')
 
 exports.productList = async (categoryID, sortby, price, subCategoryID, search, currentPage, noOfProducts, skipPages) => {
     let findQuery = { isDeleted: false };
@@ -72,7 +71,7 @@ exports.productList = async (categoryID, sortby, price, subCategoryID, search, c
 }
 
 
-exports.viewProduct = async (_id) => {
+exports.viewProduct = async (_id,userID) => {
 
     try {
         const product = await productCollection.findById(_id)
@@ -90,9 +89,9 @@ exports.viewProduct = async (_id) => {
             .exec();
 
         const relatedProducts = await productCollection.find({ isDeleted: false, categoryID: product.categoryID._id, _id: { $ne: product._id } })
-
-
-        return { product, relatedProducts };
+    
+        
+        return { product, relatedProducts};
     } catch (err) {
         console.log(err);
 

@@ -124,7 +124,7 @@
                         confirmButtonText: "Yes"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/admin/returns/aproveRejectReturn`, { // Ensure this URL and endpoint are correct for updating return status
+                            fetch(`/admin/returns`, { // Ensure this URL and endpoint are correct for updating return status
                                 method: "PATCH",
                                 headers: {
                                     'Content-Type': 'application/json'

@@ -54,11 +54,14 @@ exports.addSubCategory = async (subCategoryName, subCategoryDescription) => {
 //edit sub category
 exports.editSubCategory = async (subCategoryID, subCategoryName, subCategoryDescription) => {
     try {
-        let subCategory = await subCategoryCollection.findOne({ subCategoryName, _id: { $ne: { subCategoryID } } })
+
+        let subCategory = await subCategoryCollection.findOne({ subCategoryName, _id: { $ne: subCategoryID } })
 
         if (subCategory) { //checks subcateogry exists
             return "subCategory already exists cannot edit"
         }
+
+        
         await subCategoryCollection.updateOne({ _id: subCategoryID }, { subCategoryName, subCategoryDescription })
     } catch (err) {
         console.log(err);

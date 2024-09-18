@@ -184,7 +184,7 @@
         <script>
             function updateProductStatus(_id, orderID) {
                 const status = document.getElementById(`product_status_${_id}`).value;
-                fetch(`/admin/orders/updateProductStauts/${_id}`, {
+                fetch(`/admin/orders/viewEditOrder/${_id}`, {
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json'

@@ -222,7 +222,7 @@
                         return
                     }
 
-                    fetch('/admin/coupons/addCoupon', {
+                    fetch('/admin/coupons', {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -301,7 +301,7 @@
                         confirmButtonText: "Yes"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/admin/coupons/deleteCoupon/${couponID}`, {
+                            fetch(`/admin/coupons/${couponID}`, {
                                 method: "DELETE",
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -411,7 +411,7 @@
                         });
                         return
                     }
-                    fetch(`/admin/coupons/editCoupon/${ID}`, {
+                    fetch(`/admin/coupons/${ID}`, {
                         method: "PUT",
                         headers: {
                             'Content-Type': 'application/json'

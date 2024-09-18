@@ -112,7 +112,7 @@
                         confirmButtonText: "Yes"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/admin/users/blockUnblockUser/${userID}?search=${search}`, {
+                            fetch(`/admin/users/${userID}?search=${search}`, {
                                 method: "PATCH",
                                 headers: {
                                     'Content-Type': 'application/json'

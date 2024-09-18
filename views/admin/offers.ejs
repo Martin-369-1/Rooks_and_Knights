@@ -339,7 +339,7 @@
         });
         return
       }
-      fetch('/admin/offers/addOffer', {
+      fetch('/admin/offers', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -418,7 +418,7 @@
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          fetch(`/admin/offers/deleteOffer/${ID}`, {
+          fetch(`/admin/offers/${ID}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json'

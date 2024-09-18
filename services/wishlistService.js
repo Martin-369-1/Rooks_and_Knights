@@ -70,3 +70,12 @@ exports.deleteFromWishlist = async (userID, wishlistItemID) => {
         console.log(err);
     }
 }
+
+exports.productInWishlist=async(userID,productID)=>{
+    try{
+        const productInWishlist=await wishlistCollection.findOne({userID,'wishlistItems.$.productID':productID})
+        return !!productInWishlist
+    }catch(err){
+        console.log(err)
+    }
+}

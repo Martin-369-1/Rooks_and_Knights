@@ -50,34 +50,6 @@
                             <tbody>
                                 <% categoryList.forEach(category=> { %>
                                     <tr>
-                                        <!-- <form class=""
-                                            action="/admin/categories/editCategory/<%= category._id %>/?_method=PUT"
-                                            method="post" id="editCategoryForm_<%= category._id %>"
-                                            onsubmit="editCategoryValidation('<%= category._id %>',event)">
-                                            <td>
-                                                <input type="text" class="form-control transparent-input"
-                                                    value="<%= category.categoryName %>" name="categoryName"
-                                                    id="categoryName_<%= category._id %>">
-                                            </td>
-                                            <td class="dis-flex">
-                                                <input type="text" class="form-control transparent-input"
-                                                    value="<%= category.categoryDescription %>"
-                                                    name="categoryDescription"
-                                                    id="categoryDescription_<%= category._id %>">
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-dark btn-sm" type="submit"><i
-                                                        class="fas fa-pencil-alt"></i></button>
-                                            </td>
-                                        </form>
-                                        <td>
-                                            <form
-                                                action="/admin/categories/deleteCategory/<%= category._id %>/?_method=DELETE"
-                                                method="post">
-                                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
-                                                    </button>
-                                            </form> 
-                                        </td> -->
                                         <td>
                                             <%= category.categoryName %>
                                         </td>
@@ -206,7 +178,7 @@
                                 });
                                 return
                             }
-                            fetch('/admin/categories/addCategory', {
+                            fetch('/admin/categories', {
                                 method: "POST",
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -314,7 +286,7 @@
                                 });
                                 return
                             }
-                            fetch(`/admin/categories/editCategory/${ID}`, {
+                            fetch(`/admin/categories/${ID}`, {
                                 method: "PUT",
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -393,7 +365,7 @@
                                 confirmButtonText: "Yes"
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch(`/admin/categories/deleteCategory/${ID}`, {
+                                    fetch(`/admin/categories/${ID}`, {
                                         method: "DELETE",
                                         headers: {
                                             'Content-Type': 'application/json'

@@ -1,5 +1,6 @@
 //services
 const shopServices = require('../services/shopServices')
+const wishlistService=require('../services/wishlistService')
 
 //render product page
 exports.getProductList = async (req, res) => {
@@ -23,9 +24,14 @@ exports.getProduct = async (req, res) => {
 
     let _id = req.params.id;
     try {
-        const { product, relatedProducts } = await shopServices.viewProduct(_id);
+        const { product, relatedProducts} = await shopServices.viewProduct(_id);
+        
+        let productInWishlist=false;
+        if(req.userID){
+            productInWishlist=await wishlistService.productInWishlist(userID,_id)
+        }
 
-        res.render('product', { product, relatedProducts })
+        res.render('product', { product, relatedProducts ,productInWishlist})
     } catch (err) {
         console.log(err);
         res.redirect('/error')
