@@ -144,10 +144,10 @@
 					<!--  -->
 					<div class="flex-w flex-m  p-t-10 respon7">
 						<div class="flex-m bor9 p-r-10 m-r-11">
-							<button href="#" onclick="addToWishlist(event,'<%= product._id %>')"
+							<button href="#" onclick="addRemoveWishlist(event,'<%= product._id %>','<%= productInWishlist %>')"
 								class="fs-20 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-								data-tooltip="Add to Wishlist">
-								<i class="<%= productInWishlist? 'zmdi zmdi-favorite':'zmdi zmdi-favorite-outline' %>"></i>
+								data-tooltip="<%= productInWishlist? 'Remove form wishlist':'Add to wishlist' %>">
+								<i id="wishlistIcon" class="<%= productInWishlist? 'zmdi zmdi-favorite':'zmdi zmdi-favorite-outline' %>"></i>
 							</button>
 
 							
@@ -404,10 +404,11 @@
 							if (data.success) {
 								Swal.fire({
 									title: "Good job!",
-									text: data.success,
+									text: "Product added to cart",
 									icon: "success",
 									footer: `<a href="/cart">Go to cart</a>`,
 								})
+
 							} else if (data.error) {
 								Swal.fire({
 									icon: "error",
@@ -445,29 +446,26 @@
 
 				}
 
-				function addToWishlist(event, productID) {
+				function addRemoveWishlist(event, productID,productInWishlist) {
 					event.preventDefault()
-					fetch(`/wishlist/addToWishlist/${productID}`, {
-						method: 'POST',
+
+					const  method = (productInWishlist=='true') ? 'DELETE' : 'POST';
+					const  wishlistIcon=document.getElementById('wishlistIcon')
+
+					console.log(method);
+					
+					fetch(`/wishlist/${productID}`, {
+						method,
 						headers: {
 							'Content-Type': 'application/json'
 						},
 					}).then((res) => res.json())
 						.then((data) => {
 							if (data.success) {
-								Swal.fire({
-									title: "Good job!",
-									text: data.success,
-									icon: "success",
-									footer: `<a href="/wishlist">Go to Wishlist</a>`,
-								})
-							} else if (data.error) {
-								Swal.fire({
-									icon: "error",
-									title: "Oops...",
-									text: data.error,
-									footer: data.errorRedirect
-								});
+
+								
+									window.location.reload()
+								
 							} else if (data.authError) {
 								Swal.fire({
 									icon: "error",

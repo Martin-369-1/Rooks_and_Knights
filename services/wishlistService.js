@@ -41,15 +41,6 @@ exports.addToWishlist = async (userID, productID) => {
             return
         }
 
-
-        const wishlistItemIndex = wishlist.wishlistItems.findIndex(
-            (item) => item.productID.toString() === productID.toString()
-        );
-
-        if (wishlistItemIndex !== -1) {
-            return "Product already in wishlist";
-        }
-
         wishlist.wishlistItems.push({ productID })
 
         await wishlist.save()
@@ -60,11 +51,11 @@ exports.addToWishlist = async (userID, productID) => {
 }
 
 //delete a product form wishlist 
-exports.deleteFromWishlist = async (userID, wishlistItemID) => {
+exports.deleteFromWishlist = async (userID, productID) => {
     try {
         await wishlistCollection.updateOne(
             { userID },
-            { $pull: { wishlistItems: { _id: wishlistItemID } } }
+            { $pull: { wishlistItems: { productID } } }
         );
     } catch (err) {
         console.log(err);
@@ -73,7 +64,7 @@ exports.deleteFromWishlist = async (userID, wishlistItemID) => {
 
 exports.productInWishlist=async(userID,productID)=>{
     try{
-        const productInWishlist=await wishlistCollection.findOne({userID,'wishlistItems.$.productID':productID})
+        const productInWishlist=await wishlistCollection.findOne({userID,'wishlistItems.productID':productID})
         return !!productInWishlist
     }catch(err){
         console.log(err)

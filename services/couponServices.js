@@ -1,7 +1,7 @@
 //models
 const couponCollection=require('../models/couponModel')
 
-exports.addCouponDiscount=async(subTotalAmount,couponCode)=>{
+exports.addCouponDiscount=async(basePrice,couponCode)=>{
     const now=new Date()
     now.setHours(0,0,0,0)
     try{
@@ -15,8 +15,8 @@ exports.addCouponDiscount=async(subTotalAmount,couponCode)=>{
             return {error:"coupon expired"}
         }
 
-        if(subTotalAmount < coupon.minimumOrderAmount){
-            return {error:`To use this coupon there must me minimum order amount of ${subTotalAmount}`}
+        if(basePrice < coupon.minimumOrderAmount){
+            return {error:`To use this coupon there must me minimum order amount of ${basePrice}`}
         }
         
         return {discount:coupon.discountAmount}

@@ -131,7 +131,7 @@
 
                         <!-- Sub Total -->
                         <div class="m-t-10">
-                            <p class="cl2 mtext-101">Sub Total: <span id="subTotalAmount">
+                            <p class="cl2 mtext-101">Base Price: <span id="basePrice">
                                     <%= cart.totalPrice %>
                                 </span></p>
 
@@ -143,13 +143,17 @@
                                             <% if (product.productID.offer) { %>
                                                 <% offer +=parseInt((product.productID.price * product.productID.offer /
                                                     100)*product.quantity) %>
-                                            <% } else if (product.categoryID && product.categoryID.offer) { %>
-                                                <% offer +=parseInt((product.productID.price *product.categoryID.offer / 100)*product.quantity); %>
-                                            <% } else if (product.subCategoryID && product.subCategoryID.offer) { %>
-                                                <% offer +=parseInt((product.productID.price * product.subCategoryID.offer /100)*product.quantity); %>
-                                            <% } %>
-                                        <% }) %>
-                                    <%= offer %>
+                                                    <% } else if (product.categoryID && product.categoryID.offer) { %>
+                                                        <% offer +=parseInt((product.productID.price
+                                                            *product.categoryID.offer / 100)*product.quantity); %>
+                                                            <% } else if (product.subCategoryID &&
+                                                                product.subCategoryID.offer) { %>
+                                                                <% offer +=parseInt((product.productID.price *
+                                                                    product.subCategoryID.offer /100)*product.quantity);
+                                                                    %>
+                                                                    <% } %>
+                                                                        <% }) %>
+                                                                            <%= offer %>
 
                                 </span></p>
 
@@ -180,9 +184,20 @@
                                     <%= offer %>
                                 </span>
                             </p>
+                            <p class="cl2 mtext-101 m-t-5">Tax Amount:
+                                <span id="taxAmount">
+                                    <%= cart.totalPrice * 2 / 100 %>
+                                </span>
+                            </p>
+                            <p class="cl2 mtext-101 m-t-5">Delivery Charge:
+                                <span id="deliveryCharge">
+                                    100
+                                </span>
+                            </p>
+
                             <p class="cl2 mtext-101 m-t-5">Total Amount:
                                 <span id="totalAmount">
-                                    <%= cart.totalPrice-offer %>
+                                    <%= cart.totalPrice-offer+100 %>
                                 </span>
                             </p>
 
@@ -451,15 +466,15 @@
                     console.log(cartItem);
 
                     const row = document.getElementById(`cartItemRow_${cartItem._id}`)
-                    const subTotalAmmount = document.getElementById('subTotalAmount');
+                    const basePrice = document.getElementById('basePrice');
                     const OfferAmount = document.getElementById('OfferAmount');
                     const totalAmount = document.getElementById('totalAmount');
                     const couponDiscountAmount = document.getElementById('couponDiscountAmount');
                     const discountAmount = document.getElementById('discountAmount');
 
                     let offer = 0;
-                    
-                    
+
+
                     if (cartItem.productID.offer) {
                         offer = parseInt(cartItem.productID.offer * cartItem.productID.price * cartItem.quantity / 100)
                     } else if (cartItem.categoryID.offer) {
@@ -468,7 +483,7 @@
                         offer = parseInt(cartItem.subcategoryID.offer * cartItem.productID.price * cartItem.quantity / 100)
                     }
 
-                    subTotalAmmount.innerHTML = Number(subTotalAmmount.textContent) - Number(cartItem.productID.price * cartItem.quantity);
+                    basePrice.innerHTML = Number(basePrice.textContent) - Number(cartItem.productID.price * cartItem.quantity);
                     OfferAmount.innerText = Number(OfferAmount.textContent) - offer
                     totalAmount.innerText = Number(totalAmount.textContent) - ((cartItem.productID.price * cartItem.quantity) - offer)
                     discountAmount.innerText = Number(discountAmount.textContent) - offer - Number(couponDiscountAmount.textContent)
@@ -484,11 +499,11 @@
                     const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
                     console.log(selectedAddress);
 
-                    if(!selectedAddress){
+                    if (!selectedAddress) {
                         Swal.fire({
-                                title: "Address not selected ",
-                                icon: "error",
-                            });
+                            title: "Address not selected ",
+                            icon: "error",
+                        });
                         return
                     }
 
@@ -500,17 +515,17 @@
                     let outOfStock = false;
                     let unavaliableProduct = false;
 
-                    if(!rows.length){
+                    if (!rows.length) {
                         Swal.fire({
-                                title: "No product to checkout ",
-                                icon: "error",
-                            });
+                            title: "No product to checkout ",
+                            icon: "error",
+                        });
                         return
                     }
 
                     rows.forEach((row) => {
                         const cartItem = JSON.parse(row.getAttribute('data-products'))
-                        
+
                         if (cartItem.quantity > cartItem.productID.stock) {
                             outOfStock = true
                             Swal.fire({
@@ -530,33 +545,33 @@
                         }
                         console.log(cartItem);
                         const price = cartItem.productID.price * cartItem.quantity;
-                        let discount=0;
+                        let discount = 0;
 
-                        if(cartItem.productID.offer){
-                            
-                            discount=(cartItem.productID.price * cartItem.productID.offer / 100)*cartItem.quantity
-                            
-                        }else if(cartItem.categoryID.offer){
-                            discount=(cartItem.productID.price * cartItem.categoryID.offer / 100)*cartItem.quantity
-                        }else if(cartItem.subCategoryID.offer){
-                            discount=(cartItem.productID.price * cartItem.subCategoryID.offer / 100)*cartItem.quantity
+                        if (cartItem.productID.offer) {
+
+                            discount = (cartItem.productID.price * cartItem.productID.offer / 100) * cartItem.quantity
+
+                        } else if (cartItem.categoryID.offer) {
+                            discount = (cartItem.productID.price * cartItem.categoryID.offer / 100) * cartItem.quantity
+                        } else if (cartItem.subCategoryID.offer) {
+                            discount = (cartItem.productID.price * cartItem.subCategoryID.offer / 100) * cartItem.quantity
                         }
                         console.log(discount);
-                        
-                        const couponDiscount=Number(document.getElementById('couponDiscountAmount').innerText)
-                        console.log(discount,couponDiscount);
-                        
-                        discount+=couponDiscount;
+
+                        const couponDiscount = Number(document.getElementById('couponDiscountAmount').innerText)
+                        console.log(discount, couponDiscount);
+
+                        discount += couponDiscount;
 
                         products.push({
                             productID: cartItem.productID,
                             quantity: cartItem.quantity,
                             price,
                             discount,
-                            amountPaid:price - discount
+                            amountPaid: price - discount
                         })
                         console.log(discount);
-                        
+
                         cartItemIds.push(cartItem._id)
                     })
 
@@ -564,17 +579,26 @@
                         return
                     }
                     const paymentMethod = document.getElementById('paymentMethod').value
-                    const subTotalAmmount = document.getElementById('subTotalAmount').textContent;
+                    const basePrice = document.getElementById('basePrice').textContent;
                     const totalAmmount = document.getElementById('totalAmount').textContent;
                     const discount = document.getElementById('discountAmount').textContent;
+                    const taxAmmount = document.getElementById('taxAmount').textContent;
 
+                    if (totalAmmount > 1000 && paymentMethod == 'COD') {
+                        Swal.fire({
+                            title: "Cannot Proceed to using Cash on delivery",
+                            text: "For cash on delivery the amount should be less than 1000",
+                            icon: "error",
+                        });
+                        return
+                    }
 
                     fetch('/order/proceedToPayment', {
                         method: "POST",
                         headers: {
                             'Content-type': 'application/json'
                         },
-                        body: JSON.stringify({ products, addressId, paymentMethod, subTotalAmmount, cartItemIds, totalAmmount, discount })
+                        body: JSON.stringify({ products, addressId, paymentMethod, basePrice, cartItemIds, totalAmmount, discount, taxAmmount })
                     }).then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
@@ -612,15 +636,20 @@
                                 };
                                 var rzp1 = new Razorpay(options);
 
+                                rzp1.on('payment.failed', function (response) {
+                                    // Handle payment failure and redirect
+                                    console.error("Payment failed:", response.error);
+                                    alert('payment Failed')
+                                    window.location.href='/'
+                                });
                                 rzp1.open();
-
                             }
                         })
                 }
 
 
                 function addCouponDiscount() {
-                    const subTotalAmmount = document.getElementById('subTotalAmount').value
+                    const basePrice = document.getElementById('basePrice').value
                     const couponCode = document.getElementById('couponCodeInput').value
                     const totalAmount = document.getElementById('totalAmount');
                     const couponDiscountAmount = document.getElementById('couponDiscountAmount');
@@ -631,18 +660,18 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ subTotalAmmount, couponCode })
+                        body: JSON.stringify({ basePrice, couponCode })
                     })
                         .then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
-                                if(couponDiscountAmount.textContent>0){
-                                    discountAmount.innerText=Number(discountAmount.textContent)-Number(couponDiscountAmount.textContent)
-                                totalAmount.innerText=Number(totalAmount.textContent)+Number(couponDiscountAmount.textContent)
+                                if (couponDiscountAmount.textContent > 0) {
+                                    discountAmount.innerText = Number(discountAmount.textContent) - Number(couponDiscountAmount.textContent)
+                                    totalAmount.innerText = Number(totalAmount.textContent) + Number(couponDiscountAmount.textContent)
                                 }
                                 couponDiscountAmount.innerText = data.couponDiscount;
-                                discountAmount.innerText=Number(discountAmount.textContent)+data.couponDiscount
-                                totalAmount.innerText=Number(totalAmount.textContent)-data.couponDiscount
+                                discountAmount.innerText = Number(discountAmount.textContent) + data.couponDiscount
+                                totalAmount.innerText = Number(totalAmount.textContent) - data.couponDiscount
                             }
 
                             else if (data.error) {

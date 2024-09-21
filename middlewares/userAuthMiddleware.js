@@ -42,7 +42,7 @@ exports.validUser = async (req, res, next) => {
         const token = req.cookies.token;
 
         if (!token) {
-            return res.status(401).json({ error: 'You must login first to continue', errorRedirect: `<a href="/user/login">Login here</a>` });
+            return res.status(401).json({ authError: 'You must login first to continue', errorRedirect: `<a href="/user/login">Login here</a>` });
         }
 
         // Verify JWT token
@@ -98,5 +98,32 @@ exports.checkUserAldreadyAuthenticated = async (req, res, next) => {
     } catch (err) {
         console.log(err);
         return next();
+    }
+};
+
+//used to get user data in shop page 
+exports.getUser = async (req, res, next) => {
+    try {
+
+        const token = req.cookies.token;
+
+        if (!token) {
+            return next()
+        }
+
+        // Verify JWT token
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
+            if (err) {
+                return next()
+            }
+
+            req.email = user.email;
+            req.userID = user._id;
+
+            next(); // Proceed to the next middleware or route handler
+        });
+    } catch (err) {
+        console.log(err);
+        return res.redirect('/error')
     }
 };

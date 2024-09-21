@@ -18,7 +18,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Email</th>
-                                    <th>Sub Total Ammount</th>
+                                    <th>Base Price</th>
                                     <th>Discount</th>
                                     <th>Total Ammount</th>
                                     <th>Status</th>
@@ -36,7 +36,7 @@
                                             <%= order.userID.email %>
                                         </td>
                                         <td>
-                                            <%= order.subTotalAmmount %>
+                                            <%= order.basePrice %>
                                         </td>
                                         <td>
                                             <%=order.discount %>
@@ -48,7 +48,7 @@
                                             <%=order.orderStatus %>
                                         </td>
                                         <td>
-                                            <%=order.paymentStatus %>
+                                            <%= order.paymentStatus %>
                                         </td>
                                         <td>
                                             <form action="/admin/orders/viewEditOrder/<%= order._id %>" method="get">

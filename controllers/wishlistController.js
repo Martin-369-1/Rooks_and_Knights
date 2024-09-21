@@ -1,4 +1,5 @@
 //services
+const wishlist = require('../models/wishlistModel');
 const wishlistService = require('../services/wishlistService')
 
 //render wishlist page
@@ -18,10 +19,8 @@ exports.addToWihslist = async (req, res) => {
     try {
         const productId = req.params.id;
         let error = await wishlistService.addToWishlist(req.userID, productId)
-        if (error) {
-            return res.json({ error, errorRedirect: `<a href="/wishlist">Go to Wishlist</a>` })
-        }
-        res.json({ success: "Item added to wishlist" })
+
+        res.json({ success: true , successMessage:'product added to wishlist'})
 
     } catch (err) {
         console.log(err);
@@ -32,9 +31,10 @@ exports.addToWihslist = async (req, res) => {
 //delete a product form wishlist
 exports.deleteFromWishlist = async (req, res) => {
     try {
-        const wishlistItemId = req.params.id;
-        await wishlistService.deleteFromWishlist(req.userID, wishlistItemId)
-        res.json({ success: true })
+        
+        const productID = req.params.id;
+        await wishlistService.deleteFromWishlist(req.userID, productID)
+        res.json({ success: true ,successMessage:'product removed for wihslist'})
 
     } catch (err) {
         console.log(err);

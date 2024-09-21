@@ -1,3 +1,6 @@
+//modules
+const pdfKit=require('pdfkit')
+
 //services
 const addressService = require('../services/addressServices');
 const cartService = require('../services/cartServices')
@@ -8,6 +11,7 @@ const couponService=require('../services/couponServices')
 
 //utils
 const { verifyPayment } = require('../utils/razorpayPaymentVerify')
+const {generateInvoice }=require('../utils/pdfUtils')
 
 //razorpay
 const Razorpay = require('razorpay');
@@ -33,12 +37,12 @@ exports.getCheckout = async (req, res) => {
 exports.postCheckout = async (req, res) => {
 
     try {
-        const { products, addressId, paymentMethod, subTotalAmmount, totalAmmount, cartItemIds ,discount} = req.body;
+        const { products, addressId, paymentMethod, basePrice, totalAmmount, cartItemIds ,discount,taxAmmount} = req.body;
 
         //if cash on delivery
         if (paymentMethod == 'COD') {
-            await cartService.deleteManyCartItem(cartItemIds, subTotalAmmount, req.userID)
-            await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount, discount, req.userID)
+            await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
+            await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount, discount,taxAmmount, req.userID)
             return res.status(200).json({ success: true, successRedirect: '/' })
         }
 
@@ -50,8 +54,8 @@ exports.postCheckout = async (req, res) => {
                 return res.status(400).json({ error })
             }
 
-            await cartService.deleteManyCartItem(cartItemIds, subTotalAmmount, req.userID)
-            const order = await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount,discount, req.userID)
+            await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
+            const order = await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount,discount,taxAmmount, req.userID)
             await orderService.completePayment(order._id)
             await transationService.completeTransation(req.userID, totalAmmount, 'purchase', paymentMethod)
 
@@ -60,7 +64,8 @@ exports.postCheckout = async (req, res) => {
 
         //if razorpay
         
-        const order = await orderService.createOrder(products, addressId, paymentMethod, subTotalAmmount, totalAmmount,discount, req.userID)
+        const order = await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount,discount,taxAmmount, req.userID)
+        await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
 
         const options = {
             amount: order.totalAmmount * 100,
@@ -85,6 +90,49 @@ exports.postCheckout = async (req, res) => {
     }
 }
 
+//checkout for pending payemnts
+exports.postPendingCheckout = async (req, res) => {
+
+    try {
+        const {orderID,paymentMethod,totalAmmount}=req.query;
+
+        //if wallet
+        if (paymentMethod == "Wallet") {
+            const error = await walletService.payFromWallet(req.userID, totalAmmount)
+
+            if (error) {
+                return res.status(400).json({ error })
+            }
+
+            await orderService.completePayment(orderID)
+            await transationService.completeTransation(req.userID, totalAmmount, 'purchase', paymentMethod)
+
+            return res.status(200).json({ success: true, successRedirect: '/' })
+        }
+
+        //if razorpay
+        const options = {
+            amount:totalAmmount * 100,
+            currency: "INR",
+        }
+
+        razorpay.orders.create(options, (err, razorpayOrder) => {
+            if (err) {
+                console.log(err);
+            }
+
+            req.session.order = {_id:orderID,totalAmmount,paymentMethod};
+            res.status(200).json({ razorpayOrder })
+        })
+
+
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
+
 //complete payment using razorpay
 exports.completePayment = async (req, res) => {
     try {
@@ -92,15 +140,17 @@ exports.completePayment = async (req, res) => {
         const { _id, totalAmmount, paymentMethod } = req.session.order;
 
         const isValid = verifyPayment(razorpay_order_id, razorpay_payment_id, razorpay_signature, process.env.RAZORPAY_KEY_SECRET);
-        if (!isValid) {
-            res.status(400).json({ error: 'payment not valid' })
+
+        if (isValid) {
+            await orderService.completePayment(_id)
+            await transationService.completeTransation(req.userID, totalAmmount, 'purchase', paymentMethod)
         }
 
-        await orderService.completePayment(_id)
-        await cartService.deleteManyCartItem(req.session.cartItemIds, totalAmmount, req.userID)
-        await transationService.completeTransation(req.userID, totalAmmount, 'purchase', paymentMethod)
-        res.redirect('/')
-
+        if(req.session.cartItemIds){
+            res.redirect('/')
+        }else{
+            res.redirect('/account')
+        }
 
     } catch (err) {
         console.log(err);
@@ -111,9 +161,9 @@ exports.completePayment = async (req, res) => {
 //apply coupon
 exports.postAddCouponDiscount=async(req,res)=>{
     try{
-        const {subTotalAmmount,couponCode}=req.body;
+        const {basePrice,couponCode}=req.body;
         
-        const coupon=await couponService.addCouponDiscount(subTotalAmmount,couponCode)
+        const coupon=await couponService.addCouponDiscount(basePrice,couponCode)
 
         if(coupon.error){
             return res.status(400).json({ error:coupon.error})
@@ -163,4 +213,15 @@ exports.patchReturn = async (req, res) => {
     }
 }
 
+exports.invoiceDownload = async(req,res)=>{
+    try{
+        const orderID=req.params.id;
+        const {order,address}=await orderService.getOrder(orderID)
+        generateInvoice(req,res,order,address)
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: "Server Error" })
+    }
+}
 

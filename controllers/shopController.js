@@ -27,8 +27,9 @@ exports.getProduct = async (req, res) => {
         const { product, relatedProducts} = await shopServices.viewProduct(_id);
         
         let productInWishlist=false;
+        
         if(req.userID){
-            productInWishlist=await wishlistService.productInWishlist(userID,_id)
+            productInWishlist=await wishlistService.productInWishlist(req.userID,_id)        
         }
 
         res.render('product', { product, relatedProducts ,productInWishlist})

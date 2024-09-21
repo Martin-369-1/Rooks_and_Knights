@@ -3,14 +3,301 @@
 
 <%- include('./partials/header') %>
 
-    <body>
-        <div class="wrapper">
-            <%- include('./partials/slidebar') %>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <div class="wrapper">
+        <%- include('./partials/slidebar') %>
 
+        <div id="content">
+            <div class="container-fluid">
+                <!-- Row for Top Category, Top Products, and Top Subcategory cards -->
+                <div class="row mb-4">
+                    <!-- Top Category Card -->
+                    <div class="col-md-4" data-toggle="modal" data-target="#topProductsModal">
+                        <div class="card bg-dark text-white border-light shadow-sm card-summary">
+                            <div class="card-body text-center">
+                                <i class="fas fa-list-alt fa-3x text-warning"></i>
+                                <h4 class="mt-2">Top 10 Products</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Products Card -->
+
+                    <div class="col-md-4" data-toggle="modal" data-target="#topCategoriesModal">
+                        <div class="card bg-dark text-white border-light shadow-sm card-summary">
+                            <div class="card-body text-center">
+                                <i class="fas fa-box-open fa-3x text-primary"></i>
+                                <h4 class="mt-2">Top 10 Categories</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Subcategory Card -->
+                    <div class="col-md-4" data-toggle="modal" data-target="#topSubCategoriesModal">
+                        <div class="card bg-dark text-white border-light shadow-sm card-summary">
+                            <div class="card-body text-center">
+                                <i class="fas fa-tags fa-3x text-danger"></i>
+                                <h4 class="mt-2">Top 10 Subcategory</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graph with Select for Time Period -->
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <div class="card bg-dark text-white border-light shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center bg-info">
+                                <span>Sales Trend</span>
+                                <select id="timePeriod" class="custom-select w-auto bg-dark text-white">
+                                    <option value="daily" <%= (graphType=='daily')? 'selected':'' %>>Daily</option>
+                                    <option value="monthly" <%= (graphType=='monthly')? 'selected':'' %>>Monthly</option>
+                                    <option value="yearly" <%= (graphType=='yearly')? 'selected':'' %>>Yearly</option>
+                                </select>
+                            </div>
+                            <div class="card-body">
+                                <!-- Increase the height of the canvas -->
+                                <canvas id="myChart" style="height: 400px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <%- include('./partials/footer') %>
-    </body>
 
+
+    <div class="modal fade" id="topProductsModal" tabindex="-1" role="dialog" aria-labelledby="topProductsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+              <h5 class="modal-title" id="topProductsModalLabel">Top 10 Products</h5>
+              <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table table-dark table-bordered table-hover">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Product</th>
+                      <th scope="col">Product Name</th>
+                      <th scope="col">No. of Sales</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% topTenProductsList.forEach((product)=>{ %>
+                        <tr>
+                            <td><img src="<%= product.productImage1 %>" alt="" width="50px"></td>
+                            <td><%= product.productName %></td>
+                            <td><%= product.noOfOrders %></td>
+                        </tr>
+                    <% }) %>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="modal fade" id="topCategoriesModal" tabindex="-1" role="dialog" aria-labelledby="topProductsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+              <h5 class="modal-title" id="topProductsModalLabel">Top 10 Categories</h5>
+              <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table table-dark table-bordered table-hover">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Category Name</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">No. of Sales</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% topTenCategoryList.forEach((category)=>{ %>
+                      <tr>
+                          <td><%= category.categoryName %></td>
+                          <td><%= category.categoryDescription %></td>
+                          <td><%= category.noOfOrders %></td>
+                      </tr>
+                  <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="modal fade" id="topSubCategoriesModal" tabindex="-1" role="dialog" aria-labelledby="topProductsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+              <h5 class="modal-title" id="topProductsModalLabel">Top 10 Sub Categories</h5>
+              <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table table-dark table-bordered table-hover">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Subcategory Name</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">No. of Sales</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% topTenSubCategoryList.forEach((subCategory)=>{ %>
+                      <tr>
+                          <td><%= subCategory.subCategoryName %></td>
+                          <td><%= subCategory.subCategoryDescription %></td>
+                          <td><%= subCategory.noOfOrders %></td>
+                      </tr>
+                  <% }) %>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <%- include('./partials/footer') %>
+
+    <script>
+        // Chart initialization
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart;
+
+        function updateChart(timePeriod) {
+  
+
+          const salesData =  <%- JSON.stringify(salesData) %>
+            console.log(salesData);
+            
+
+            // Destroy previous chart if it exists
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            console.log(salesData.labels);
+            
+            // Create new chart based on the selected time period
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: salesData.labels,
+                    datasets: [{
+                        label: 'No of Sales',
+                        data: salesData.totalSales,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)',
+                            },
+                            ticks: {
+                                color: '#fff',
+                                font: {
+                                    size: 14,
+                                },
+                                stepSize: 500
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#fff',
+                                font: {
+                                    size: 14,
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: '#fff',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleFont: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 14
+                            },
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false, // Allow the chart to fill the canvas
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial chart setup with 'yearly' data
+        updateChart('yearly');
+
+        // Event listener to update chart when time period changes
+        document.getElementById('timePeriod').addEventListener('change', function () {
+            var selectedPeriod = this.value;
+            window.location.href=`/admin/?graphType=${selectedPeriod}`
+            updateChart(selectedPeriod);
+        });
+    </script>
+
+</body>
 </html>

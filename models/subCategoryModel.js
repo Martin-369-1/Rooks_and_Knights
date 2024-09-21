@@ -12,6 +12,10 @@ const subCategorySchema = new Schema({
     type: String,
     required: true
   },
+  noOfOrders:{
+    type:Number,
+    default:0
+  },
 
   isDeleted: {
     type: Boolean,

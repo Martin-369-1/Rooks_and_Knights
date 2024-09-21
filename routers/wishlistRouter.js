@@ -10,7 +10,7 @@ const wishlistController = require('../controllers/wishlistController');
 
 //routers
 router.get('/', userAuthMiddleware.checkUserAuthenticated, wishlistController.getWishlist);
-router.post('/addToWishlist/:id', userAuthMiddleware.validUser, wishlistController.addToWihslist);
-router.delete('/deleteFromWishlist/:id', userAuthMiddleware.validUser, wishlistController.deleteFromWishlist);
+router.post('/:id', userAuthMiddleware.validUser, wishlistController.addToWihslist);
+router.delete('/:id', userAuthMiddleware.validUser, wishlistController.deleteFromWishlist);
 
 module.exports = router;

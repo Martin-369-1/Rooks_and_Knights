@@ -169,6 +169,7 @@ exports.downloadSalesReport=async(reportType, startDate, endDate)=>{
                     as: 'userDetails'
                 }
             },
+            { $unwind: '$userDetails' },
             {$sort:{
                 createdAt:-1
             }},

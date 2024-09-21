@@ -65,7 +65,8 @@
 
                             <div class="form-group">
                                 <label for="referalLink">Referal Link</label>
-                                <input type="text" class="form-control" id="referalLink" readonly value="http://localhost:3000/user/register?referalID=<%= userProfile.referalID %>">
+                                <input type="text" class="form-control" id="referalLink" readonly
+                                    value="http://localhost:3000/user/register?referalID=<%= userProfile.referalID %>">
                             </div>
                             <button class="btn btn-save">Save Changes</button>
                         </form>
@@ -111,72 +112,57 @@
                 </div>
 
                 <!-- Orders Section -->
-                <div id="orders-section" class="orders-card section hidden">
+                <div id="orders-section" class=" section hidden">
                     <h3>My Orders</h3>
                     <!-- When there are no orders -->
-                    <% orders.forEach((order)=>{ %>
-
-                        <div class="address-card">
-                            <div class="address-info">
-                                <strong>Date:</strong>
-                                <%=order.createdAt.toLocaleDateString()%><br>
-                                    <strong>Sub Total Amount:</strong>
-                                    <%= order.subTotalAmmount %><br>
-                                        <strong>Discount Amount:</strong>
-                                        <%=order.discount %><br>
-                                            <strong>Total Amount:</strong>
-                                            <%=order.totalAmmount %>
-                            </div>
-
-                            <div class="address-actions">
-                                <button type="button" onclick="orderViewTable(event)" data-toggle="modal"
-                                    data-target=".bd-example-modal-lg" data-order-item="<%= JSON.stringify(order) %>"><i
-                                        class="fa fa-eye"></i></button>
-                            </div>
-                        </div>
-                        <% }) %>
 
 
-                            <!-- Returns Section -->
-                            <div id="returns-section" class="returns-card section hidden">
-                                <h3>My Returns</h3>
-                                <!-- When there are no orders -->
-                                <div class="address-card">
-                                    <div class="address-info">
-                                        <strong>John Doe</strong><br>
-                                        123 Main St, Apt 4B<br>
-                                        New York, NY 10001<br>
-                                        +1 234-567-890
-                                    </div>
-                                    <div class="address-actions">
-                                        <a href="#"><i class="fa fa-eye"></i></a>
-                                    </div>
+                    <div class="order-section">
+                        <% orders.forEach((order)=>{ %>
+
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <span>
+                                        <%= order.createdAt.toLocaleDateString() %>
+                                    </span>
                                 </div>
+                                <div class="order-info">
+                                    <p><strong>No of Products : </strong>
+                                        <%= order.products.length %>
+                                    </p>
+                                    <p><strong>Base Price : </strong>
+                                        <%= order.basePrice %>
+                                    </p>
+                                    <p><strong>Discount : </strong>
+                                        <%= order.discount %>
+                                    </p>
+                                    <p><strong>Total Amount : </strong>
+                                        <%= order.totalAmmount %>
+                                    </p>
+                                    <p><strong>Order Stauts : </strong>
+                                        <%= order.orderStatus %>
+                                    </p>
+                                    <p><strong>Payment Stauts : </strong>
+                                        <%= order.paymentStatus %>
+                                    </p>
+                                    <% if(order.paymentStatus=='pending' ){%>
+                                        <button class="btn p-t-10" onclick="proccedToPayment('<%= order._id %>','<%= order.totalAmmount %>','Wallet')"><i class="fas fa-wallet"></i> Pay by wallet</button>
+                                        <button class="btn p-t-10" onclick="proccedToPayment('<%= order._id %>','<%= order.totalAmmount %>','Razorpay')"><i class="fas fa-credit-card"></i> Pay online</button>
 
-                                <div class="address-card">
-                                    <div class="address-info">
-                                        <strong>Jane Smith</strong><br>
-                                        456 Elm St, Suite 5A<br>
-                                        San Francisco, CA 94102<br>
-                                        +1 987-654-3210
-                                    </div>
-                                    <div class="address-actions">
-                                        <a href="#"><i class="fa fa-edit"></i></a>
-                                    </div>
+                                        <%} %>
                                 </div>
-
-                                <div class="address-card">
-                                    <div class="address-info">
-                                        <strong>Emily Johnson</strong><br>
-                                        789 Oak St, Unit 2<br>
-                                        Chicago, IL 60614<br>
-                                        +1 555-555-5555
-                                    </div>
-                                    <div class="address-actions">
-                                        <a href="#"><i class="fa fa-edit"></i></a>
-                                    </div>
+                                <div class="order-actions">
+                                    <button type="button" onclick="orderViewTable(event)" data-toggle="modal"
+                                        data-target=".bd-example-modal-lg"
+                                        data-order-item="<%= JSON.stringify(order) %>"><i
+                                            class="fa fa-eye"></i>View</button>
+                                    <button onclick="downloadInvoice('<%= order._id %>')"><i class="fas fa-download"></i> Download Invoice </button>
                                 </div>
                             </div>
+                            <% }) %>
+                                <!-- Order Card 1 -->
+
+                    </div>
                 </div>
 
                 <!-- Orders Section -->
@@ -319,7 +305,7 @@
 
         <%- include('./partials/scriptBody.ejs') %>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <script>
 
 
@@ -808,7 +794,57 @@
 
                 }
 
+                function proccedToPayment(orderID,totalAmmount,paymentMethod) {
 
+                    event.preventDefault()
+                    
+
+                    fetch(`/order/pendingProceedToPayment?orderID=${orderID}&&totalAmmount=${totalAmmount}&&paymentMethod=${paymentMethod}`, {
+                        method: "POST",
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                    }).then((res) => res.json())
+                        .then((data) => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: "Payment completed",
+                                    icon: "success",
+                                    timer: 2000
+                                });
+                                setTimeout(() => {
+                                    window.location.href = data.successRedirect;
+                                }, 2000)
+                            }
+
+                            if (data.error) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: data.error,
+                                    icon: "error",
+                                });
+                            }
+
+                            if (data.razorpayOrder) {
+                                console.log(data.razorpayOrder);
+                                var options = {
+                                    "key": "rzp_test_iPUiBGfQqstcsI", // Enter the Key ID generated from the Dashboard
+                                    "name": "Rook & Knights",
+                                    "description": "Test Transaction",
+                                    "image": "https://imgs.search.brave.com/jsPXFiH4YxTvzVbUvQMILb4V32Y6I0DxlC2p3CaqAfA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ibG9n/LnBob3RvYWRraW5n/LmNvbS93cC1jb250/ZW50L3VwbG9hZHMv/MjAyMy8wNS8xNjgy/OTQ2NDIzMzgxLTEu/anBn",
+                                    "order_id": data.razorpayOrder.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                    "callback_url": "/order/completePayment",
+                                    "theme": {
+                                        "color": "#454545"
+                                    }
+                                };
+                                var rzp1 = new Razorpay(options);
+
+                                rzp1.open();
+
+                            }
+                        })
+                }
 
             </script>
 
@@ -831,6 +867,12 @@
                     // Add active class to the clicked link
                     element.classList.add('active');
                 }
+
+
+                function downloadInvoice(orderID){
+                    window.location.href=`/order/downloadInvoicePdf/${orderID}`
+                }
+
 
             </script>
 </body>

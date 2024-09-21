@@ -13,7 +13,7 @@ const orderSchema = Schema({
         ref: 'address',
         required: true
     },
-    subTotalAmmount: {
+    basePrice: {
         type: Number,
         required: true
     },
@@ -34,9 +34,18 @@ const orderSchema = Schema({
         required: true
     },
     paymentStatus: {
-        type: Boolean,
+        type:String,
         required: true,
-        default: false
+        default: "pending"
+    },
+    taxAmmount:{
+        type:Number,
+        required:true,
+    },
+    deliveryCharge:{
+        type:Number,
+        required:true,
+        default:100
     },
     products: [
         {

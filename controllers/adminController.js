@@ -1,8 +1,6 @@
-//modules
-const exceljs = require('exceljs')
-const pdfkit = require('pdfkit')
 
 //Services
+const adminDashboardService = require('../services/adminDashboardService')
 const adminUserService = require('../services/adminUserService');
 const adminCategoryService = require('../services/adminCategoryService');
 const adminSubCategoryService = require('../services/adminSubCategoryServices')
@@ -17,8 +15,11 @@ const adminCouponService = require('../services/adminCouponServices');
 const adminSalesService = require('../services/adminSalesService')
 
 const mongoose = require('mongoose')
+const dateFns=require('date-fns')
 //Utils
 const generateAccessToken = require('../utils/JWTUtils');
+const { generateSalesPdf } = require('../utils/pdfUtils')
+const { generateSalesExcel } = require('../utils/excelUtils')
 
 //Render login page
 exports.getLogin = (req, res) => {
@@ -66,7 +67,37 @@ exports.postLogout = (req, res) => {
 
 //render dashboard
 exports.getDashboard = async (req, res) => {
-    res.render('admin/dashboard')
+    try {
+        const graphType = req.query.graphType || 'yearly'
+        const { topTenProductsList, topTenCategoryList, topTenSubCategoryList } = await adminDashboardService.TopTenList()
+
+        let salesData=null;
+
+        if (graphType === 'daily') {
+
+             salesData = await adminDashboardService.dailySales()
+            labels = salesData.map(item => `${item._id.day}`);
+
+        } else if (graphType === 'monthly') {
+
+             salesData = await adminDashboardService.monthlySales()
+            labels = salesData.map(item => `${dateFns.format(new Date(item._id.year, item._id.month - 1, 1),'MMMM')}`);
+
+        } else if (graphType === 'yearly') {
+
+             salesData = await adminDashboardService.yearlySales()
+            labels = salesData.map(item => item._id.year);
+
+        }        
+        
+        totalSales = salesData.map(item => item.totalSales);
+
+        res.render('admin/dashboard', { topTenProductsList, topTenCategoryList, topTenSubCategoryList ,salesData:{labels, totalSales} ,graphType})
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/error')
+    }
 }
 
 //renders users list page
@@ -335,7 +366,7 @@ exports.addSubCategory = async (req, res) => {
 exports.putEditSubCategory = async (req, res) => {
     try {
         const subCategoryID = req.params.id;
-        
+
         const { subCategoryName, subCategoryDescription } = req.body;
 
         if (!subCategoryName || !subCategoryDescription) {
@@ -613,37 +644,7 @@ exports.getDownloadSalesExcel = async (req, res) => {
 
         const salesList = await adminSalesService.downloadSalesReport(reportType, startDate, endDate)
 
-        const workbook = new exceljs.Workbook();
-        const worksheet = workbook.addWorksheet('Sales_Report')
-
-        worksheet.columns = [
-            { header: 'Date', key: 'date', width: 15 },
-            { header: 'Product Name', key: 'productName', width: 20 },
-            { header: 'Quantity', key: 'quantity', width: 10 },
-            { header: 'Email', key: 'email', width: 30 },
-            { header: 'Price', key: 'price', width: 15 },
-            { header: 'Discount', key: 'discount', width: 15 },
-            { header: 'Amount Paid', key: 'amountPaid', width: 15 },
-            { header: 'Payment Method', key: 'paymentMethod', width: 15 },
-        ]
-
-        salesList.forEach((sale) => {
-            worksheet.addRow({
-                date: sale.createdAt.toLocaleDateString(),
-                productName: sale.productDetails.productName,
-                quantity: sale.products.quantity,
-                email: sale.userDetails.email,
-                price: sale.products.price,
-                discount: sale.products.discount,
-                amountPaid: sale.products.amountPaid,
-                paymentMethod: sale.paymentMethod
-            })
-        })
-
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=sales_report_${(reportType != 'custom') ? reportType : startDate + '_' + endDate}.xlsx`);
-
-        await workbook.xlsx.write(res);
+        generateSalesExcel(req, res, salesList, reportType, startDate, endDate)
 
     } catch (err) {
         console.log(err);
@@ -656,68 +657,7 @@ exports.getDownloadSalesPdf = async (req, res) => {
         const { reportType, startDate, endDate } = req.query;
 
         const salesList = await adminSalesService.downloadSalesReport(reportType, startDate, endDate);
-
-        const doc = new pdfkit();
-
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=sales_report_${(reportType !== 'custom') ? reportType : startDate + '_' + endDate}.pdf`);
-
-        doc.pipe(res);
-
-        doc.fontSize(18).text('Sales Report', { align: 'center' });
-
-        const columnWidths = {
-            date: 50,
-            productName: 90,
-            quantity: 40,
-            email: 120,
-            price: 50,
-            discount: 50,
-            amountPaid: 60,
-            paymentMethod: 60,
-        };
-
-        const tableTop = 100;
-        const rowHeight = 16;
-        let y = tableTop;
-
-        function drawTableHeader() {
-            doc.fontSize(8).text('Date', 50, y, { width: columnWidths.date });
-            doc.text('Product Name', 100, y, { width: columnWidths.productName });
-            doc.text('Quantity', 190, y, { width: columnWidths.quantity, align: 'center' });
-            doc.text('Email', 230, y, { width: columnWidths.email });
-            doc.text('Price', 350, y, { width: columnWidths.price, align: 'center' });
-            doc.text('Discount', 400, y, { width: columnWidths.discount, align: 'center' });
-            doc.text('Amount Paid', 450, y, { width: columnWidths.amountPaid, align: 'center' });
-            doc.text('Payment Method', 510, y, { width: columnWidths.paymentMethod, align: 'center' });
-
-            y += rowHeight;
-            doc.moveTo(50, y).lineTo(620, y).stroke();
-            y += 5;
-        }
-
-        drawTableHeader();
-
-        salesList.forEach((sale) => {
-            doc.fontSize(6).text(sale.createdAt.toLocaleDateString(), 50, y, { width: columnWidths.date });
-            doc.text(sale.productDetails.productName, 100, y, { width: columnWidths.productName });
-            doc.text(sale.products.quantity, 190, y, { width: columnWidths.quantity, align: 'center' });
-            doc.text(sale.userDetails.email, 230, y, { width: columnWidths.email });
-            doc.text(sale.products.price, 350, y, { width: columnWidths.price, align: 'center' });
-            doc.text(sale.products.discount, 400, y, { width: columnWidths.discount, align: 'center' });
-            doc.text(sale.products.amountPaid, 450, y, { width: columnWidths.amountPaid, align: 'center' });
-            doc.text(sale.paymentMethod, 510, y, { width: columnWidths.paymentMethod, align: 'center' });
-
-            y += rowHeight;
-
-            if (y > doc.page.height - doc.page.margins.bottom) {
-                doc.addPage();
-                y = tableTop;
-                drawTableHeader();
-            }
-        });
-
-        doc.end();
+        generateSalesPdf(req, res, salesList, reportType, startDate, endDate)
 
     } catch (err) {
         console.error(err);
