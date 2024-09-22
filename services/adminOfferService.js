@@ -2,15 +2,14 @@
 const productCollection=require('../models/productsModel');
 const categoryCollection=require('../models/CategoryModel');
 const subCategoryCollection=require('../models/subCategoryModel');
+const offerCollection=require('../models/offerModel')
 
 exports.displayOffers=async(search)=>{
     try{
-        
-        const productList=await productCollection.find( {isDeleted:false , productName:{$regex: new RegExp(search, 'i')}})
-        const categoryList=await categoryCollection.find( {isDeleted:false , categoryName:{$regex: new RegExp(search, 'i')}})
-        const subCategoryList=await subCategoryCollection.find( {isDeleted:false , subCategoryName:{$regex: new RegExp(search, 'i')}});
-        
-        return {productList,categoryList,subCategoryList}
+        const offerList=await offerCollection.find({offerName:{$regex: new RegExp(search, 'i')}})
+                        .populate('applicableProducts.productID').populate('applicableCategories.categoryID').populate('applicableSubCategoreis.subCategoryID')
+                        
+        return offerList
     }catch(err){
         console.log(err);
     }

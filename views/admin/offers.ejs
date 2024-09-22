@@ -4,6 +4,76 @@
 <%- include('./partials/header') %>
 
   <body>
+
+    <style>
+ /* Custom CSS for Modal */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.custom-input {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+.custom-select {
+    border-radius: 5px;
+}
+
+.add-btn {
+    border-radius: 5px;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.btn-success {
+    background-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.open-modal-btn {
+    margin: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+    </style>
+
+
     <div class="wrapper">
       <%- include('./partials/slidebar') %>
 
@@ -27,155 +97,53 @@
                     </button>
                   </form>
 
+                  
+
+                    <button class="btn-add" data-toggle="modal" data-target="#addProductOfferModal">
+                      <i class="fas fa-plus"></i> New product offer
+                    </button>
+                    
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#offerModal">
+                      Create New Offer
+                    </button>
+                    
+                  
                 </div>
               </div>
             </div>
-            <!-- Tab Navigation -->
-            <ul class="nav nav-tabs mb-4" id="offerTabs" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="product-offer-tab" data-toggle="tab" href="#product-offer"
-                  role="tab">Product Offer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="category-offer-tab" data-toggle="tab" href="#category-offer" role="tab">Category
-                  Offer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="subcategory-offer-tab" data-toggle="tab" href="#subcategory-offer"
-                  role="tab">Subcategory Offer</a>
-              </li>
-            </ul>
 
             <!-- Tab Content -->
             <div class="tab-content">
               <!-- Product Offer Tab -->
               <div class="tab-pane fade show active" id="product-offer" role="tabpanel">
-                <div class="container p-b-10">
-
-                  <button class="btn-add" data-toggle="modal" data-target="#addProductOfferModal">
-                    <i class="fas fa-plus"></i> New product offer
-                  </button>
-                </div>
+                
                 <div class="table-responsive">
                   <table class="table table-bordered m-t-10">
                     <thead>
                       <tr>
-                        <th>product</th>
-                        <th>Product Name</th>
+                        <th>Offer Name</th>
+                        <th>offerPercentage</th>
+                        <th>No of Products</th>
+                        <th>No of Categories</th>
+                        <th>No of Sub Categories</th>
                         <th>Offer (%)</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       <!-- Example Rows -->
-                      <% productList.forEach((product)=>{%>
-                        <% if(product.offer>0){%>
-                          <tr>
-                            <td><img src="<%= product.productImage1 %>" alt="" style="width: 50px;"></td>
-                            <td>
-                              <%= product.productName %>
-                            </td>
-                            <td>
-                              <%= product.offer %>
-                            </td>
-                            <td>
-                              <button class="btn btn-danger btn-sm"
-                                onclick="deleteOffer('product','<%= product._id%>')"><i
-                                  class="fas fa-trash-alt"></i></button>
-                            </td>
-                          </tr>
-                          <% } %>
-                            <% }) %>
+                      <% offerList.forEach((offer)=>{%>
+                        <tr>
+                          <td><%= offer.offerName %></td>
+                          <td><%= offer.offerPercentage %></td>
+                          <td><%= offer.applicableProducts.length  %></td>
+                          <td><%= offer.applicableCategories.length  %></td>
+                          <td><%= offer.applicableSubCategories.length  %></td>
+                          <td><%= offer.offerPercentage %></td>
+                          <td><%= offer.expiryDate %></td>
+                        </tr>
+                      <% }) %>
 
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Category Offer Tab -->
-              <div class="tab-pane fade" id="category-offer" role="tabpanel">
-                <div class="container p-b-10">
-
-                  <button class="btn-add" data-toggle="modal" data-target="#addCategoryOfferModal">
-                    <i class="fas fa-plus"></i> New product
-                  </button>
-                </div>
-                <div class="table-responsive">
-                  <table class="table table-bordered m-t-10">
-                    <thead>
-                      <tr>
-                        <th>Category Name</th>
-                        <th>Description</th>
-                        <th>Offer (%)</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Example Rows -->
-                      <% categoryList.forEach((category)=>{%>
-                        <% if(category.offer>0){%>
-                          <tr>
-                            <td>
-                              <%= category.categoryName %>
-                            </td>
-                            <td>
-                              <%= category.categoryDescription %>
-                            </td>
-                            <td>
-                              <%= category.offer %>
-                            </td>
-                            <td>
-                              <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"
-                                  onclick="deleteOffer('category','<%= category._id %>')"></i></button>
-                            </td>
-                          </tr>
-                          <% } %>
-                            <% }) %>
-
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Subcategory Offer Tab -->
-              <div class="tab-pane fade" id="subcategory-offer" role="tabpanel">
-                <div class="container p-b-10">
-
-                  <button class="btn-add" data-toggle="modal" data-target="#addSubCategoryOfferModal">
-                    <i class="fas fa-plus"></i> New product
-                  </button>
-                </div>
-                <div class="table-responsive">
-                  <table class="table table-bordered m-t-10">
-                    <thead>
-                      <tr>
-                        <th>Subcategory Name</th>
-                        <th>Description</th>
-                        <th>Offer (%)</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Example Rows -->
-                      <% subCategoryList.forEach((subCategory)=>{%>
-                        <% if(subCategory.offer>0){%>
-                          <tr>
-                            <td>
-                              <%= subCategory.subCategoryName %>
-                            </td>
-                            <td>
-                              <%= subCategory.subCategoryDescription %>
-                            </td>
-                            <td>
-                              <%= subCategory.offer %>
-                            </td>
-                            <td>
-                              <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"
-                                  onclick="deleteOffer('subCategory','<%= subCategory._id %>')"></i></button>
-                            </td>
-                          </tr>
-                          <% } %>
-                            <% }) %>
                     </tbody>
                   </table>
                 </div>
@@ -187,308 +155,219 @@
     </div>
 
 
-
-    <div class="modal fade" id="addProductOfferModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
+    <!-- Bootstrap Modal (Large) -->
+    <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="productModalLabel">Add Product Offer</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title" id="offerModalLabel"><i class="fas fa-tags"></i> Create New Offer</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="form-group">
-              <label for="addProductOffer_productID">Product</label>
-              <select class="custom-select" id="addProductOffer_productID" required>
-                <option value="default" disabled selected>Select a product</option>
-                <% productList.forEach((product)=>{ %>
-                  <option value="<%= product._id %>">
-                    <%= product.productName %> - <%= product.offer %>% off
-                  </option>
-                  <% }) %>
-              </select>
+            <!-- Top Three Input Boxes -->
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="offerName" class="form-label"><strong>Offer Name</strong></label>
+                <input type="text" class="form-control custom-input" id="offerName" placeholder="Enter offer name">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="discountPrice" class="form-label"><strong>Discount Price</strong></label>
+                <input type="number" class="form-control custom-input" id="discountPrice" placeholder="Enter discount price">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="expiryDate" class="form-label"><strong>Expiry Date</strong></label>
+                <input type="date" class="form-control custom-input" id="expiryDate">
+              </div>
             </div>
-
-            <div class="form-group">
-              <label for="addProductOffer_productOffer">Offer Percentage</label>
-              <input type="number" class="form-control" id="addProductOffer_productOffer"
-                placeholder="Enter offer percentage" min="0" max="100">
+    
+            <!-- Select Inputs for Products, Categories, Subcategories -->
+            <div class="row mt-4">
+              <div class="col-md-4 mb-3">
+                <label for="productSelect" class="form-label"><strong>Products</strong></label>
+                <div class="input-group">
+                  <select class="form-select custom-select" id="productSelect">
+                    <option value="Product 1">Product 1</option>
+                    <option value="Product 2">Product 2</option>
+                    <option value="Product 3">Product 3</option>
+                  </select>
+                  <button type="button" class="btn btn-success add-btn" id="addProductBtn"><i class="fas fa-plus-circle"></i> Add</button>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="categorySelect" class="form-label"><strong>Categories</strong></label>
+                <div class="input-group">
+                  <select class="form-select custom-select" id="categorySelect">
+                    <option value="Category 1">Category 1</option>
+                    <option value="Category 2">Category 2</option>
+                    <option value="Category 3">Category 3</option>
+                  </select>
+                  <button type="button" class="btn btn-success add-btn" id="addCategoryBtn"><i class="fas fa-plus-circle"></i> Add</button>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="subcategorySelect" class="form-label"><strong>Subcategories</strong></label>
+                <div class="input-group">
+                  <select class="form-select custom-select" id="subcategorySelect">
+                    <option value="Subcategory 1">Subcategory 1</option>
+                    <option value="Subcategory 2">Subcategory 2</option>
+                    <option value="Subcategory 3">Subcategory 3</option>
+                  </select>
+                  <button type="button" class="btn btn-success add-btn" id="addSubcategoryBtn"><i class="fas fa-plus-circle"></i> Add</button>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Lists to Display Selected Products, Categories, Subcategories -->
+            <div class="row mt-4">
+              <div class="col-md-4 mb-3">
+                <label><strong>Applicable Products</strong></label>
+                <ul class="list-group" id="productList"></ul>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label><strong>Applicable Categories</strong></label>
+                <ul class="list-group" id="categoryList"></ul>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label><strong>Applicable Subcategories</strong></label>
+                <ul class="list-group" id="subcategoryList"></ul>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="addProductOffer()">Select</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Save Offer</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal fade" id="addCategoryOfferModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="productModalLabel">Add Category Offer</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="addProductOffer_productID">Category</label>
-              <select class="custom-select" id="addCategoryOffer_categoryID" required>
-                <option value="default" disabled selected>Select a category</option>
-                <% categoryList.forEach((category)=>{ %>
-                  <option value="<%= category._id %>">
-                    <%= category.categoryName %> - <%= category.offer %>% off
-                  </option>
-                  <% }) %>
-              </select>
-            </div>
 
-            <div class="form-group">
-              <label for="addCategoryOffer_categoryOffer">Offer Percentage</label>
-              <input type="number" class="form-control" id="addCategoryOffer_categoryOffer"
-                placeholder="Enter offer percentage" min="0" max="100">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="addCategoryOffer()">Select</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
-    <div class="modal fade" id="addSubCategoryOfferModal" tabindex="-1" role="dialog"
-      aria-labelledby="productModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="productModalLabel">Add SubCategory Offer</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="addProductOffer_productID">SubCategory</label>
-              <select class="custom-select" id="addSubCategoryOffer_subCategoryID" required>
-                <option value="default" disabled selected>Select a subCategory</option>
-                <% subCategoryList.forEach((subCategory)=>{ %>
-                  <option value="<%= subCategory._id %>">
-                    <%= subCategory.subCategoryName %> - <%= subCategory.offer %>% off
-                  </option>
-                  <% }) %>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="addSubCategoryOffer_subCategoryOffer">Offer Percentage</label>
-              <input type="number" class="form-control" id="addSubCategoryOffer_subCategoryOffer"
-                placeholder="Enter offer percentage" min="0" max="100">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="addSubCategoryOffer()">Select</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
     <%- include('./partials/footer') %>
   </body>
-
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 
   <script>
-    function addProductOffer() {
-      const productID = document.getElementById('addProductOffer_productID').value;
-      const productOffer = document.getElementById('addProductOffer_productOffer').value;
-      addOffer('product', productID, productOffer)
+    // JavaScript for Dynamic Adding, Removing, and Clearing Fields
+const availableProducts = ["Product 1", "Product 2", "Product 3"];
+const availableCategories = ["Category 1", "Category 2", "Category 3"];
+const availableSubcategories = ["Subcategory 1", "Subcategory 2", "Subcategory 3"];
+
+// Function to populate dropdowns
+function populateDropdowns() {
+  const productSelect = document.getElementById('productSelect');
+  const categorySelect = document.getElementById('categorySelect');
+  const subcategorySelect = document.getElementById('subcategorySelect');
+
+  productSelect.innerHTML = '';
+  availableProducts.forEach(product => {
+    const option = document.createElement('option');
+    option.value = product;
+    option.textContent = product;
+    productSelect.appendChild(option);
+  });
+
+  categorySelect.innerHTML = '';
+  availableCategories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categorySelect.appendChild(option);
+  });
+
+  subcategorySelect.innerHTML = '';
+  availableSubcategories.forEach(subcategory => {
+    const option = document.createElement('option');
+    option.value = subcategory;
+    option.textContent = subcategory;
+    subcategorySelect.appendChild(option);
+  });
+}
+
+// Add product to the list and remove from dropdown
+document.getElementById('addProductBtn').addEventListener('click', function() {
+  const productSelect = document.getElementById('productSelect');
+  const selectedProduct = productSelect.value;
+  if (selectedProduct) {
+    addListItem('productList', selectedProduct, productSelect);
+  }
+});
+
+// Add category to the list and remove from dropdown
+document.getElementById('addCategoryBtn').addEventListener('click', function() {
+  const categorySelect = document.getElementById('categorySelect');
+  const selectedCategory = categorySelect.value;
+  if (selectedCategory) {
+    addListItem('categoryList', selectedCategory, categorySelect);
+  }
+});
+
+// Add subcategory to the list and remove from dropdown
+document.getElementById('addSubcategoryBtn').addEventListener('click', function() {
+  const subcategorySelect = document.getElementById('subcategorySelect');
+  const selectedSubcategory = subcategorySelect.value;
+  if (selectedSubcategory) {
+    addListItem('subcategoryList', selectedSubcategory, subcategorySelect);
+  }
+});
+
+// Function to dynamically add list items with a remove button and remove from dropdown
+function addListItem(listId, value, selectElement) {
+  const list = document.getElementById(listId);
+  const listItem = document.createElement('li');
+  listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+  listItem.textContent = value;
+
+  // Create remove button with icon
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'btn btn-danger btn-sm';
+  removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+  removeBtn.addEventListener('click', function() {
+    listItem.remove(); // Remove the list item
+    const option = document.createElement('option'); // Re-add item to the dropdown
+    option.value = value;
+    option.textContent = value;
+    selectElement.appendChild(option);
+  });
+
+  // Append remove button to the list item
+  listItem.appendChild(removeBtn);
+  list.appendChild(listItem); // Add the item to the list
+
+  // Remove selected item from dropdown
+  Array.from(selectElement.options).forEach(option => {
+    if (option.value === value) {
+      option.remove();
     }
+  });
+}
 
-    function addCategoryOffer() {
-      const categoryID = document.getElementById('addCategoryOffer_categoryID').value;
-      const categoryOffer = document.getElementById('addCategoryOffer_categoryOffer').value;
-      addOffer('category', categoryID, categoryOffer)
-    }
+// Clear the modal fields when the modal is closed
+document.getElementById('offerModal').addEventListener('hidden.bs.modal', function () {
+  document.getElementById('offerName').value = '';
+  document.getElementById('discountPrice').value = '';
+  document.getElementById('expiryDate').value = '';
+  clearList('productList', document.getElementById('productSelect'));
+  clearList('categoryList', document.getElementById('categorySelect'));
+  clearList('subcategoryList', document.getElementById('subcategorySelect'));
+  populateDropdowns(); // Repopulate dropdowns with available options
+});
 
-    function addSubCategoryOffer() {
-      const subCategoryID = document.getElementById('addSubCategoryOffer_subCategoryID').value;
-      const subCategoryOffer = document.getElementById('addSubCategoryOffer_subCategoryOffer').value;
-      addOffer('subCategory', subCategoryID, subCategoryOffer)
-    }
+// Clear list items and re-populate dropdowns
+function clearList(listId, selectElement) {
+  const list = document.getElementById(listId);
+  list.innerHTML = ''; // Clear the list
+  Array.from(selectElement.querySelectorAll('option')).forEach(option => {
+    option.selected = false; // Deselect all options
+  });
+}
 
-
-    function addOffer(type, ID, offer) {
-
-      if (ID == 'default') {
-        Swal.fire({
-          icon: "error",
-          title: `Select a ${type}`,
-        });
-        return
-      }
-      if (offer < 0 || offer > 100) {
-        Swal.fire({
-          icon: "error",
-          title: "Offer should be between 0 and 100",
-        });
-        return
-      }
-      fetch('/admin/offers', {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ type, ID, offer })
-      })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.validationError) {
-            let timerInterval;
-            Swal.fire({
-              title: "Validation Error",
-              html: "You will be redirected to login in <b></b> milliseconds.",
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-                timerInterval = setInterval(() => {
-                  timer.textContent = `${Swal.getTimerLeft()}`;
-                }, 100);
-              },
-              willClose: () => {
-                clearInterval(timerInterval);
-              }
-            }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                console.log("I was closed by the timer");
-                window.location.href = data.redirectUrl;
-              }
-            });
-          }
-
-          if (data.success) {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              }
-            });
-            Toast.fire({
-              icon: "success",
-              title: `new ${type} offer added`
-            });
-            setTimeout(() => {
-              window.location.reload()
-            }, 2000)
-
-          }
-
-          if (data.error) {
-            Swal.fire({
-              icon: "error",
-              title: "Validation Error",
-              text: data.error,
-            });
-          }
-        })
-    }
-
-
-    function deleteOffer(type, ID) {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          fetch(`/admin/offers/${ID}`, {
-        method: "DELETE",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ type })
-      })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.validationError) {
-            let timerInterval;
-            Swal.fire({
-              title: "Validation Error",
-              html: "You will be redirected to login in <b></b> milliseconds.",
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-                timerInterval = setInterval(() => {
-                  timer.textContent = `${Swal.getTimerLeft()}`;
-                }, 100);
-              },
-              willClose: () => {
-                clearInterval(timerInterval);
-              }
-            }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                console.log("I was closed by the timer");
-                window.location.href = data.redirectUrl;
-              }
-            });
-          }
-
-          if (data.success) {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              }
-            });
-            Toast.fire({
-              icon: "success",
-              title: `${type} offer removed`
-            });
-            setTimeout(() => {
-              window.location.reload()
-            }, 2000)
-
-          }
-
-          if (data.error) {
-            Swal.fire({
-              icon: "error",
-              title: "Validation Error",
-              text: data.error,
-            });
-          }
-        })
-        }
-      });
-
-      
-    }
+// Initial population of dropdowns when the page loads
+populateDropdowns();
 
   </script>
-
 </html>
