@@ -515,8 +515,8 @@ exports.getOffers = async (req, res) => {
     try {
         const { search } = req.query;
 
-        const offerList = await adminOfferService.displayOffers(search)
-        res.render('admin/offers', { offerList, searchFilter: search || null })
+        const {offerList,productsList,categoryList,subCategoryList} = await adminOfferService.displayOffers(search)
+        res.render('admin/offers', { offerList,productsList,categoryList,subCategoryList, searchFilter: search || null })
     } catch (err) {
         console.log(err);
         res.redirect('/error')

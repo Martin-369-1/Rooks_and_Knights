@@ -2,14 +2,19 @@
 const productCollection=require('../models/productsModel');
 const categoryCollection=require('../models/CategoryModel');
 const subCategoryCollection=require('../models/subCategoryModel');
-const offerCollection=require('../models/offerModel')
+const offerCollection=require('../models/offerModel');
+const { sub } = require('date-fns');
 
 exports.displayOffers=async(search)=>{
     try{
         const offerList=await offerCollection.find({offerName:{$regex: new RegExp(search, 'i')}})
                         .populate('applicableProducts.productID').populate('applicableCategories.categoryID').populate('applicableSubCategoreis.subCategoryID')
-                        
-        return offerList
+        
+        const productsList=await productCollection.find({isDeleted:false})
+        const categoryList=await categoryCollection.find({isDeleted:false})
+        const subCategoryList=await subCategoryCollection.find({isDeleted:false})
+
+        return {offerList,productsList,categoryList,subCategoryList}
     }catch(err){
         console.log(err);
     }
