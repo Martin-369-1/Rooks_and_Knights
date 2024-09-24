@@ -382,6 +382,7 @@
                                             window.location.href = data.successRedirect;
                                         }, 2000)
                                     }
+                                    
                                 })
 
                         }
@@ -590,7 +591,6 @@
                 }
 
                 function removeAddress(event, ID) {
-                    console.log("dfdfdf");
 
                     event.preventDefault()
                     Swal.fire({
@@ -823,6 +823,16 @@
                                     text: data.error,
                                     icon: "error",
                                 });
+                            }
+
+                            else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
+                                return
                             }
 
                             if (data.razorpayOrder) {

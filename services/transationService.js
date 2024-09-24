@@ -15,9 +15,8 @@ exports.allTransationsList = async (currentPage, noOfList, skipPages) => {
         const totalNoOfList = await transationCollection.countDocuments()
 
         const transationList = await transationCollection.find().sort({ createdAt: -1 })
-            .skip(skipPages * noOfList).limit(currentPage * noOfList).populate('userID')
+            .skip(skipPages ).limit( noOfList).populate('userID')
         
-            console.log(transationList);
             
         return { transationList, currentPage, totalNoOfList };
     } catch (err) {

@@ -5,7 +5,7 @@ exports.returnsList = async (currentPage, noOfList, skipPages) => {
         const totalNoOfList = await orderCollection.countDocuments({ 'products.returnStatus': { $ne: 'notRequested' } })
 
         const returnList = await orderCollection.find({ 'products.returnStatus': { $ne: 'notRequested' } })
-            .sort({ createdAt: -1 }).skip(skipPages * noOfList).limit(currentPage * noOfList)
+            .sort({ createdAt: -1 }).skip(skipPages ).limit(noOfList )
             .populate('userID').populate('products.productID')
 
         return { returnList, currentPage, totalNoOfList };

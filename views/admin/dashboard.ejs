@@ -199,7 +199,6 @@
   
 
           const salesData =  <%- JSON.stringify(salesData) %>
-            console.log(salesData);
             
 
             // Destroy previous chart if it exists
@@ -207,7 +206,6 @@
                 myChart.destroy();
             }
 
-            console.log(salesData.labels);
             
             // Create new chart based on the selected time period
             myChart = new Chart(ctx, {

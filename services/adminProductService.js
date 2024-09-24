@@ -20,7 +20,7 @@ exports.productList = async (search, currentPage, noOfList, skipPages) => {
 
     try {
         const totalNoOfList = await productCollection.countDocuments({ isDeleted: false })
-        const productList = await productCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
+        const productList = await productCollection.find(findQuery).skip(skipPages).limit(noOfList )
             .populate('categoryID')
             .populate('subCategoryID')
             .lean();
@@ -72,7 +72,6 @@ exports.addProduct = async (req, res) => {
 exports.viewProduct = async (productID) => {
     try {
         const product = await productCollection.findById(productID).populate('categoryID').populate('subCategoryID')
-        console.log(product);
 
         return product;
     } catch (err) {

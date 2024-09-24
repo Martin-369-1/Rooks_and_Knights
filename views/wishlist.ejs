@@ -177,7 +177,7 @@
 
                 }
 
-                function addToCart(productID,categoryID,subCategoryID, event) {
+                function addToCart(productID, categoryID, subCategoryID, event) {
                     event.preventDefault();
                     let quantity = document.getElementById('productQuantity').value;
                     fetch(`/cart/addToCart/${productID}`, {
@@ -186,14 +186,14 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            quantity,categoryID,subCategoryID
+                            quantity, categoryID, subCategoryID
                         })
                     }).then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
                                 Swal.fire({
                                     title: "Good job!",
-                                    text: data.success,
+                                    text: "Product added to cart",
                                     icon: "success",
                                     footer: `<a href="/cart">Go to cart</a>`,
                                 })
@@ -253,6 +253,14 @@
                                         setTimeout(() => {
                                             window.location.reload();
                                         }, 2000)
+                                    }
+                                    else if (data.authError) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Oops...",
+                                            text: data.authError,
+                                            footer: data.errorRedirect
+                                        });
                                     }
                                 })
 

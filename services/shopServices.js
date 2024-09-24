@@ -62,7 +62,7 @@ exports.productList = async (categoryID, sortby, price, subCategoryID, search, c
         let categoryList = await categoryCollection.find({ isDeleted: false })
         let subCategoryList = await subCategoryCollection.find({ isDeleted: false })
         let totalNoOfProducts = await productCollection.countDocuments({ isDeleted: false })
-        let productList = await productCollection.find(findQuery).collation({ locale: 'en', strength: 2 }).sort(sortQuery).skip(skipPages * noOfProducts).limit(currentPage * noOfProducts);
+        let productList = await productCollection.find(findQuery).collation({ locale: 'en', strength: 2 }).sort(sortQuery).skip(skipPages ).limit(noOfProducts );
         return { productList, categoryList, subCategoryList, totalNoOfProducts };
     } catch (err) {
         console.log(err);

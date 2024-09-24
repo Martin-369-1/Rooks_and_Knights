@@ -15,7 +15,7 @@ const adminCouponService = require('../services/adminCouponServices');
 const adminSalesService = require('../services/adminSalesService')
 
 const mongoose = require('mongoose')
-const dateFns=require('date-fns')
+const dateFns = require('date-fns')
 //Utils
 const generateAccessToken = require('../utils/JWTUtils');
 const { generateSalesPdf } = require('../utils/pdfUtils')
@@ -71,28 +71,28 @@ exports.getDashboard = async (req, res) => {
         const graphType = req.query.graphType || 'yearly'
         const { topTenProductsList, topTenCategoryList, topTenSubCategoryList } = await adminDashboardService.TopTenList()
 
-        let salesData=null;
+        let salesData = null;
 
         if (graphType === 'daily') {
 
-             salesData = await adminDashboardService.dailySales()
+            salesData = await adminDashboardService.dailySales()
             labels = salesData.map(item => `${item._id.day}`);
 
         } else if (graphType === 'monthly') {
 
-             salesData = await adminDashboardService.monthlySales()
-            labels = salesData.map(item => `${dateFns.format(new Date(item._id.year, item._id.month - 1, 1),'MMMM')}`);
+            salesData = await adminDashboardService.monthlySales()
+            labels = salesData.map(item => `${dateFns.format(new Date(item._id.year, item._id.month - 1, 1), 'MMMM')}`);
 
         } else if (graphType === 'yearly') {
 
-             salesData = await adminDashboardService.yearlySales()
+            salesData = await adminDashboardService.yearlySales()
             labels = salesData.map(item => item._id.year);
 
-        }        
-        
+        }
+
         totalSales = salesData.map(item => item.totalSales);
 
-        res.render('admin/dashboard', { topTenProductsList, topTenCategoryList, topTenSubCategoryList ,salesData:{labels, totalSales} ,graphType})
+        res.render('admin/dashboard', { topTenProductsList, topTenCategoryList, topTenSubCategoryList, salesData: { labels, totalSales }, graphType })
 
     } catch (err) {
         console.log(err);
@@ -106,10 +106,10 @@ exports.getUsers = async (req, res) => {
         const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
 
         const { userList, totalNoOfList } = await adminUserService.userList(search, currentPage, noOfList, skipPages);
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
 
         res.render('admin/users.ejs', { userList, searchFilter: search || null, currentPage, totalNoOfPages })
 
@@ -143,10 +143,10 @@ exports.getProducts = async (req, res) => {
         const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
 
         const { productList, totalNoOfList } = await adminProductService.productList(search, currentPage, noOfList, skipPages);
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
 
         res.render('admin/products', { productList, searchFilter: search || null, currentPage, totalNoOfPages })
 
@@ -237,9 +237,9 @@ exports.getCategories = async (req, res) => {
         const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
         const { categoryList, totalNoOfList } = await adminCategoryService.categoryList(search, currentPage, noOfList, skipPages);
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
         res.render('admin/categories', { categoryList, searchFilter: search || null, currentPage, totalNoOfPages })
 
 
@@ -324,10 +324,10 @@ exports.getSubCategory = async (req, res) => {
         const { search, page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
         const { subCategoryList, totalNoOfList } = await adminSubCategoryService.subCategoryList(search, currentPage, noOfList, skipPages);
 
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList)
         res.render('admin/subCategories', { subCategoryList, searchFilter: search || null, currentPage, totalNoOfPages })
 
 
@@ -410,10 +410,10 @@ exports.getOrders = async (req, res) => {
         const { page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
         const { orders, totalNoOfList } = await adminOrderService.viewOrders(currentPage, noOfList, skipPages);
-        const totalNoOfPages = totalNoOfList / noOfList;
-
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
+        
         res.render('admin/orders', { orders, currentPage, totalNoOfPages })
     } catch (err) {
         console.log(err);
@@ -458,10 +458,10 @@ exports.getReturns = async (req, res) => {
         const { page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
 
         const { returnList, totalNoOfList } = await adminReturnService.returnsList(currentPage, noOfList, skipPages);
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
 
         res.render('admin/returns', { returnList, currentPage, totalNoOfPages })
     } catch (err) {
@@ -496,10 +496,10 @@ exports.getTransations = async (req, res) => {
         const { page } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
 
         const { transationList, totalNoOfList } = await transationService.allTransationsList(currentPage, noOfList, skipPages);
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
 
         res.render('admin/transations', { transationList, currentPage, totalNoOfPages })
 
@@ -510,13 +510,12 @@ exports.getTransations = async (req, res) => {
 }
 
 
-//offers
 exports.getOffers = async (req, res) => {
     try {
         const { search } = req.query;
 
-        const {offerList,productsList,categoryList,subCategoryList} = await adminOfferService.displayOffers(search)
-        res.render('admin/offers', { offerList,productsList,categoryList,subCategoryList, searchFilter: search || null })
+        const { productList, categoryList, subCategoryList } = await adminOfferService.displayOffers(search)
+        res.render('admin/offers', { productList, categoryList, subCategoryList, searchFilter: search || null })
     } catch (err) {
         console.log(err);
         res.redirect('/error')
@@ -553,14 +552,13 @@ exports.deleteOffer = async (req, res) => {
 exports.getCoupons = async (req, res) => {
     try {
         const { search, page } = req.query;
-
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1;
+        const skipPages = (currentPage - 1) * noOfList
 
         const { couponList, totalNoOfList } = await adminCouponService.couponList(search, currentPage, noOfList, skipPages)
 
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
         res.render('admin/coupons', { couponList, currentPage, totalNoOfPages, searchFilter: search || null })
 
     } catch (err) {
@@ -624,11 +622,11 @@ exports.getSales = async (req, res) => {
         const { page, reportType, startDate, endDate } = req.query;
         const currentPage = page || 1;
         const noOfList = 6;
-        const skipPages = currentPage - 1
+        const skipPages = (currentPage - 1) * noOfList
 
         const { orderList, salesList, totalNoOfList } = await adminSalesService.salesList(reportType, startDate, endDate, currentPage, noOfList, skipPages)
 
-        const totalNoOfPages = totalNoOfList / noOfList;
+        const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
 
         res.render('admin/sales', { salesList, orderList, reportType, startDate, endDate, currentPage, totalNoOfPages })
 

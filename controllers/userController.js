@@ -198,7 +198,7 @@ exports.postResetPassword = async (req, res) => {
             res.redirect('/user/login');
         })
     } catch (err) {
-        console.log("getResetPassword Error", err);
+        console.log( err);
 
     }
 }

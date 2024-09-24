@@ -78,8 +78,7 @@
                             class="m-r-20 text-dark">
                             <i class="fas fa-chevron-left"></i> Previous
                         </a>
-                        <P class="m-r-20 text-dark">page : <%= currentPage %> of <%= Math.ceil(totalNoOfPages) %>
-                        </P>
+                        <P class="m-r-20 text-dark">page : <%= currentPage %> of <%= Math.ceil(totalNoOfPages) %></P>
                         <!-- Next Button -->
                         <a href="/admin/subCategories?search=<%= searchFilter %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
                             class=" text-dark">
@@ -208,7 +207,7 @@
                                         }).then((result) => {
                                             /* Read more about handling dismissals below */
                                             if (result.dismiss === Swal.DismissReason.timer) {
-                                                console.log("I was closed by the timer");
+                                                
                                                 window.location.href = data.redirectUrl;
                                             }
                                         });
@@ -271,7 +270,6 @@
 
 
                         function editSubCategory(event, ID) {
-                            console.log("hello");
 
                             event.preventDefault();
                             const subCategoryName = document.getElementById('subCategoryNameEdit').value;
@@ -314,7 +312,7 @@
                                         }).then((result) => {
                                             /* Read more about handling dismissals below */
                                             if (result.dismiss === Swal.DismissReason.timer) {
-                                                console.log("I was closed by the timer");
+                                                
                                                 window.location.href = data.redirectUrl;
                                             }
                                         });
@@ -391,7 +389,7 @@
                                                 }).then((result) => {
                                                     /* Read more about handling dismissals below */
                                                     if (result.dismiss === Swal.DismissReason.timer) {
-                                                        console.log("I was closed by the timer");
+                                                        
                                                         window.location.href = data.redirectUrl;
                                                     }
                                                 });

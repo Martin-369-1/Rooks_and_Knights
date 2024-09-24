@@ -16,7 +16,7 @@ exports.couponList=async(search, currentPage, noOfList, skipPages)=>{
     try{
         
         const totalNoOfList=await couponCollection.countDocuments()
-        const couponList=await couponCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
+        const couponList=await couponCollection.find(findQuery).skip(skipPages).limit(noOfList )
         return {couponList, currentPage, totalNoOfList};
         
     }catch(err){

@@ -100,7 +100,6 @@
 
             $('.sub-menu-m').each(function () {
                 if ($(this).css('display') == 'block') {
-                    console.log('hello');
                     $(this).css('display', 'none');
                     $(arrowMainMenu).removeClass('turn-arrow-main-menu-m');
                 }

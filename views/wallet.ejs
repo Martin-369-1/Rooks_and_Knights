@@ -103,7 +103,6 @@
             <script>
                 function addToWallet() {
                     const amount = document.getElementById('amount').value;
-                    console.log(amount);
 
                     fetch('/wallet/addToWallet', {
                         method: 'POST',
@@ -114,9 +113,18 @@
                     })
                         .then(res => res.json())
                         .then((data) => {
+                            if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
+                                return
+                            }
 
                             if (data.razorpayOrder) {
-                                console.log(data.razorpayOrder);
+
                                 var options = {
                                     "key": "rzp_test_iPUiBGfQqstcsI", // Enter the Key ID generated from the Dashboard
                                     "name": "Rook & Knights",

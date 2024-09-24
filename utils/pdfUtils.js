@@ -29,10 +29,10 @@ module.exports.generateInvoice = (req, res, order,address) => {
 
     const columnWidths = {
         productName: 120,
-        quantity: 60,
         unitPrice: 80,
-        finalPrice: 100,
-        discount: 80
+        quantity: 60,
+        discount: 80,
+        finalPrice: 100
     };
 
     const tableTop = doc.y; // Start the table at the current y position
@@ -41,11 +41,10 @@ module.exports.generateInvoice = (req, res, order,address) => {
 
     function drawTableHeader() {
         doc.fontSize(10).text('Product Name', 50, y, { width: columnWidths.productName });
+        doc.text('Unit Price', 120, y, { width: columnWidths.unitPrice, align: 'center' });
         doc.text('Quantity', 200, y, { width: columnWidths.quantity, align: 'center' });
-        doc.text('Unit Price', 260, y, { width: columnWidths.unitPrice, align: 'center' });
-        doc.text('Total Price', 340, y, { width: columnWidths.finalPrice, align: 'center' });
-        doc.text('Discount', 440, y, { width: columnWidths.discount, align: 'center' });
-        doc.text('Final Price', 520, y, { width: columnWidths.finalPrice, align: 'center' });
+        doc.text('Discount', 350, y, { width: columnWidths.discount, align: 'center' });
+        doc.text('Final Price', 400, y, { width: columnWidths.finalPrice, align: 'center' });
 
         y += rowHeight;
         doc.moveTo(50, y).lineTo(600, y).stroke();
@@ -55,11 +54,10 @@ module.exports.generateInvoice = (req, res, order,address) => {
     function drawProductRows(products) {
         products.forEach((product) => {
             doc.fontSize(10).text(product.productID.productName, 50, y, { width: columnWidths.productName });
+            doc.text(`Rs.${product.price}`, 120, y, { width: columnWidths.unitPrice, align: 'center' });
             doc.text(product.quantity, 200, y, { width: columnWidths.quantity, align: 'center' });
-            doc.text(`Rs.${product.price}`, 260, y, { width: columnWidths.unitPrice, align: 'center' });
-            doc.text(`Rs.${(product.price * product.quantity)}`, 340, y, { width: columnWidths.finalPrice, align: 'center' });
-            doc.text(`Rs.${product.discount}`, 440, y, { width: columnWidths.discount, align: 'center' });
-            doc.text(`Rs.${((product.price * product.quantity) - product.discount)}`, 520, y, { width: columnWidths.finalPrice, align: 'center' });
+            doc.text(`Rs.${product.discount}`, 350, y, { width: columnWidths.discount, align: 'center' });
+            doc.text(`Rs.${product.amountPaid}`, 400, y, { width: columnWidths.finalPrice, align: 'center' });
 
             y += rowHeight;
 

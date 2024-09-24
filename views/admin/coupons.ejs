@@ -251,7 +251,7 @@
                                 }).then((result) => {
                                     /* Read more about handling dismissals below */
                                     if (result.dismiss === Swal.DismissReason.timer) {
-                                        console.log("I was closed by the timer");
+                                        
                                         window.location.href = data.redirectUrl;
                                     }
                                 });
@@ -328,7 +328,7 @@
                                         }).then((result) => {
                                             /* Read more about handling dismissals below */
                                             if (result.dismiss === Swal.DismissReason.timer) {
-                                                console.log("I was closed by the timer");
+                                                
                                                 window.location.href = data.redirectUrl;
                                             }
                                         });
@@ -391,7 +391,6 @@
 
 
                 function editCoupon(event, ID) {
-                    console.log("hello");
 
                     event.preventDefault();
 
@@ -440,7 +439,7 @@
                                 }).then((result) => {
                                     /* Read more about handling dismissals below */
                                     if (result.dismiss === Swal.DismissReason.timer) {
-                                        console.log("I was closed by the timer");
+                                        
                                         window.location.href = data.redirectUrl;
                                     }
                                 });
@@ -483,12 +482,14 @@
 
 
                 function couponValidation(couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate) {
-                    console.log("hello");
 
                     if (!(couponCode && couponName && discountAmount && minimumOrderAmount && expiryDate)) {
-                        console.log("ged");
 
                         return "All fields are required"
+                    }
+
+                    if(couponName != couponName.trim()){
+                        return "Coupon Name must not contain empty space"
                     }
 
                     if (! /^[A-Za-z\s]{3,}$/.test(couponName)) {

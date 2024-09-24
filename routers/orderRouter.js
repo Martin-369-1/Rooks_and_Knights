@@ -20,6 +20,6 @@ router.post('/completePayment', userAuthMiddleware.checkUserAuthenticated, order
 router.post('/addCoupon',userAuthMiddleware.validUser,orderController.postAddCouponDiscount)
 
 //download Invoice pdf
-router.get('/downloadInvoicePdf/:id',userAuthMiddleware.validUser,orderController.invoiceDownload)
+router.get('/downloadInvoicePdf/:id',userAuthMiddleware.checkUserAuthenticated,orderController.invoiceDownload)
 
 module.exports = router;

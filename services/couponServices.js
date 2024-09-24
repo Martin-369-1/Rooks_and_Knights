@@ -19,7 +19,7 @@ exports.addCouponDiscount=async(basePrice,couponCode)=>{
             return {error:`To use this coupon there must me minimum order amount of ${basePrice}`}
         }
         
-        return {discount:coupon.discountAmount}
+        return {discount:coupon.discountAmount,_id:coupon._id}
 
     }catch(err){
         console.log(err);

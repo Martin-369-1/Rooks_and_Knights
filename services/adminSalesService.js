@@ -85,8 +85,8 @@ exports.salesList = async (reportType, startDate, endDate,currentPage, noOfList,
             {$sort:{
                 createdAt:-1
             }},
-            {$skip:skipPages * noOfList},
-            {$limit:currentPage * noOfList}
+            {$skip:skipPages },
+            {$limit:noOfList }
             
         ])
         

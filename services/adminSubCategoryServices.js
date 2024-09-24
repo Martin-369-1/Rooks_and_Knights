@@ -13,7 +13,7 @@ exports.subCategoryList = async (search, currentPage, noOfList, skipPages) => {
     }
     try {
         let totalNoOfList = await subCategoryCollection.countDocuments({ isDeleted: false })
-        let subCategoryList = await subCategoryCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
+        let subCategoryList = await subCategoryCollection.find(findQuery).skip(skipPages).limit(noOfList)
 
         return { subCategoryList, currentPage, totalNoOfList };
     } catch (err) {

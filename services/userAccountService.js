@@ -12,7 +12,6 @@ exports.viewUserProfile = async (_id) => {
 
 exports.updateUserProfile = async (username, phoneNumber, _id) => {
     try {
-        console.log(username, phoneNumber, _id);
 
         let anotherUser = await userCollection.findOne({ _id: { $ne: _id }, phoneNumber });
         if (anotherUser) {

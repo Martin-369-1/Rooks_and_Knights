@@ -13,7 +13,7 @@ exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
     }
     try {
         let totalNoOfList = await categoryCollection.countDocuments({ isDeleted: false })
-        let categoryList = await categoryCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList)
+        let categoryList = await categoryCollection.find(findQuery).skip(skipPages).limit(noOfList )
 
         return { categoryList, currentPage, totalNoOfList };
     } catch (err) {

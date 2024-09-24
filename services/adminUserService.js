@@ -14,7 +14,7 @@ exports.userList = async (search, currentPage, noOfList, skipPages) => {
 
     try {
         let totalNoOfList = await userCollection.countDocuments({ isAdmin: false })
-        let userList = await userCollection.find(findQuery).skip(skipPages * noOfList).limit(currentPage * noOfList);
+        let userList = await userCollection.find(findQuery).skip(skipPages ).limit(noOfList );
 
         return { userList, currentPage, totalNoOfList };
     } catch (err) {

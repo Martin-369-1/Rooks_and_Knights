@@ -160,6 +160,23 @@ h6 {
   /* Shadow on hover */
 }
 
+.moving-line {
+  display: inline-block;
+  font-size: 24px;
+  font-family: cursive;
+  white-space: nowrap;
+  animation: move 15s linear infinite;
+}
+
+@keyframes move {
+  0% {
+      transform: translateX(100%);
+  }
+  100% {
+      transform: translateX(-100%);
+  }
+}
+
 /* Style for the product image */
 .product-image img {
   width: 100%;
@@ -294,11 +311,21 @@ h6 {
   height: 124px;
 }
 
+.footer-link{
+  color: #ecf0e1c1; 
+  text-decoration:underline;
+}
+
+.footer-link:hover{
+  color: #ecf0e1;
+}
+
 
 /*==================================================================
 [ Top bar ]*/
 .top-bar {
   height: 40px;
+  overflow: hidden;
   background-color: #222;
 }
 
@@ -335,6 +362,7 @@ h6 {
 .topbar-mobile li {
   padding: 8px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
   background-color: #222;
 }
 
@@ -442,7 +470,7 @@ h6 {
 
 .main-menu>li>a {
   font-family: Poppins-Medium;
-  font-size: 14px;
+  font-size: 20px;
   color: #333;
   padding: 5px 0px;
   transition: all 0.4s;

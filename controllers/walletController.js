@@ -31,7 +31,6 @@ exports.getWallet = async (req, res) => {
 exports.postWallet = async (req, res) => {
     try {
         const { amount } = req.body
-        console.log(amount, req.body);
 
         const options = {
             amount: amount * 100,

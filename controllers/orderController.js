@@ -164,12 +164,12 @@ exports.postAddCouponDiscount=async(req,res)=>{
         const {basePrice,couponCode}=req.body;
         
         const coupon=await couponService.addCouponDiscount(basePrice,couponCode)
-
+        
         if(coupon.error){
             return res.status(400).json({ error:coupon.error})
         }
         
-        return res.status(200).json({success:true,couponDiscount:coupon.discount})
+        return res.status(200).json({success:true,couponDiscount:coupon.discount,couponID:coupon._id})
 
     }catch(err){
         console.log(err);
@@ -200,7 +200,7 @@ exports.patchCancel = async (req, res) => {
 exports.patchReturn = async (req, res) => {
     try {
         const { returnReason } = req.body;
-        console.log(returnReason);
+        
 
         const orderProductsID = req.params.id;
         await orderService.returnOrders(req.userID, orderProductsID, returnReason)

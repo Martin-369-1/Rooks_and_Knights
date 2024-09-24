@@ -219,6 +219,14 @@
                                             window.location.reload();
                                         }, 2000)
                                     }
+                                    else if (data.authError) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Oops...",
+                                            text: data.authError,
+                                            footer: data.errorRedirect
+                                        });
+                                    }
                                 })
 
                         }
@@ -278,6 +286,14 @@
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)
+                            }
+                            else if (data.authError) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: data.authError,
+                                    footer: data.errorRedirect
+                                });
                             }
                         })
 

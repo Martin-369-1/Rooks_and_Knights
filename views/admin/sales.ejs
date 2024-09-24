@@ -126,8 +126,7 @@
                         class="m-r-20 text-dark">
                         <i class="fas fa-chevron-left"></i> Previous
                     </a>
-                    <P class="m-r-20 text-dark">page : <%= currentPage %>
-                    </P>
+                    <P class="m-r-20 text-dark">page : <%= currentPage %> of <%= Math.ceil(totalNoOfPages) %></P>
                     <!-- Next Button -->
                     <a href="/admin/sales?reportType=<%= reportType %>&&startDate=<%= startDate %>&&endDate=<%= endDate %>&&page=<%= (currentPage<totalNoOfPages)? Number(currentPage)+1:currentPage %>"
                         class=" text-dark">
@@ -163,7 +162,6 @@
 
         function downloadSales(reportType,startDate,endDate){
             const fileFromat=document.getElementById('file-format').value;
-            console.log(1,fileFromat);
             
             if(fileFromat=='pdf'){
                 window.location.href=`/admin/sales/downloadPdf?reportType=${reportType}&&startDate=${startDate}&&endDate=${endDate}`

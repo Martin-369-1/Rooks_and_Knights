@@ -59,7 +59,6 @@ exports.getOrder=async(orderID)=>{
         const order=await orderCollection.findOne({_id:orderID}).populate('userID').populate('products.productID')
 
         const address=(await addressCollection.findOne({'address._id':order.addressId})).address[0]
-        console.log(address);
         
         
         return {order,address};
@@ -96,7 +95,6 @@ exports.cancelOrders = async (_id, userID, productID, productQuantity) => {
 
 exports.returnOrders = async (userID, orderProductId, returnReason) => {
     try {
-        console.log(orderProductId);
 
         await orderCollection.updateOne(
             { userID, 'products._id': orderProductId },
