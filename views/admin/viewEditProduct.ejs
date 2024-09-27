@@ -130,7 +130,7 @@
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="productOffer">Offer</label>
-                                            <input type="number" class="form-control" id="productOffer" name="offers"
+                                            <input type="number" class="form-control" id="productOffer" name="offer"
                                                 value="<%= product.offer %>">
                                             <p id="offersError" class="text-danger fs-15"></p>
                                         </div>
@@ -140,16 +140,11 @@
                                                 <label for="productCategory">Category</label>
                                                 <select id="productCategory" class="form-control" name="category">
                                                     <% categories.forEach((category)=>{ %>
-                                                        <% if(category.categoryName==product.category) { %>
-                                                            <option selected>
-                                                                <%= category.categoryName %>
-                                                            </option>
-                                                            <% } else { %>
-                                                                <option>
-                                                                    <%= category.categoryName %>
-                                                                </option>
-                                                                <% } %>
-                                                                    <% }) %>
+                                                        <option <%= (product.categoryID._id.toString() == category._id.toString()) ? 'selected' : '' %>>
+                                                            <%= category.categoryName %>
+                                                        </option>
+                                                        
+                                                        <% }) %>
                                                 </select>
                                             </div>
                                             <p id="categoryError" class="text-danger fs-15"></p>

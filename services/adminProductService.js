@@ -10,7 +10,7 @@ const path = require('node:path')
 
 //get product list
 exports.productList = async (search, currentPage, noOfList, skipPages) => {
-    const findQuery = { isDeleted: false };
+    const findQuery = { };
 
     if (search) {
         findQuery.productName = {
@@ -19,7 +19,7 @@ exports.productList = async (search, currentPage, noOfList, skipPages) => {
     }
 
     try {
-        const totalNoOfList = await productCollection.countDocuments({ isDeleted: false })
+        const totalNoOfList = await productCollection.countDocuments()
         const productList = await productCollection.find(findQuery).skip(skipPages).limit(noOfList )
             .populate('categoryID')
             .populate('subCategoryID')
@@ -149,9 +149,9 @@ exports.editProduct = async (req, res, productID) => {
 }
 
 //delete a product
-exports.deleteProduct = async (productID) => {
+exports.listUnlistProduct = async (productID,list) => {
     try {
-        await productCollection.updateOne({ _id: productID }, { isDeleted: true })
+        await productCollection.updateOne({ _id: productID }, {isListed:list})
 
     } catch (err) {
         console.log(err);
@@ -161,7 +161,8 @@ exports.deleteProduct = async (productID) => {
 //get cateogry list
 exports.categories = async () => {
     try {
-        const categories = await categoryCollection.find({ isDeleted: false }, { _id: 0, categoryName: 1 });
+        const categories = await categoryCollection.find({ isListed: true });
+        
         return categories;
     } catch (err) {
         console.log(err);
@@ -171,7 +172,7 @@ exports.categories = async () => {
 //get subcategory list
 exports.subCategories = async () => {
     try {
-        const subCategories = await subCategoryCollection.find({ isDeleted: false }, { _id: 0, subCategoryName: 1 });
+        const subCategories = await subCategoryCollection.find({ isListed: true });
         return subCategories;
     } catch (err) {
         console.log(err);

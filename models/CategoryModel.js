@@ -23,10 +23,10 @@ const CategorySchema = new Schema({
     type:Number,
     default:0
   },
-  isDeleted: {
+  isListed: {
     type: Boolean,
     required: true,
-    default: false
+    default: true
   }
 
 }, { timestamps: true });

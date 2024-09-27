@@ -33,7 +33,7 @@
                 <!-- Profile Section -->
                 <div class="section profile-section" id="profile-section">
                     <div class="profile-card text-center">
-                        <div class="">
+                        <!-- <div class="">
                             <div>
                                 <% if(userProfile.profilePicture) {%>
                                     <img class="profile-image" src="<% userProfile.profilePicture %>" alt="">
@@ -45,7 +45,7 @@
 
                             <button class="btn "><i class="fa fa-pencil-alt"></i></button>
                             <button class="btn"><i class="fa fa-trash-alt"></i></button>
-                        </div>
+                        </div> -->
                         <br>
                         <form action="" onsubmit="updateProfile(event) ">
                             <div class="form-group">
@@ -60,7 +60,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="phone">Phone</label>
-                                <input type="text" class="form-control" id="phoneNumber" value="+1234567890">
+                                <input type="text" class="form-control" id="phoneNumber"
+                                    value="<%= userProfile.phoneNumber %>">
                             </div>
 
                             <div class="form-group">
@@ -146,8 +147,12 @@
                                         <%= order.paymentStatus %>
                                     </p>
                                     <% if(order.paymentStatus=='pending' ){%>
-                                        <button class="btn p-t-10" onclick="proccedToPayment('<%= order._id %>','<%= order.totalAmmount %>','Wallet')"><i class="fas fa-wallet"></i> Pay by wallet</button>
-                                        <button class="btn p-t-10" onclick="proccedToPayment('<%= order._id %>','<%= order.totalAmmount %>','Razorpay')"><i class="fas fa-credit-card"></i> Pay online</button>
+                                        <button class="btn p-t-10"
+                                            onclick="proccedToPayment('<%= order._id %>','<%= order.totalAmmount %>','Wallet')"><i
+                                                class="fas fa-wallet"></i> Pay by wallet</button>
+                                        <button class="btn p-t-10"
+                                            onclick="proccedToPayment('<%= order._id %>','<%= order.totalAmmount %>','Razorpay')"><i
+                                                class="fas fa-credit-card"></i> Pay online</button>
 
                                         <%} %>
                                 </div>
@@ -156,7 +161,8 @@
                                         data-target=".bd-example-modal-lg"
                                         data-order-item="<%= JSON.stringify(order) %>"><i
                                             class="fa fa-eye"></i>View</button>
-                                    <button onclick="downloadInvoice('<%= order._id %>')"><i class="fas fa-download"></i> Download Invoice </button>
+                                    <button onclick="downloadInvoice('<%= order._id %>')"><i
+                                            class="fas fa-download"></i> Download Invoice </button>
                                 </div>
                             </div>
                             <% }) %>
@@ -382,7 +388,7 @@
                                             window.location.href = data.successRedirect;
                                         }, 2000)
                                     }
-                                    
+
                                 })
 
                         }
@@ -394,6 +400,18 @@
                     event.preventDefault()
                     let username = document.getElementById('username').value;
                     let phoneNumber = document.getElementById('phoneNumber').value;
+
+                    const error = checkValidText(username, 'username', 3, 10, false, false, false) ||
+                        checkValidPhoneNumber(phoneNumber.toString())
+
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
                     fetch('/user/account/updateProfile', {
                         method: 'PUT',
                         headers: {
@@ -406,7 +424,7 @@
                             if (data.success) {
                                 Swal.fire({
                                     title: "Updated",
-                                    text: "Your cart has been updated",
+                                    text: "Your Profile has been updated",
                                     icon: "success",
                                     timer: 2000
                                 });
@@ -455,15 +473,7 @@
                             }).then((res) => res.json())
                                 .then((data) => {
                                     if (data.success) {
-                                        Swal.fire({
-                                            title: "Updated",
-                                            text: "Your cart has been updated",
-                                            icon: "success",
-                                            timer: 2000
-                                        });
-                                        setTimeout(() => {
-                                            window.location.href = data.redirectUrl;
-                                        }, 2000)
+                                        window.location.href = data.redirectUrl;
                                     } else if (data.error) {
                                         Swal.fire({
                                             title: "Not updated",
@@ -498,6 +508,16 @@
                     let pinCode = document.getElementById('pinCode').value;
                     let streetAddress = document.getElementById('streetAddress').value;
 
+                    const error = ValidateAddress(addressTitle, state, city, pinCode, streetAddress);
+
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
                     fetch('/address/add', {
                         method: "POST",
                         headers: {
@@ -547,7 +567,17 @@
                     let city = document.getElementById('cityEdit').value;
                     let pinCode = document.getElementById('pinCodeEdit').value;
                     let streetAddress = document.getElementById('streetAddressEdit').value;
-                    console.log(addressTitle, state, city);
+
+                    const error = ValidateAddress(addressTitle, state, city, pinCode, streetAddress);
+
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
 
                     fetch(`/address/edit/${_id}`, {
                         method: "PUT",
@@ -794,10 +824,10 @@
 
                 }
 
-                function proccedToPayment(orderID,totalAmmount,paymentMethod) {
+                function proccedToPayment(orderID, totalAmmount, paymentMethod) {
 
                     event.preventDefault()
-                    
+
 
                     fetch(`/order/pendingProceedToPayment?orderID=${orderID}&&totalAmmount=${totalAmmount}&&paymentMethod=${paymentMethod}`, {
                         method: "POST",
@@ -879,10 +909,17 @@
                 }
 
 
-                function downloadInvoice(orderID){
-                    window.location.href=`/order/downloadInvoicePdf/${orderID}`
+                function downloadInvoice(orderID) {
+                    window.location.href = `/order/downloadInvoicePdf/${orderID}`
                 }
 
+                function ValidateAddress(addressTitle, state, city, pinCode, streetAddress) {
+                    return  checkValidText(addressTitle, 'Address Title', 3, 20, true, true, false) ||
+                        checkValidText(state, 'State', 3, 25, true, false, false) ||
+                        checkValidText(city, 'City', 3, 25, true, false, false) ||
+                        checkPincode(pinCode) ||
+                        checkValidText(streetAddress, 'Street Address', 10, 100, true, true, true)
+                }
 
             </script>
 </body>

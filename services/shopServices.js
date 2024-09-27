@@ -4,7 +4,7 @@ const subCategoryCollection = require('../models/subCategoryModel');
 const wishlistCollection=require('../models/wishlistModel')
 
 exports.productList = async (categoryID, sortby, price, subCategoryID, search, currentPage, noOfProducts, skipPages) => {
-    let findQuery = { isDeleted: false };
+    let findQuery = { isListed: true };
     if (categoryID) {
         findQuery.categoryID = categoryID;
     }
@@ -59,10 +59,10 @@ exports.productList = async (categoryID, sortby, price, subCategoryID, search, c
     }
 
     try {
-        let categoryList = await categoryCollection.find({ isDeleted: false })
-        let subCategoryList = await subCategoryCollection.find({ isDeleted: false })
-        let totalNoOfProducts = await productCollection.countDocuments({ isDeleted: false })
-        let productList = await productCollection.find(findQuery).collation({ locale: 'en', strength: 2 }).sort(sortQuery).skip(skipPages ).limit(noOfProducts );
+        let categoryList = await categoryCollection.find({ isListed: true })
+        let subCategoryList = await subCategoryCollection.find({ isListed: true })
+        let totalNoOfProducts = await productCollection.countDocuments({ isListed: true })
+        let productList = await productCollection.find(findQuery).populate('categoryID').populate('subCategoryID').collation({ locale: 'en', strength: 2 }).sort(sortQuery).skip(skipPages ).limit(noOfProducts );
         return { productList, categoryList, subCategoryList, totalNoOfProducts };
     } catch (err) {
         console.log(err);
@@ -77,19 +77,16 @@ exports.viewProduct = async (_id,userID) => {
         const product = await productCollection.findById(_id)
             .populate({
                 path: 'categoryID',
-                select: 'categoryName'
             })
             .populate({
                 path: 'subCategoryID',
-                select: 'subCategoryName'
             })
             .populate({
                 path: 'reviews.userID',
             })
             .exec();
 
-        const relatedProducts = await productCollection.find({ isDeleted: false, categoryID: product.categoryID._id, _id: { $ne: product._id } })
-    
+        const relatedProducts = await productCollection.find({ isListed: true, categoryID: product.categoryID._id, _id: { $ne: product._id } })
         
         return { product, relatedProducts};
     } catch (err) {

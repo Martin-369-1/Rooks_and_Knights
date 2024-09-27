@@ -236,7 +236,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
 
-                            fetch(`/wishlist/deleteFromWishlist/${wishlistItemID}`, {
+                            fetch(`/wishlist/${wishlistItemID}`, {
                                 method: "DELETE",
                                 headers: {
                                     'Content-Type': 'application/json'

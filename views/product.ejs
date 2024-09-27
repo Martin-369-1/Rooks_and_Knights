@@ -87,8 +87,8 @@
 						</h4>
 
 						<p class="mtext-106 cl2">
-							<% if(product.offer>0) {%>
-								<span style="text-decoration: line-through">₹<%= product.price %></span> ₹<%= product.price- product.price * product.offer/100 %>
+							<% if(product.offer || product.categoryID.offer || product.subCategoryID.offer) {%>
+								<span style="text-decoration: line-through">₹<%= product.price %></span> ₹<%=parseInt( product.price- product.price * Math.max(product.offer,product.categoryID.offer,product.subCategoryID.offer)/100 )%>
 							<% }else{ %>
 								₹<%= product.price %>
 							<% } %>

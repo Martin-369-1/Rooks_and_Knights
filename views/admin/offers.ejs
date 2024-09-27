@@ -16,7 +16,7 @@
                   <!-- Search Form -->
                   <form action="/admin/offers" method="GET" class="search-input-group">
                     <input type="text" id="search-input" name="search" class="form-control search-input"
-                      placeholder="<%= searchFilter || " search"%>">
+                    placeholder="search" value="<%= searchFilter ? searchFilter:null %>">
                     <a href="/admin/offers?search=">
                       <button type="button" class="btn-clear" id="clear-btn">
                         <i class="fas fa-times"></i>
@@ -50,12 +50,12 @@
             <div class="tab-content">
               <!-- Product Offer Tab -->
               <div class="tab-pane fade show active" id="product-offer" role="tabpanel">
-                <div class="container p-b-10">
+                <!-- <div class="container p-b-10">
 
                   <button class="btn-add" data-toggle="modal" data-target="#addProductOfferModal">
                     <i class="fas fa-plus"></i> New product offer
                   </button>
-                </div>
+                </div> -->
                 <div class="table-responsive">
                   <table class="table table-bordered m-t-10">
                     <thead>
@@ -63,6 +63,7 @@
                         <th>product</th>
                         <th>Product Name</th>
                         <th>Offer (%)</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </thead>
@@ -77,6 +78,11 @@
                             </td>
                             <td>
                               <%= product.offer %>
+                            </td>
+                            <td>
+                              <button class="btn btn-dark btn-sm"
+                              data-toggle="modal" data-target="#editOfferModal"
+                              onclick="editOfferModal('product', '<%= product._id %>', '<%= product.offer %>')"><i class="fas fa-pen"></i></button>
                             </td>
                             <td>
                               <button class="btn btn-danger btn-sm"
@@ -97,7 +103,7 @@
                 <div class="container p-b-10">
 
                   <button class="btn-add" data-toggle="modal" data-target="#addCategoryOfferModal">
-                    <i class="fas fa-plus"></i> New product
+                    <i class="fas fa-plus"></i> New Category Offer
                   </button>
                 </div>
                 <div class="table-responsive">
@@ -107,6 +113,7 @@
                         <th>Category Name</th>
                         <th>Description</th>
                         <th>Offer (%)</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </thead>
@@ -123,6 +130,12 @@
                             </td>
                             <td>
                               <%= category.offer %>
+                            </td>
+                            <td>
+                              <button class="btn btn-dark btn-sm" 
+                              data-toggle="modal" data-target="#editOfferModal"
+                              onclick="editOfferModal('category', '<%= category._id %>', '<%= category.offer %>')"><i
+                                  class="fas fa-pen"></i></button>
                             </td>
                             <td>
                               <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"
@@ -142,7 +155,7 @@
                 <div class="container p-b-10">
 
                   <button class="btn-add" data-toggle="modal" data-target="#addSubCategoryOfferModal">
-                    <i class="fas fa-plus"></i> New product
+                    <i class="fas fa-plus"></i> New Sub Category Offer
                   </button>
                 </div>
                 <div class="table-responsive">
@@ -152,6 +165,7 @@
                         <th>Subcategory Name</th>
                         <th>Description</th>
                         <th>Offer (%)</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </thead>
@@ -168,6 +182,11 @@
                             </td>
                             <td>
                               <%= subCategory.offer %>
+                            </td>
+                            <td>
+                              <button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#editOfferModal"
+                                onclick="editOfferModal('subCategory', '<%= subCategory._id %>', '<%= subCategory.offer %>')"><i
+                                  class="fas fa-pen"></i></button>
                             </td>
                             <td>
                               <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"
@@ -241,9 +260,11 @@
               <select class="custom-select" id="addCategoryOffer_categoryID" required>
                 <option value="default" disabled selected>Select a category</option>
                 <% categoryList.forEach((category)=>{ %>
-                  <option value="<%= category._id %>">
-                    <%= category.categoryName %> - <%= category.offer %>% off
-                  </option>
+                  <% if(category.offer == 0){ %>
+                    <option value="<%= category._id %>">
+                      <%= category.categoryName %>
+                    </option>
+                  <% } %>
                   <% }) %>
               </select>
             </div>
@@ -264,7 +285,7 @@
 
     <div class="modal fade" id="addSubCategoryOfferModal" tabindex="-1" role="dialog"
       aria-labelledby="productModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog " role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="productModalLabel">Add SubCategory Offer</h5>
@@ -278,9 +299,11 @@
               <select class="custom-select" id="addSubCategoryOffer_subCategoryID" required>
                 <option value="default" disabled selected>Select a subCategory</option>
                 <% subCategoryList.forEach((subCategory)=>{ %>
-                  <option value="<%= subCategory._id %>">
-                    <%= subCategory.subCategoryName %> - <%= subCategory.offer %>% off
-                  </option>
+                  <% if(subCategory.offer == 0){ %>
+                    <option value="<%= subCategory._id %>">
+                      <%= subCategory.subCategoryName %>
+                    </option>
+                  <% } %>
                   <% }) %>
               </select>
             </div>
@@ -299,6 +322,24 @@
       </div>
     </div>
 
+
+    <div class="modal fade" id="editOfferModal" tabindex="-1" role="dialog" aria-labelledby="editOfferModalLablel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="editOffer">Offer Percentage</label>
+              <input type="number" class="form-control" id="editOffer" placeholder="Enter offer percentage">
+            </div>
+          </div>
+          <div class="modal-footer" id="edit-offer-div">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <%- include('./partials/footer') %>
   </body>
 
@@ -307,23 +348,48 @@
     function addProductOffer() {
       const productID = document.getElementById('addProductOffer_productID').value;
       const productOffer = document.getElementById('addProductOffer_productOffer').value;
-      addOffer('product', productID, productOffer)
+      addOffer('product', productID, productOffer,'added')
     }
 
     function addCategoryOffer() {
       const categoryID = document.getElementById('addCategoryOffer_categoryID').value;
       const categoryOffer = document.getElementById('addCategoryOffer_categoryOffer').value;
-      addOffer('category', categoryID, categoryOffer)
+      addOffer('category', categoryID, categoryOffer,'added')
     }
 
     function addSubCategoryOffer() {
       const subCategoryID = document.getElementById('addSubCategoryOffer_subCategoryID').value;
       const subCategoryOffer = document.getElementById('addSubCategoryOffer_subCategoryOffer').value;
-      addOffer('subCategory', subCategoryID, subCategoryOffer)
+      addOffer('subCategory', subCategoryID, subCategoryOffer,'added')
+    }
+
+    function editOfferModal(type, ID, offer) {
+      document.getElementById('editOffer').value = offer;
+
+      const editOfferDiv = document.getElementById('edit-offer-div')
+      editButton = document.createElement('button')
+
+      if (!document.getElementById('editOfferButton')) {
+        var editButton = document.createElement('button');
+        editButton.textContent = "Edit";
+        editButton.id = 'editOfferButton';
+        editButton.onclick = () => editOffer(type, ID);
+        editButton.classList.add('btn', 'btn-primary');
+
+        editOfferDiv.appendChild(editButton);
+      }
+
+    }
+
+    function editOffer(type,ID){
+      const offer=document.getElementById('editOffer').value
+
+      addOffer(type,ID,offer,'edit')
+
     }
 
 
-    function addOffer(type, ID, offer) {
+    function addOffer(type, ID, offer,action) {
 
       if (ID == 'default') {
         Swal.fire({
@@ -332,10 +398,13 @@
         });
         return
       }
-      if (offer < 0 || offer > 100) {
+      const error = checkValidNumber(offer, `${type} offer percentage`, 0, 100)
+
+      if (error) {
         Swal.fire({
           icon: "error",
-          title: "Offer should be between 0 and 100",
+          title: "validation error",
+          text: error
         });
         return
       }
@@ -368,7 +437,7 @@
             }).then((result) => {
               /* Read more about handling dismissals below */
               if (result.dismiss === Swal.DismissReason.timer) {
-                
+
                 window.location.href = data.redirectUrl;
               }
             });
@@ -388,7 +457,7 @@
             });
             Toast.fire({
               icon: "success",
-              title: `new ${type} offer added`
+              title: `${type} offer ${action}ed`
             });
             setTimeout(() => {
               window.location.reload()
@@ -419,75 +488,76 @@
       }).then((result) => {
         if (result.isConfirmed) {
           fetch(`/admin/offers/${ID}`, {
-        method: "DELETE",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ type })
-      })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.validationError) {
-            let timerInterval;
-            Swal.fire({
-              title: "Validation Error",
-              html: "You will be redirected to login in <b></b> milliseconds.",
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-                timerInterval = setInterval(() => {
-                  timer.textContent = `${Swal.getTimerLeft()}`;
-                }, 100);
-              },
-              willClose: () => {
-                clearInterval(timerInterval);
-              }
-            }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                
-                window.location.href = data.redirectUrl;
-              }
-            });
-          }
+            method: "DELETE",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          })
+            .then(res => res.json())
+            .then((data) => {
+              if (data.validationError) {
+                let timerInterval;
+                Swal.fire({
+                  title: "Validation Error",
+                  html: "You will be redirected to login in <b></b> milliseconds.",
+                  timer: 2000,
+                  timerProgressBar: true,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                      timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                  },
+                  willClose: () => {
+                    clearInterval(timerInterval);
+                  }
+                }).then((result) => {
+                  /* Read more about handling dismissals below */
+                  if (result.dismiss === Swal.DismissReason.timer) {
 
-          if (data.success) {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
+                    window.location.href = data.redirectUrl;
+                  }
+                });
               }
-            });
-            Toast.fire({
-              icon: "success",
-              title: `${type} offer removed`
-            });
-            setTimeout(() => {
-              window.location.reload()
-            }, 2000)
 
-          }
+              if (data.success) {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 2000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                  }
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: `${type} offer removed`
+                });
+                setTimeout(() => {
+                  window.location.reload()
+                }, 2000)
 
-          if (data.error) {
-            Swal.fire({
-              icon: "error",
-              title: "Validation Error",
-              text: data.error,
-            });
-          }
-        })
+              }
+
+              if (data.error) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Validation Error",
+                  text: data.error,
+                });
+              }
+            })
         }
       });
 
-      
+
     }
+
 
   </script>
 

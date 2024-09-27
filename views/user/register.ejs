@@ -15,27 +15,23 @@
                         Signup with Google
                     </a>
                 </div>
-                <p id="error-message" class="fs=15 bg-white text-danger error"></p>
                 <form action="/user/register" id="registerForm" method="post">
 
                     <div class="w-full m-t-20">
                         <label for="username" class="clblack f-w-600">Enter your Name</label>
                         <input class="input_box p-l-15" type="text" id="username" name="username" placeholder="Joe">
-                        <p id="usernameError" class="fs=15 bg-white text-danger"></p>
                     </div>
 
                     <div class="w-full m-t-20">
                         <label for="email" class="clblack f-w-600">Email Address</label>
                         <input class="input_box p-l-15" type="email" id="email" name="email"
                             placeholder="abc@gmail.com">
-                        <p id="emailError" class="fs=15 bg-white text-danger"></p>
                     </div>
 
                     <div class="w-full m-t-20">
                         <label for="phoneNumber" class="clblack f-w-600">Phone Number</label>
                         <input class="input_box p-l-15" type="tel" id="phoneNumber" name="phoneNumber"
                             placeholder="89809834">
-                        <p id="phoneNumberError" class="fs=15 bg-white text-danger"></p>
                     </div>
 
                     <div class="w-full m-t-20 password-container">
@@ -45,7 +41,6 @@
                         <button type="button" id="togglePassword" class="m-t-10">
                             <i class="fas fa-eye fs-20"></i>
                         </button>
-                        <p id="passwordError" class="fs=15 bg-white text-danger"></p>
                     </div>
 
 
@@ -53,7 +48,6 @@
                         <label for="confirmPassword" class="clblack f-w-600">Confirm Password</label>
                         <input class="input_box p-l-15" type="password" id="confirmPassword" name="confirmPassword"
                             placeholder="********">
-                        <p id="confirmPasswordError" class="fs=15 bg-white text-danger"></p>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-full m-t-20 submit_btn_1" id="submit-btn">
@@ -66,7 +60,8 @@
         </div>
 
 
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/public/JS/validation.js"></script>
 
 
         <script>
@@ -86,9 +81,7 @@
         <script>
             document.getElementById('registerForm').addEventListener('submit', function (event) {
                 event.preventDefault();
-                clearErrors();
 
-                const submitButton = document.getElementById('submit-btn')
                 // submitButton.disabled = true;
 
                 const username = document.getElementById('username').value;
@@ -97,88 +90,47 @@
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
 
-                submitButton.disabled = false;
-                let isValid = true;
+                const error = validate(username, email, phoneNumber, password, confirmPassword)
 
-                if (!validateUsername(username)) {
-                    displayError('usernameError', 'Invalid Username');
-                    isValid = false;
+                if (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Validation Error",
+                        text: error,
+                    });
+                    return
                 }
 
-                if (!validateEmail(email)) {
-                    displayError('emailError', 'Invalid email format');
-                    isValid = false;
-                }
-
-                if (!validatePhoneNumber(phoneNumber)) {
-                    displayError('phoneNumberError', 'Invalid Phone Number format');
-                    isValid = false;
-                }
-
-                if (!validatePassword(password)) {
-                    displayError('passwordError', 'Invalid Password');
-                    isValid = false;
-                }
-
-                if (password !== confirmPassword) {
-                    displayError('confirmPasswordError', 'Passwords do not match');
-                    isValid = false;
-                }
-
-                if (isValid) {
-                    submitButton.disabled = true;
-                    fetch('/user/register', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ username, email, phoneNumber, password, confirmPassword })
+                fetch('/user/register', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, email, phoneNumber, password, confirmPassword })
+                })
+                    .then(res =>  res.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = data.successRedirect;
+                        } 
+                        if (data.error) {
+                            
+                            Swal.fire({
+                                icon: "error",
+                                title: "Validation Error",
+                                text: data.error,
+                            });
+                            return
+                        }
                     })
-                        .then(res => {
-                            return res.json();
-                        })
-                        .then(data => {
-                            submitButton.disabled = false;
-                            if (data.redirectUrl) {
-                                window.location.href = data.redirectUrl;
-                            }
-                            document.getElementById('error-message').innerText = data.error;
-                        })
-                        .catch(err => {
-                            console.error('An error occurred:', err);
-                            document.getElementById('error-message').innerText = 'Some error occurred';
-                        });
-                }
             });
 
-            function validateUsername(username) {
-                const usernameRegex = /^[A-Za-z]+$/;
-                return usernameRegex.test(username);
-            }
 
-            function validateEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-
-            function validatePhoneNumber(phoneNumber) {
-                const phoneNumberRegex = /^\d{10}$/;
-                return phoneNumberRegex.test(phoneNumber);
-            }
-
-            function validatePassword(password) {
-                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-                return passwordRegex.test(password) && !password.includes(' ');
-            }
-
-            function displayError(elementId, message) {
-
-                document.getElementById(elementId).innerText = message;
-            }
-
-            function clearErrors() {
-                const errors = document.querySelectorAll('.error');
-                errors.forEach(error => error.innerText = '');
+            function validate(username, email, phoneNumber, password, confirmPassword) {
+                return checkValidText(username, 'username', 3, 10, false, false, false) ||
+                    checkValidEmail(email) ||
+                    checkValidPhoneNumber(phoneNumber.toString()) ||
+                    checkValidPassword(password, confirmPassword)
             }
 
         </script>

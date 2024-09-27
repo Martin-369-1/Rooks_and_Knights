@@ -166,7 +166,11 @@
 																</span>
 																<br>
 																<span class="stext-105 cl3">
-																	₹<%= product.price %>
+																	<% if(product.offer || product.categoryID.offer || product.subCategoryID.offer) {%>
+																		<span style="text-decoration: line-through">₹<%= product.price %></span> ₹<%=parseInt( product.price- product.price * Math.max(product.offer,product.categoryID.offer,product.subCategoryID.offer)/100 )%>
+																	<% }else{ %>
+																		₹<%= product.price %>
+																	<% } %>
 																</span>
 
 								</div>

@@ -55,7 +55,7 @@
                             <div class="card-body text-center">
                                 <i class="fa fa-shopping-cart fa-2x mb-2"></i>
                                 <h4>Total Sales</h4>
-                                <p class="lead"><%= orderList.reduce((acc,curr)=> acc+curr.products.length,0) %></p>
+                                <p class="lead"><%= salesList.length %></p>
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                             <div class="card-body text-center">
                                 <i class="fa fa-money-bill fa-2x mb-2"></i>
                                 <h4>Total Order Amount</h4>
-                                <p class="lead">₹<%= parseInt(orderList.reduce((acc, curr) => acc + Number(curr.totalAmmount), 0)).toLocaleString() %></p>
+                                <p class="lead">₹<%= parseInt(salesList.reduce((acc, curr) => acc + Number(curr.products.amountPaid), 0)).toLocaleString() %></p>
 
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                             <div class="card-body text-center">
                                 <i class="fa fa-tags fa-2x mb-2"></i>
                                 <h4>Total Discount</h4>
-                                <p class="lead">₹<%= parseInt(orderList.reduce((acc, curr) => acc + Number(curr.discount), 0)).toLocaleString() %></p>
+                                <p class="lead">₹<%= parseInt(salesList.reduce((acc, curr) => acc + Number(curr.products.discount), 0)).toLocaleString() %></p>
                             </div>
                         </div>
                     </div>

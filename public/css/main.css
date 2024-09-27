@@ -3871,14 +3871,16 @@ input.num-product::-webkit-inner-spin-button {
 
 .login_body {
   background-image: url('../images/loginbg.jpg');
-  background-size: cover;
-  /* Ensure the image covers the entire area */
+  background-size: cover; /* Ensure the image covers the entire area */
   background-repeat: no-repeat;
-  background-position: 50%;
+  background-position: center; /* This centers the image */
   height: 100vh;
+  min-height: 100vh; /* Ensure it covers the full viewport height */
   padding: 30px !important;
 
-
+  display: flex; /* Make sure it's a flex container */
+  align-items: center; /* Centers the content vertically */
+  justify-content: center; /* Centers the content horizontally */
 }
 
 .error_body {

@@ -47,7 +47,7 @@
                                         </td>
 
                                         <td class="column-4 text-center ">
-                                            <% if(cartItem.productID.isDeleted){%>
+                                            <% if(!cartItem.productID.isListed){%>
                                                 <p>Proudct unavaliable</p>
                                                 <% } else if(cartItem.quantity<=cartItem.productID.stock) {%>
 
@@ -138,22 +138,10 @@
                         </div>
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Offer: <span id="OfferAmount">
-                                    <% let offer=0 %>
-                                        <% cart.cartItems.forEach((product)=> { %>
-                                            <% if (product.productID.offer) { %>
-                                                <% offer +=parseInt((product.productID.price * product.productID.offer /
-                                                    100)*product.quantity) %>
-                                                    <% } else if (product.categoryID && product.categoryID.offer) { %>
-                                                        <% offer +=parseInt((product.productID.price
-                                                            *product.categoryID.offer / 100)*product.quantity); %>
-                                                            <% } else if (product.subCategoryID &&
-                                                                product.subCategoryID.offer) { %>
-                                                                <% offer +=parseInt((product.productID.price *
-                                                                    product.subCategoryID.offer /100)*product.quantity);
-                                                                    %>
-                                                                    <% } %>
-                                                                        <% }) %>
-                                                                            <%= offer %>
+                                         <% let offer= cart.cartItems.reduce((acc,product)=>{ %>
+                                            <%  return acc+parseInt((product.productID.price * Math.max(product.productID.offer,product.categoryID.offer,product.subCategoryID.offer) /100)*product.quantity) %>
+                                        <%},0) %>
+                                        <%= offer %>
 
                                 </span></p>
 
@@ -355,6 +343,17 @@
                     let pinCode = document.getElementById('pinCode').value;
                     let streetAddress = document.getElementById('streetAddress').value;
 
+                    const error = ValidateAddress(addressTitle, state, city, pinCode, streetAddress);
+
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
+
                     fetch('/address/add', {
                         method: "POST",
                         headers: {
@@ -394,6 +393,17 @@
                     let city = document.getElementById('cityEdit').value;
                     let pinCode = document.getElementById('pinCodeEdit').value;
                     let streetAddress = document.getElementById('streetAddressEdit').value;
+
+                    const error = ValidateAddress(addressTitle, state, city, pinCode, streetAddress);
+
+                    if (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validation Error",
+                            text: error,
+                        });
+                        return
+                    }
 
                     fetch(`/address/edit/${_id}`, {
                         method: "PUT",
@@ -535,7 +545,7 @@
                     event.preventDefault()
                     const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
 
-                    if (!selectedAddress) {
+                    if (!selectedAddress ) {
                         Swal.fire({
                             title: "Address not selected ",
                             icon: "error",
@@ -571,7 +581,7 @@
                             });
                         }
 
-                        if (cartItem.productID.isDeleted) {
+                        if (!cartItem.productID.isListed) {
                             unavaliableProduct = true
                             Swal.fire({
                                 title: "Cannot Proceed to payment",
@@ -691,7 +701,7 @@
 
 
                 function addCouponDiscount() {
-                    const basePrice = document.getElementById('basePrice').value
+                    const basePrice = document.getElementById('basePrice').textContent
                     const couponCode = document.getElementById('couponCodeInput').value
                     const totalAmount = document.getElementById('totalAmount');
                     const couponDiscountAmount = document.getElementById('couponDiscountAmount');
@@ -703,7 +713,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ basePrice, couponCode })
+                        body: JSON.stringify({ totalAmount:totalAmount.textContent, couponCode })
                     })
                         .then((res) => res.json())
                         .then((data) => {
@@ -761,6 +771,14 @@
                     totalAmount.innerText=parseInt(totalAmount.textContent) + parseInt(couponDiscount);
                     couponDiscountAmount.innerText=couponDiscountAmount.textContent - couponDiscount;
                     discountAmount.innerText=discountAmount.textContent - couponDiscount;
+                }
+
+                function ValidateAddress(addressTitle, state, city, pinCode, streetAddress) {
+                    return  checkValidText(addressTitle, 'Address Title', 3, 20, true, true, false) ||
+                        checkValidText(state, 'State', 3, 25, true, false, false) ||
+                        checkValidText(city, 'City', 3, 25, true, false, false) ||
+                        checkPincode(pinCode) ||
+                        checkValidText(streetAddress, 'Street Address', 10, 100, true, true, true)
                 }
 
 

@@ -8,10 +8,27 @@ const orderSchema = Schema({
         required: true,
         ref: 'users'
     },
-    addressId: {
-        type: Schema.Types.ObjectId,
-        ref: 'address',
-        required: true
+    address: {
+        addressTitle: {
+            type: String,
+            required: true
+        },
+        state: {
+            type: String,
+            required: true
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        pinCode: {
+            type: String,
+            required: true
+        },
+        streetAddress: {
+            type: String,
+            reqired: true
+        }
     },
     basePrice: {
         type: Number,

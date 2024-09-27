@@ -7,9 +7,9 @@ const subCategoryCollection=require('../models/subCategoryModel');
 exports.displayOffers=async(search)=>{
     try{
         
-        const productList=await productCollection.find( {isDeleted:false , productName:{$regex: new RegExp(search, 'i')}})
-        const categoryList=await categoryCollection.find( {isDeleted:false , categoryName:{$regex: new RegExp(search, 'i')}})
-        const subCategoryList=await subCategoryCollection.find( {isDeleted:false , subCategoryName:{$regex: new RegExp(search, 'i')}});
+        const productList=await productCollection.find( {isListed:true , productName:{$regex: new RegExp(search, 'i')}})
+        const categoryList=await categoryCollection.find( {isListed:true , categoryName:{$regex: new RegExp(search, 'i')}})
+        const subCategoryList=await subCategoryCollection.find( {isListed:true , subCategoryName:{$regex: new RegExp(search, 'i')}});
         
         return {productList,categoryList,subCategoryList}
     }catch(err){
@@ -38,7 +38,7 @@ exports.deleteOffer=async(type,ID)=>{
         if(type == 'product'){
             await productCollection.updateOne({_id:ID},{offer:0})
         }else if(type == 'category'){
-            await productCollection.updateMany({categoryID:ID},{offer:0})
+            await categoryCollection.updateOne({_id:ID},{offer:0})
         }else if(type == 'subCategory'){
             await subCategoryCollection.updateOne({_id:ID},{offer:0})
         }

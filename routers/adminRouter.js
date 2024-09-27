@@ -47,21 +47,21 @@ router.get('/products/addProduct', adminController.getAddProduct); //display pag
 router.post('/products/addProduct', upload, adminController.postAddProduct); //add a new product
 router.get('/products/viewEditProduct/:id', adminController.getViewEditProduct); //view specif product
 router.post('/products/viewEditProduct/:id', upload, adminController.putViewEditProduct);//edit a product
-router.delete('/products/deleteProduct/:id', adminController.deleteProduct); //delete a product
+router.patch('/products/:id', adminController.patchListUnlistProduct); //delete a product
 
 
 //Categories
 router.get('/categories', adminController.getCategories); //display categories
 router.post('/categories', adminController.addCategory); //add new category
 router.put('/categories/:id', adminController.putEditCategory) //edit a category
-router.delete('/categories/:id', adminController.deleteCategory); //delete a category
+router.patch('/categories/:id', adminController.patchListUnlistCategory); //delete a category
 
 
 //subCategories
 router.get('/subCategories', adminController.getSubCategory) //display sub categories
 router.post('/subCategories', adminController.addSubCategory); //add new sub category
 router.put('/subCategories/:id', adminController.putEditSubCategory) //edit a sub category
-router.delete('/subCategories/:id', adminController.deleteSubCategory); //delet a sub category
+router.patch('/subCategories/:id', adminController.patchListUnlistSubCategory); //delet a sub category
 
 
 //orders

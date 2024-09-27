@@ -92,8 +92,8 @@ function addProductValidation(event, imageValidation) {
             flag = false;
             return;
         }
-        if (offers < 0) {
-            offersError.innerText = "Offer should not be negative";
+        if (offers < 0 || offers>100) {
+            offersError.innerText = "Offer should be between 0 to 100";
             flag = false;
             return;
         }

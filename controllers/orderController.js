@@ -25,6 +25,7 @@ exports.getCheckout = async (req, res) => {
     try {
         let address = await addressService.viewAddress(req.userID)
         let cart = await cartService.viewCart(req.userID)
+        
         res.render('checkout', { address, cart })
 
     } catch (err) {
@@ -66,7 +67,7 @@ exports.postCheckout = async (req, res) => {
         
         const order = await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount,discount,taxAmmount, req.userID)
         await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
-
+        
         const options = {
             amount: order.totalAmmount * 100,
             currency: "INR",
@@ -161,9 +162,9 @@ exports.completePayment = async (req, res) => {
 //apply coupon
 exports.postAddCouponDiscount=async(req,res)=>{
     try{
-        const {basePrice,couponCode}=req.body;
+        const {totalAmount,couponCode}=req.body;
         
-        const coupon=await couponService.addCouponDiscount(basePrice,couponCode)
+        const coupon=await couponService.addCouponDiscount(totalAmount,couponCode)
         
         if(coupon.error){
             return res.status(400).json({ error:coupon.error})
@@ -182,11 +183,11 @@ exports.patchCancel = async (req, res) => {
     try {
         const { productID, productQuantity, amountPaid } = req.body;
         const orderProductsID = req.params.id;
-        const paymentMethod = await orderService.cancelOrders(orderProductsID, req.userID, productID, productQuantity)
-        await transationService.completeTransation(req.userID, amountPaid, 'refund')
+        const {paymentMethod,paymentStatus,additionlaCharge} = await orderService.cancelOrders(orderProductsID, req.userID, productID, productQuantity)
 
-        if (paymentMethod == "Razorpay" || paymentMethod == "Wallet") {
-            await walletService.addToWallet(req.userID, amountPaid)
+        if ((paymentMethod == "Razorpay" || paymentMethod == "Wallet") && paymentStatus=='completed') {
+            await transationService.completeTransation(req.userID, amountPaid + additionlaCharge, 'refund')
+            await walletService.addToWallet(req.userID, amountPaid + additionlaCharge)
         }
         res.json({ success: true })
 
@@ -216,8 +217,8 @@ exports.patchReturn = async (req, res) => {
 exports.invoiceDownload = async(req,res)=>{
     try{
         const orderID=req.params.id;
-        const {order,address}=await orderService.getOrder(orderID)
-        generateInvoice(req,res,order,address)
+        const {order}=await orderService.getOrder(orderID)
+        generateInvoice(req,res,order)
 
     }catch(err){
         console.log(err);

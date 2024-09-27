@@ -4,7 +4,7 @@ const productCollection = require('../models/productsModel')
 
 //get cateogy list
 exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
-    let findQuery = { isDeleted: false };
+    let findQuery = { };
 
     if (search) {
         findQuery.categoryName = {
@@ -12,9 +12,9 @@ exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
         }
     }
     try {
-        let totalNoOfList = await categoryCollection.countDocuments({ isDeleted: false })
+        let totalNoOfList = await categoryCollection.countDocuments()
         let categoryList = await categoryCollection.find(findQuery).skip(skipPages).limit(noOfList )
-
+        
         return { categoryList, currentPage, totalNoOfList };
     } catch (err) {
         console.log(err);
@@ -25,17 +25,18 @@ exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
 //add a category
 exports.addCategory = async (categoryName, categoryDescription) => {
     try {
-        let category = await categoryCollection.findOne({ categoryName });
+        let category = await categoryCollection.findOne({ categoryName:{ $regex: new RegExp(`^${categoryName}$`, "i") } });
 
         if (category) { //checks for the category exist aldready
+            return "category Aldready exists"
 
-            if (!category.isDeleted) { //checks the category is not deleted
-                return "category Aldready exists"
-            }
+            // if (!category.isListed) { //checks the category is not deleted
+            //     return "category Aldready exists"
+            // }
 
             //if category is deleted change deleted to flase
-            let oldCategory = await categoryCollection.findOneAndUpdate({ categoryName }, { $set: { isDeleted: false } })
-            return
+            // let oldCategory = await categoryCollection.findOneAndUpdate({ categoryName }, { $set: { isListed: false } })
+            // return
         }
 
         //category does not exist
@@ -68,13 +69,15 @@ exports.editCategory = async (categoryID, categoryName, categoryDescription) => 
 }
 
 //delete category
-exports.deleteCategory = async (categoryId) => {
+exports.listUnlistCategory = async (categoryId,list) => {
     try {
-        const productsExists = await productCollection.findOne({ categoryID: categoryId })
-        if (productsExists) {
-            return "Categories with products cannot delete"
-        }
-        await categoryCollection.updateOne({ _id: categoryId }, { isDeleted: true })
+        // const productsExists = await productCollection.findOne({ categoryID: categoryId })
+        // if (productsExists) {
+        //     return "Categories with products cannot delete"
+        // }
+        await categoryCollection.updateOne({ _id: categoryId },{ isListed: list } );
+        await productCollection.updateMany({categoryID:categoryId},{isListed:list});
+        
     } catch (err) {
 
     }

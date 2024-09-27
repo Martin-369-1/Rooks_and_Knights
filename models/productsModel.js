@@ -72,10 +72,10 @@ const ProductsSchema = new Schema({
         default: 0
     },
 
-    isDeleted: {
+    isListed: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
 
 }, { timestamps: true });

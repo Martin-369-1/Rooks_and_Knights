@@ -216,10 +216,11 @@ exports.putViewEditProduct = async (req, res) => {
 }
 
 //delete product
-exports.deleteProduct = async (req, res) => {
+exports.patchListUnlistProduct = async (req, res) => {
     try {
-        const userID = req.params.id;
-        await adminProductService.deleteProduct(userID);
+        const productID = req.params.id;
+        const {list}=req.body;
+        await adminProductService.listUnlistProduct(productID,list);
         res.json({ success: true })
 
 
@@ -300,10 +301,12 @@ exports.putEditCategory = async (req, res) => {
 }
 
 //delete specific category
-exports.deleteCategory = async (req, res) => {
+exports.patchListUnlistCategory = async (req, res) => {
     try {
         const categoryID = req.params.id;
-        const error = await adminCategoryService.deleteCategory(categoryID);
+        const {list}=req.body
+        
+        const error = await adminCategoryService.listUnlistCategory(categoryID,list);
 
         if (error) {
             return res.status(400).json({ error })
@@ -387,10 +390,11 @@ exports.putEditSubCategory = async (req, res) => {
 }
 
 //delete specific subcategory
-exports.deleteSubCategory = async (req, res) => {
+exports.patchListUnlistSubCategory = async (req, res) => {
     try {
         const subCategoryID = req.params.id;
-        const error = await adminSubCategoryService.deleteSubCategory(subCategoryID);
+        const {list} = req.body;
+        const error = await adminSubCategoryService.listUnlistSubCategory(subCategoryID,list);
         if (error) {
             return res.status(400).json({ error })
         }
@@ -425,9 +429,9 @@ exports.getOrders = async (req, res) => {
 exports.getViewEditOrder = async (req, res) => {
     try {
         const orderID = req.params.id;
-        const { order, address } = await adminOrderService.viewOrder(orderID);
+        const { order,} = await adminOrderService.viewOrder(orderID);
 
-        res.render('admin/viewEditOrder', { order, address });
+        res.render('admin/viewEditOrder', { order});
 
     } catch (err) {
         console.log(err);
@@ -539,6 +543,8 @@ exports.deleteOffer = async (req, res) => {
     try {
         const ID = req.params.id;
         const { type } = req.body;
+        console.log(ID,type);
+        
         await adminOfferService.deleteOffer(type, ID)
         res.status(200).json({ success: true })
     } catch (err) {

@@ -3,8 +3,10 @@ const cartCollection = require('../models/cartModel')
 const productCollection = require('../models/productsModel')
 
 //Add a new product to cart
-exports.addToCart = async (userID, productID, quantity,categoryID,subCategoryID) => {
+exports.addToCart = async (userID, productID, quantity,categoryID ,subCategoryID) => {
     try {
+        console.log(categoryID,subCategoryID);
+        
         const product = await productCollection.findById(productID)
         const cart = await cartCollection.findOne({ userID })
         
@@ -53,6 +55,7 @@ exports.addToCart = async (userID, productID, quantity,categoryID,subCategoryID)
 
             // If the product doesn't exist, add it to the cart
             cart.cartItems.push({ productID, quantity ,categoryID,subCategoryID });
+            
             cart.totalPrice += product.price * Number(quantity);
         }
         
@@ -86,7 +89,9 @@ exports.viewCart = async (userID) => {
 
             await newCart.save()
             return newCart;
+
         }
+        
         
         //if cart exist return cart
         return cart;

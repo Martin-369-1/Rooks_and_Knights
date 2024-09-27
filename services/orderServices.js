@@ -6,9 +6,11 @@ const subCategoryCollection=require('../models/subCategoryModel')
 
 exports.createOrder = async (products, addressId, paymentMethod, basePrice, totalAmmount,discount,taxAmmount, userID) => {
     try {
+        const address=await addressCollection.findOne({userID,'address._id':addressId})
+        
         const newOrder = new orderCollection({
             userID,
-            addressId,
+            address:address.address[0],
             products,
             paymentMethod,
             basePrice,
@@ -16,6 +18,7 @@ exports.createOrder = async (products, addressId, paymentMethod, basePrice, tota
             discount,
             taxAmmount
         })
+        
 
         for (const product of products) {
             const productDetails= await productCollection.findOneAndUpdate(
@@ -57,11 +60,8 @@ exports.viewOrders = async (userID) => {
 exports.getOrder=async(orderID)=>{
     try{
         const order=await orderCollection.findOne({_id:orderID}).populate('userID').populate('products.productID')
-
-        const address=(await addressCollection.findOne({'address._id':order.addressId})).address[0]
         
-        
-        return {order,address};
+        return {order,};
     }catch(err){
         console.log(err);  
     }
@@ -79,13 +79,14 @@ exports.cancelOrders = async (_id, userID, productID, productQuantity) => {
         await productCollection.updateOne({ _id: productID }, { $inc: { stock: productQuantity } })
         const allCanceled = order.products.every(product => product.status === 'canceled');
 
-
+        let additionlaCharge=0;
         if (allCanceled) {
             order.orderStatus = 'canceled'
+            additionlaCharge+=order.deliveryCharge;
             await order.save()
         }
 
-        return order.paymentMethod;
+        return {paymentMethod:order.paymentMethod , paymentStatus:order.paymentStatus,additionlaCharge};
 
     } catch (err) {
         console.log(err);

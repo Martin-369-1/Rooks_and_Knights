@@ -6,11 +6,11 @@ const orderCollection=require('../models/orderModel')
 module.exports.TopTenList=async()=>{
     try{
 
-        const topTenProductsList=await productsCollection.find({isDeleted:false}).sort({noOfOrders:-1}).limit(10)
+        const topTenProductsList=await productsCollection.find({isListed:true}).sort({noOfOrders:-1}).limit(10)
         
-        const topTenCategoryList=await categoryCollection.find({isDeleted:false}).sort({noOfOrders:-1}).limit(10)
+        const topTenCategoryList=await categoryCollection.find({isListed:true}).sort({noOfOrders:-1}).limit(10)
 
-        const topTenSubCategoryList=await subCategoryCollection.find({isDeleted:false}).sort({noOfOrders:-1}).limit(10)
+        const topTenSubCategoryList=await subCategoryCollection.find({isListed:true}).sort({noOfOrders:-1}).limit(10)
         
         return {topTenProductsList,topTenCategoryList,topTenSubCategoryList}
     }catch(err){

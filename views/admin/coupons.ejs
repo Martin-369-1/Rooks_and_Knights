@@ -14,7 +14,7 @@
                             <!-- Search Form -->
                             <form action="/admin/coupons" method="GET" class="search-input-group">
                                 <input type="text" id="search-input" name="search" class="form-control search-input"
-                                    placeholder="<%= searchFilter || " search"%>">
+                                placeholder="search" value="<%= searchFilter ? searchFilter:null %>">
                                 <a href="/admin/coupons?search=">
                                     <button type="button" class="btn-clear" id="clear-btn">
                                         <i class="fas fa-times"></i>

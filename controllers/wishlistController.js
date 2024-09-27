@@ -32,8 +32,8 @@ exports.addToWihslist = async (req, res) => {
 exports.deleteFromWishlist = async (req, res) => {
     try {
         
-        const productID = req.params.id;
-        await wishlistService.deleteFromWishlist(req.userID, productID)
+        const wishlistItemID = req.params.id;
+        await wishlistService.deleteFromWishlist(req.userID, wishlistItemID)
         res.json({ success: true ,successMessage:'product removed for wihslist'})
 
     } catch (err) {

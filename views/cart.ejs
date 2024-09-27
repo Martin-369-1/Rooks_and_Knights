@@ -47,7 +47,7 @@
 
 
                                         <td class="column-4">
-                                            <% if(cartItem.productID.isDeleted){%>
+                                            <% if(!cartItem.productID.isListed){%>
                                                 <p>Product unavaliable</p>
                                                 <% }else if(cartItem.productID.stock>0){%>
 
@@ -248,7 +248,9 @@
 
                         arr.push({
                             productID: cartItem.productID._id,
-                            quantity
+                            quantity,
+                            categoryID:cartItem.categoryID,
+                            subCategoryID:cartItem.subCategoryID
                         })
                         cartTotalPrice += cartItem.productID.price * quantity;
 

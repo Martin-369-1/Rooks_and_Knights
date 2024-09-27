@@ -17,9 +17,8 @@ exports.viewOrders = async (currentPage, noOfList, skipPages) => {
 exports.viewOrder = async (orderID) => {
     try {
         const order = await orderCollection.findById(orderID).populate('userID').populate('products.productID')
-        const address = (await addressCollection.findOne({ userID: order.userID._id, "address._id": order.addressId })).address[0];
 
-        return { order, address };
+        return { order };
     } catch (err) {
         console.log(err);
 

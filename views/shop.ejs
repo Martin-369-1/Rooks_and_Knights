@@ -56,9 +56,13 @@
 						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
 							<i class="zmdi zmdi-search"></i>
 						</button>
-						<form id="searchForm" action="/shop" method="get">
-							<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" id="searchInput" name="search"
+						<a href="/shop" class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+							<i class="fas fa-times"></i>
+						</a>
+						<form id="searchForm" action="/shop" method="get" class="w-full">
+							<input class="mtext-107 cl2 size-114 plh2 p-r-15 w-full" type="text" id="searchInput" name="search"
 								placeholder="Search..." autofocus>
+								
 						</form>
 					</div>
 				</div>
@@ -235,7 +239,11 @@
 																</span>
 																<br>
 																<span class="stext-105 cl3">
-																	₹<%= product.price %>
+																	<% if(product.offer || product.categoryID.offer || product.subCategoryID.offer) {%>
+																		<span style="text-decoration: line-through">₹<%= product.price %></span> ₹<%=parseInt( product.price- product.price * Math.max(product.offer,product.categoryID.offer,product.subCategoryID.offer)/100 )%>
+																	<% }else{ %>
+																		₹<%= product.price %>
+																	<% } %>
 																</span>
 
 								</div>
