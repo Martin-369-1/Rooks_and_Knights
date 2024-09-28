@@ -138,10 +138,12 @@
                         </div>
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Offer: <span id="OfferAmount">
-                                         <% let offer= cart.cartItems.reduce((acc,product)=>{ %>
-                                            <%  return acc+parseInt((product.productID.price * Math.max(product.productID.offer,product.categoryID.offer,product.subCategoryID.offer) /100)*product.quantity) %>
-                                        <%},0) %>
-                                        <%= offer %>
+                                    <% let offer=cart.cartItems.reduce((acc,product)=>{ %>
+                                        <% return acc+parseInt((product.productID.price *
+                                            Math.max(product.productID.offer,product.categoryID.offer,product.subCategoryID.offer)
+                                            /100)*product.quantity) %>
+                                            <%},0) %>
+                                                <%= offer %>
 
                                 </span></p>
 
@@ -545,7 +547,7 @@
                     event.preventDefault()
                     const selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
 
-                    if (!selectedAddress ) {
+                    if (!selectedAddress) {
                         Swal.fire({
                             title: "Address not selected ",
                             icon: "error",
@@ -592,14 +594,10 @@
                         const price = cartItem.productID.price * cartItem.quantity;
                         let discount = 0;
 
-                        if (cartItem.productID.offer) {
+                        if (cartItem.productID.offer || cartItem.categoryID.offer || cartItem.subCategoryID.offer) {
 
-                            discount = (cartItem.productID.price * cartItem.productID.offer / 100) * cartItem.quantity
+                            discount = (cartItem.productID.price * Math.max(cartItem.productID.offer, cartItem.categoryID.offer, cartItem.subCategoryID.offer) / 100) * cartItem.quantity
 
-                        } else if (cartItem.categoryID.offer) {
-                            discount = (cartItem.productID.price * cartItem.categoryID.offer / 100) * cartItem.quantity
-                        } else if (cartItem.subCategoryID.offer) {
-                            discount = (cartItem.productID.price * cartItem.subCategoryID.offer / 100) * cartItem.quantity
                         }
 
                         const couponDiscount = Number(document.getElementById('couponDiscountAmount').innerText)
@@ -684,6 +682,12 @@
                                     "callback_url": "/order/completePayment",
                                     "theme": {
                                         "color": "#454545"
+                                    },
+                                    "modal": {
+                                        "ondismiss": function () {
+                                            alert('payment Failed')
+                                            window.location.href = "/"; 
+                                        }
                                     }
                                 };
                                 var rzp1 = new Razorpay(options);
@@ -695,6 +699,8 @@
                                     window.location.href = '/'
                                 });
                                 rzp1.open();
+
+
                             }
                         })
                 }
@@ -713,12 +719,12 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ totalAmount:totalAmount.textContent, couponCode })
+                        body: JSON.stringify({ totalAmount: totalAmount.textContent, couponCode })
                     })
                         .then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
-                                if(document.getElementById(`coupon_${data.couponID}`)) return ;
+                                if (document.getElementById(`coupon_${data.couponID}`)) return;
 
 
                                 if (couponDiscountAmount.textContent > 0) {
@@ -735,8 +741,8 @@
                                         <button type="button" onclick="removeCoupon('${data.couponID}',${data.couponDiscount})"><i class="fa-solid fa-trash"></i></button>
                                     </li>
                                 `;
-                                
-                                if(!document.getElementById(`coupon_${data.couponID}`))
+
+                                if (!document.getElementById(`coupon_${data.couponID}`))
 
                                     couponList.insertAdjacentHTML('beforeend', newCouponListItem);
 
@@ -761,20 +767,20 @@
                         })
                 }
 
-                function removeCoupon(couponID,couponDiscount){
-                    
+                function removeCoupon(couponID, couponDiscount) {
+
                     document.getElementById(`coupon_${couponID}`).remove()
                     const totalAmount = document.getElementById('totalAmount');
                     const couponDiscountAmount = document.getElementById('couponDiscountAmount');
                     const discountAmount = document.getElementById('discountAmount');
 
-                    totalAmount.innerText=parseInt(totalAmount.textContent) + parseInt(couponDiscount);
-                    couponDiscountAmount.innerText=couponDiscountAmount.textContent - couponDiscount;
-                    discountAmount.innerText=discountAmount.textContent - couponDiscount;
+                    totalAmount.innerText = parseInt(totalAmount.textContent) + parseInt(couponDiscount);
+                    couponDiscountAmount.innerText = couponDiscountAmount.textContent - couponDiscount;
+                    discountAmount.innerText = discountAmount.textContent - couponDiscount;
                 }
 
                 function ValidateAddress(addressTitle, state, city, pinCode, streetAddress) {
-                    return  checkValidText(addressTitle, 'Address Title', 3, 20, true, true, false) ||
+                    return checkValidText(addressTitle, 'Address Title', 3, 20, true, true, false) ||
                         checkValidText(state, 'State', 3, 25, true, false, false) ||
                         checkValidText(city, 'City', 3, 25, true, false, false) ||
                         checkPincode(pinCode) ||

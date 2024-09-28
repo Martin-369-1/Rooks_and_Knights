@@ -4,7 +4,7 @@ const productCollection = require('../models/productsModel')
 
 //get cateogy list
 exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
-    let findQuery = { };
+    let findQuery = {};
 
     if (search) {
         findQuery.categoryName = {
@@ -13,8 +13,8 @@ exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
     }
     try {
         let totalNoOfList = await categoryCollection.countDocuments()
-        let categoryList = await categoryCollection.find(findQuery).skip(skipPages).limit(noOfList )
-        
+        let categoryList = await categoryCollection.find(findQuery).skip(skipPages).limit(noOfList)
+
         return { categoryList, currentPage, totalNoOfList };
     } catch (err) {
         console.log(err);
@@ -25,7 +25,7 @@ exports.categoryList = async (search, currentPage, noOfList, skipPages) => {
 //add a category
 exports.addCategory = async (categoryName, categoryDescription) => {
     try {
-        let category = await categoryCollection.findOne({ categoryName:{ $regex: new RegExp(`^${categoryName}$`, "i") } });
+        let category = await categoryCollection.findOne({ categoryName: { $regex: new RegExp(`^${categoryName}$`, "i") } });
 
         if (category) { //checks for the category exist aldready
             return "category Aldready exists"
@@ -69,15 +69,15 @@ exports.editCategory = async (categoryID, categoryName, categoryDescription) => 
 }
 
 //delete category
-exports.listUnlistCategory = async (categoryId,list) => {
+exports.listUnlistCategory = async (categoryId, list) => {
     try {
         // const productsExists = await productCollection.findOne({ categoryID: categoryId })
         // if (productsExists) {
         //     return "Categories with products cannot delete"
         // }
-        await categoryCollection.updateOne({ _id: categoryId },{ isListed: list } );
-        await productCollection.updateMany({categoryID:categoryId},{isListed:list});
-        
+        await categoryCollection.updateOne({ _id: categoryId }, { isListed: list });
+        await productCollection.updateMany({ categoryID: categoryId }, { isListed: list });
+
     } catch (err) {
 
     }

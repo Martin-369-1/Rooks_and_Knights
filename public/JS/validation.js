@@ -20,7 +20,7 @@ function checkValidText(text, type, minChar, maxChar, containSpace, containNumbe
         return `${type} should not contain any symbols`;
     }
 
-    return ''; 
+    return '';
 }
 
 
@@ -29,7 +29,7 @@ function checkValidNumber(number, type, min, max) {
         return `${type} should not be empty`;
     }
 
-    if (!/^\d+$/.test(number)) { 
+    if (!/^\d+$/.test(number)) {
         return `${type} should be a valid number`;
     }
 
@@ -71,42 +71,42 @@ function checkValidPassword(password, confirmPassword) {
 
 }
 
-function checkValidEmail(email){
-    if(!email){
+function checkValidEmail(email) {
+    if (!email) {
         return `email should not be empty`
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if(!emailRegex.test(email)){
-        return `Email is not valid` 
+
+    if (!emailRegex.test(email)) {
+        return `Email is not valid`
     }
 }
 
-function checkValidPhoneNumber(phoneNumber){
-    if(!phoneNumber || phoneNumber!=phoneNumber.trim()){
+function checkValidPhoneNumber(phoneNumber) {
+    if (!phoneNumber || phoneNumber != phoneNumber.trim()) {
         return `phonenumber should not be empty`
     }
 
-    if(phoneNumber.length != 10){
+    if (phoneNumber.length != 10) {
         return `phonenumber should contain 10 digits`
     }
 
-    if (!/^\d+$/.test(phoneNumber)) { 
+    if (!/^\d+$/.test(phoneNumber)) {
         return `Invalid phonenumber`;
     }
 }
 
-function checkPincode(pinCode){
-    if(!pinCode || pinCode != pinCode.trim()){
+function checkPincode(pinCode) {
+    if (!pinCode || pinCode != pinCode.trim()) {
         return `pinCode should not be empty`
     }
 
-    if(pinCode.length != 6){
+    if (pinCode.length != 6) {
         return `pin code should contain 10 digits`
     }
 
-    if (!/^\d+$/.test(pinCode)) { 
+    if (!/^\d+$/.test(pinCode)) {
         return `Invalid pin code`;
     }
 }

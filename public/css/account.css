@@ -103,7 +103,7 @@ body {
 }
 
 .profile-card,
-.address-card{
+.address-card {
   max-width: 400px;
 }
 
@@ -237,7 +237,8 @@ body {
 .order-section {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Space between cards */
+  gap: 20px;
+  /* Space between cards */
 }
 
 .order-card {
@@ -270,7 +271,8 @@ body {
 }
 
 .order-info {
-  margin-bottom: 20px; /* Added margin for spacing */
+  margin-bottom: 20px;
+  /* Added margin for spacing */
 }
 
 .order-info p {
@@ -308,17 +310,20 @@ body {
 
 /* Icons */
 .order-actions .view-icon i:before {
-  content: '\1F441'; /* Unicode for eye icon */
+  content: '\1F441';
+  /* Unicode for eye icon */
 }
 
 .order-actions .download-icon i:before {
-  content: '\1F4E5'; /* Unicode for download icon */
+  content: '\1F4E5';
+  /* Unicode for download icon */
 }
 
 @media screen and (max-width: 768px) {
   .order-header h3 {
     font-size: 16px;
   }
+
   .order-info p {
     font-size: 13px;
   }

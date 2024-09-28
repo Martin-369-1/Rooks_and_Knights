@@ -17,9 +17,9 @@ router.patch('/return/returnProduct/:id', userAuthMiddleware.validUser, orderCon
 router.post('/completePayment', userAuthMiddleware.checkUserAuthenticated, orderController.completePayment)
 
 //add coupon
-router.post('/addCoupon',userAuthMiddleware.validUser,orderController.postAddCouponDiscount)
+router.post('/addCoupon', userAuthMiddleware.validUser, orderController.postAddCouponDiscount)
 
 //download Invoice pdf
-router.get('/downloadInvoicePdf/:id',userAuthMiddleware.checkUserAuthenticated,orderController.invoiceDownload)
+router.get('/downloadInvoicePdf/:id', userAuthMiddleware.checkUserAuthenticated, orderController.invoiceDownload)
 
 module.exports = router;

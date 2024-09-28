@@ -3,13 +3,13 @@ const cartCollection = require('../models/cartModel')
 const productCollection = require('../models/productsModel')
 
 //Add a new product to cart
-exports.addToCart = async (userID, productID, quantity,categoryID ,subCategoryID) => {
+exports.addToCart = async (userID, productID, quantity, categoryID, subCategoryID) => {
     try {
-        console.log(categoryID,subCategoryID);
-        
+        console.log(categoryID, subCategoryID);
+
         const product = await productCollection.findById(productID)
         const cart = await cartCollection.findOne({ userID })
-        
+
         if (!cart) {
             //if cart doesnot exist create a new cart
             const newCart = new cartCollection({
@@ -24,7 +24,7 @@ exports.addToCart = async (userID, productID, quantity,categoryID ,subCategoryID
                 ],
                 totalPrice: product.price * quantity
             })
-            
+
             return await newCart.save()
         }
 
@@ -40,7 +40,7 @@ exports.addToCart = async (userID, productID, quantity,categoryID ,subCategoryID
                 // If the product exists, update its quantity
                 cart.cartItems[cartItemIndex].quantity += Number(quantity);
                 cart.totalPrice += product.price * Number(quantity);
-                
+
 
             } else if (cart.cartItems[cartItemIndex].quantity + Number(quantity) > maxQuantity) {
                 //If the product reached max quantity then not added
@@ -54,11 +54,11 @@ exports.addToCart = async (userID, productID, quantity,categoryID ,subCategoryID
         } else {
 
             // If the product doesn't exist, add it to the cart
-            cart.cartItems.push({ productID, quantity ,categoryID,subCategoryID });
-            
+            cart.cartItems.push({ productID, quantity, categoryID, subCategoryID });
+
             cart.totalPrice += product.price * Number(quantity);
         }
-        
+
         return await cart.save();
     } catch (err) {
         console.log(err);
@@ -91,8 +91,8 @@ exports.viewCart = async (userID) => {
             return newCart;
 
         }
-        
-        
+
+
         //if cart exist return cart
         return cart;
 

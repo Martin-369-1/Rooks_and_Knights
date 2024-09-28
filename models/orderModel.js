@@ -51,18 +51,18 @@ const orderSchema = Schema({
         required: true
     },
     paymentStatus: {
-        type:String,
+        type: String,
         required: true,
         default: "pending"
     },
-    taxAmmount:{
-        type:Number,
-        required:true,
+    taxAmmount: {
+        type: Number,
+        required: true,
     },
-    deliveryCharge:{
-        type:Number,
-        required:true,
-        default:100
+    deliveryCharge: {
+        type: Number,
+        required: true,
+        default: 100
     },
     products: [
         {
@@ -93,14 +93,14 @@ const orderSchema = Schema({
                 type: Number,
                 required: true
             },
-            discount:{
-                type:Number,
-                required:true,
-                default:0
+            discount: {
+                type: Number,
+                required: true,
+                default: 0
             },
-            amountPaid:{
-                type:Number,
-                required:true,
+            amountPaid: {
+                type: Number,
+                required: true,
             }
 
         }

@@ -12,9 +12,9 @@ const subCategorySchema = new Schema({
     type: String,
     required: true
   },
-  noOfOrders:{
-    type:Number,
-    default:0
+  noOfOrders: {
+    type: Number,
+    default: 0
   },
 
   isListed: {
@@ -23,9 +23,9 @@ const subCategorySchema = new Schema({
     default: true
   },
 
-  offer:{
-    type:Number,
-    default:0
+  offer: {
+    type: Number,
+    default: 0
   }
 
 }, { timestamps: true });

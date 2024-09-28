@@ -81,6 +81,6 @@ app.get('/error', (req, res) => {
 })
 
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     res.status(404).render('404')
 })

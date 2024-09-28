@@ -1,7 +1,7 @@
 const productCollection = require('../models/productsModel');
 const categoryCollection = require('../models/CategoryModel');
 const subCategoryCollection = require('../models/subCategoryModel');
-const wishlistCollection=require('../models/wishlistModel')
+const wishlistCollection = require('../models/wishlistModel')
 
 exports.productList = async (categoryID, sortby, price, subCategoryID, search, currentPage, noOfProducts, skipPages) => {
     let findQuery = { isListed: true };
@@ -62,7 +62,7 @@ exports.productList = async (categoryID, sortby, price, subCategoryID, search, c
         let categoryList = await categoryCollection.find({ isListed: true })
         let subCategoryList = await subCategoryCollection.find({ isListed: true })
         let totalNoOfProducts = await productCollection.countDocuments({ isListed: true })
-        let productList = await productCollection.find(findQuery).populate('categoryID').populate('subCategoryID').collation({ locale: 'en', strength: 2 }).sort(sortQuery).skip(skipPages ).limit(noOfProducts );
+        let productList = await productCollection.find(findQuery).populate('categoryID').populate('subCategoryID').collation({ locale: 'en', strength: 2 }).sort(sortQuery).skip(skipPages).limit(noOfProducts);
         return { productList, categoryList, subCategoryList, totalNoOfProducts };
     } catch (err) {
         console.log(err);
@@ -71,7 +71,7 @@ exports.productList = async (categoryID, sortby, price, subCategoryID, search, c
 }
 
 
-exports.viewProduct = async (_id,userID) => {
+exports.viewProduct = async (_id, userID) => {
 
     try {
         const product = await productCollection.findById(_id)
@@ -87,8 +87,8 @@ exports.viewProduct = async (_id,userID) => {
             .exec();
 
         const relatedProducts = await productCollection.find({ isListed: true, categoryID: product.categoryID._id, _id: { $ne: product._id } })
-        
-        return { product, relatedProducts};
+
+        return { product, relatedProducts };
     } catch (err) {
         console.log(err);
 

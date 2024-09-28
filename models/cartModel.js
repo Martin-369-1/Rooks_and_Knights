@@ -17,15 +17,15 @@ const cartSchema = Schema({
             quantity: {
                 type: Number
             },
-            categoryID:{
+            categoryID: {
                 type: Schema.Types.ObjectId,
                 ref: 'categories',
-                required:true
+                required: true
             },
-            subCategoryID:{
+            subCategoryID: {
                 type: Schema.Types.ObjectId,
                 ref: 'subCategories',
-                required:true
+                required: true
             }
         }
     ],

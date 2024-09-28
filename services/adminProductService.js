@@ -10,7 +10,7 @@ const path = require('node:path')
 
 //get product list
 exports.productList = async (search, currentPage, noOfList, skipPages) => {
-    const findQuery = { };
+    const findQuery = {};
 
     if (search) {
         findQuery.productName = {
@@ -20,7 +20,7 @@ exports.productList = async (search, currentPage, noOfList, skipPages) => {
 
     try {
         const totalNoOfList = await productCollection.countDocuments()
-        const productList = await productCollection.find(findQuery).skip(skipPages).limit(noOfList )
+        const productList = await productCollection.find(findQuery).skip(skipPages).limit(noOfList)
             .populate('categoryID')
             .populate('subCategoryID')
             .lean();
@@ -128,7 +128,7 @@ exports.editProduct = async (req, res, productID) => {
 
         }
 
-        await productCollection.updateOne({ _id :productID }, {
+        await productCollection.updateOne({ _id: productID }, {
             productName,
             productAbout,
             productDescription,
@@ -149,9 +149,9 @@ exports.editProduct = async (req, res, productID) => {
 }
 
 //delete a product
-exports.listUnlistProduct = async (productID,list) => {
+exports.listUnlistProduct = async (productID, list) => {
     try {
-        await productCollection.updateOne({ _id: productID }, {isListed:list})
+        await productCollection.updateOne({ _id: productID }, { isListed: list })
 
     } catch (err) {
         console.log(err);
@@ -162,7 +162,7 @@ exports.listUnlistProduct = async (productID,list) => {
 exports.categories = async () => {
     try {
         const categories = await categoryCollection.find({ isListed: true });
-        
+
         return categories;
     } catch (err) {
         console.log(err);

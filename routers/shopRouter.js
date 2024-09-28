@@ -9,7 +9,7 @@ const shopController = require('../controllers/shopController')
 const userAuthMiddleware = require('../middlewares/userAuthMiddleware');
 
 router.get('/', shopController.getProductList)
-router.get('/product/:id',userAuthMiddleware.getUser ,shopController.getProduct);
+router.get('/product/:id', userAuthMiddleware.getUser, shopController.getProduct);
 router.post('/product/addReview/:id', userAuthMiddleware.checkUserAuthenticated, shopController.postReview);
 
 

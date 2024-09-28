@@ -158,8 +158,7 @@
                                 </div>
                                 <div class="order-actions">
                                     <button type="button" onclick="orderViewTable(event)" data-toggle="modal"
-                                        data-target=".bd-example-modal-lg"
-                                        data-order-item="<%= JSON.stringify(order) %>"><i
+                                        data-target="#orderModal" data-order-item="<%= JSON.stringify(order) %>"><i
                                             class="fa fa-eye"></i>View</button>
                                     <button onclick="downloadInvoice('<%= order._id %>')"><i
                                             class="fas fa-download"></i> Download Invoice </button>
@@ -265,36 +264,60 @@
     </div>
 
     <!-- order model -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true">
+
+
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <div class="card">
-                    <div class="card-header">
-                        Items Ordered
-                    </div>
-                    <div class="card-body">
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Name</th>
-                                        <th>Quantity</th>
-                                        <th>Ammount</th>
-                                        <th>Status</th>
-                                        <th></th>
-
-                                    </tr>
-                                </thead>
-                                <tbody id="orderTableBody">
-
-
-                                </tbody>
-
-                            </table>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Order Date:</strong> <span id="orderDate"></span></div>
+                            <div class="col-6"><strong>Number of Products:</strong> <span id="orderNoOfProducts"></span>
+                            </div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Base Price:</strong> ₹<span id="orderBasePrice"></span> </div>
+                            <div class="col-6"><strong>Discount Amount:</strong> ₹<span id="orderDiscountAmount"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Delivery Charge:</strong> ₹<span id="orderDeliveryCharge"></span></div>
+                            <div class="col-6"><strong>Tax Amount:</strong> ₹<span id="orderTaxAmount"></span></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Total Amount:</strong> ₹<span id="orderTotalAmount"></span></div>
+                            <div class="col-6"><strong>Payment Status:</strong> <span id="orderPaymentStatus"></span></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Order Status:</strong> <span id="orderStatus"></span> </div>
+                            <div class="col-6"><strong>Address:</strong> <span id="orderAddress"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="order-products">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product Image</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody">
+
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -319,14 +342,29 @@
                 function orderViewTable(e) {
                     const orderdata = e.target.closest('button');
 
-                    const { products } = JSON.parse(orderdata.getAttribute('data-order-item'));
-                    console.log(products);
+                    const order = JSON.parse(orderdata.getAttribute('data-order-item'));
+                    const products = order.products
+                    console.log(order.createdAt);
 
+
+                    document.getElementById('orderDate').innerText = order.createdAt.split('T')[0]
+                    document.getElementById('orderNoOfProducts').innerText = products.length
+                    document.getElementById('orderBasePrice').innerText = order.basePrice
+                    document.getElementById('orderDiscountAmount').innerText = order.discount
+                    document.getElementById('orderTotalAmount').innerText = order.totalAmmount
+                    document.getElementById('orderStatus').innerText = order.orderStatus
+                    document.getElementById('orderPaymentStatus').innerText = order.paymentStatus
+                    document.getElementById('orderAddress').innerText = `${order.address.addressTitle}:${order.address.state},${order.address.city},${order.address.pinCode},${order.address.streetAddress}`
+                    document.getElementById('orderDeliveryCharge').innerText = order.deliveryCharge
+                    document.getElementById('orderTaxAmount').innerText=order.taxAmmount
 
                     const tableBody = document.getElementById("orderTableBody");
 
                     // Clear existing rows in case this function is called multiple times
                     tableBody.innerHTML = "";
+                    console.log(order.totalAmmount);
+
+
 
                     // Loop through each order and create table rows
                     products.forEach(order => {
@@ -914,7 +952,7 @@
                 }
 
                 function ValidateAddress(addressTitle, state, city, pinCode, streetAddress) {
-                    return  checkValidText(addressTitle, 'Address Title', 3, 20, true, true, false) ||
+                    return checkValidText(addressTitle, 'Address Title', 3, 20, true, true, false) ||
                         checkValidText(state, 'State', 3, 25, true, false, false) ||
                         checkValidText(city, 'City', 3, 25, true, false, false) ||
                         checkPincode(pinCode) ||

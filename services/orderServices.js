@@ -2,15 +2,15 @@ const orderCollection = require('../models/orderModel');
 const productCollection = require('../models/productsModel');
 const addressCollection = require('../models/addressModel')
 const categoryCollection = require('../models/CategoryModel')
-const subCategoryCollection=require('../models/subCategoryModel')
+const subCategoryCollection = require('../models/subCategoryModel')
 
-exports.createOrder = async (products, addressId, paymentMethod, basePrice, totalAmmount,discount,taxAmmount, userID) => {
+exports.createOrder = async (products, addressId, paymentMethod, basePrice, totalAmmount, discount, taxAmmount, userID) => {
     try {
-        const address=await addressCollection.findOne({userID,'address._id':addressId})
-        
+        const address = await addressCollection.findOne({ userID, 'address._id': addressId })
+
         const newOrder = new orderCollection({
             userID,
-            address:address.address[0],
+            address: address.address[0],
             products,
             paymentMethod,
             basePrice,
@@ -18,17 +18,17 @@ exports.createOrder = async (products, addressId, paymentMethod, basePrice, tota
             discount,
             taxAmmount
         })
-        
+
 
         for (const product of products) {
-            const productDetails= await productCollection.findOneAndUpdate(
+            const productDetails = await productCollection.findOneAndUpdate(
                 { _id: product.productID },
                 { $inc: { stock: -product.quantity, noOfOrders: 1 } },
 
             );
 
-            await categoryCollection.updateOne({_id:productDetails.categoryID},{$inc:{noOfOrders:1}})
-            await subCategoryCollection.updateOne({_id:productDetails.subCategoryID},{$inc:{noOfOrders:1}})
+            await categoryCollection.updateOne({ _id: productDetails.categoryID }, { $inc: { noOfOrders: 1 } })
+            await subCategoryCollection.updateOne({ _id: productDetails.subCategoryID }, { $inc: { noOfOrders: 1 } })
         }
 
         await newOrder.save()
@@ -57,13 +57,13 @@ exports.viewOrders = async (userID) => {
     }
 }
 
-exports.getOrder=async(orderID)=>{
-    try{
-        const order=await orderCollection.findOne({_id:orderID}).populate('userID').populate('products.productID')
-        
-        return {order,};
-    }catch(err){
-        console.log(err);  
+exports.getOrder = async (orderID) => {
+    try {
+        const order = await orderCollection.findOne({ _id: orderID }).populate('userID').populate('products.productID')
+
+        return { order, };
+    } catch (err) {
+        console.log(err);
     }
 }
 
@@ -79,14 +79,14 @@ exports.cancelOrders = async (_id, userID, productID, productQuantity) => {
         await productCollection.updateOne({ _id: productID }, { $inc: { stock: productQuantity } })
         const allCanceled = order.products.every(product => product.status === 'canceled');
 
-        let additionlaCharge=0;
+        let additionlaCharge = 0;
         if (allCanceled) {
             order.orderStatus = 'canceled'
-            additionlaCharge+=order.deliveryCharge;
+            additionlaCharge += order.deliveryCharge;
             await order.save()
         }
 
-        return {paymentMethod:order.paymentMethod , paymentStatus:order.paymentStatus,additionlaCharge};
+        return { paymentMethod: order.paymentMethod, paymentStatus: order.paymentStatus, additionlaCharge };
 
     } catch (err) {
         console.log(err);

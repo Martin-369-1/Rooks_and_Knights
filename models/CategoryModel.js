@@ -19,9 +19,9 @@ const CategorySchema = new Schema({
     default: 0
   },
 
-  noOfOrders:{
-    type:Number,
-    default:0
+  noOfOrders: {
+    type: Number,
+    default: 0
   },
   isListed: {
     type: Boolean,

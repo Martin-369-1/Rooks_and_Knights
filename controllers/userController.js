@@ -73,12 +73,12 @@ exports.getRegister = (req, res) => {
 //POST Register
 exports.postRegister = async (req, res) => {
     try {
-        
+
         const { username, email, phoneNumber, password, confirmPassword } = req.body;
 
         const validationError = signupFormValidataion(username, email, password, confirmPassword);
 
-        if (validationError) {            
+        if (validationError) {
             return res.status(400).json({ error: validationError })
         }
 
@@ -90,7 +90,7 @@ exports.postRegister = async (req, res) => {
         }
         req.session.OTPVerificationRedirect = '/user/completeRegister';
         // Send success response with redirect URL
-        res.status(200).json({ success:true , successRedirect:result.redirectUrl });
+        res.status(200).json({ success: true, successRedirect: result.redirectUrl });
     } catch (err) {
         console.error('Registration error:', err);
         res.status(500).json({ error: 'Server error. Please try again later.' });
@@ -179,7 +179,7 @@ exports.getResetPassword = (req, res) => {
 
 //handle reset  password
 exports.postResetPassword = async (req, res) => {
-    
+
     const { password, confirmPassword } = req.body;
     if (!password || !confirmPassword) {
         return res.status(500).json({ error: 'Server error. Please try again later.' });
@@ -190,22 +190,22 @@ exports.postResetPassword = async (req, res) => {
     }
 
     try {
-        
+
         await resetPasswordServices.resetPassword(password, req.userID || req.session.userID)
 
         req.session.destroy((err) => {
             if (err) {
                 console.log(err);
-               return res.status(500).json({ error: 'Server error. Please try again later.' });
+                return res.status(500).json({ error: 'Server error. Please try again later.' });
             }
             res.clearCookie('token');
-        
-        res.status(200).json({success:true,successRedirect:'/user/login'})
-            
+
+            res.status(200).json({ success: true, successRedirect: '/user/login' })
+
         })
-        
+
     } catch (err) {
-        console.log( err);
+        console.log(err);
 
     }
 }

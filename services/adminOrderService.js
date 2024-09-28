@@ -6,7 +6,7 @@ const addressCollection = require('../models/addressModel')
 exports.viewOrders = async (currentPage, noOfList, skipPages) => {
     try {
         let totalNoOfList = await orderCollection.countDocuments()
-        let orders = await orderCollection.find().sort({ createdAt: -1 }).skip(skipPages ).limit(noOfList ).populate('userID')
+        let orders = await orderCollection.find().sort({ createdAt: -1 }).skip(skipPages).limit(noOfList).populate('userID')
         return { orders, currentPage, totalNoOfList };
     } catch (err) {
         console.log(err);
@@ -28,7 +28,7 @@ exports.viewOrder = async (orderID) => {
 //change the productOrderStauts
 exports.changeProductStatus = async (productOrderID, orderID, status) => {
     try {
-        
+
         let order = await orderCollection.findOneAndUpdate(
             { _id: orderID, 'products._id': productOrderID },
             { $set: { 'products.$.status': status } },

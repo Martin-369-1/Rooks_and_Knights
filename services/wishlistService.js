@@ -53,22 +53,22 @@ exports.addToWishlist = async (userID, productID) => {
 //delete a product form wishlist 
 exports.deleteFromWishlist = async (userID, wishlitItemID) => {
     try {
-        
+
         const updatedWishlist = await wishlistCollection.updateOne(
             { userID },
-            { $pull: { wishlistItems: { _id:wishlitItemID } } },
+            { $pull: { wishlistItems: { _id: wishlitItemID } } },
         );
-        
+
     } catch (err) {
         console.log(err);
     }
 }
 
-exports.productInWishlist=async(userID,productID)=>{
-    try{
-        const productInWishlist=await wishlistCollection.findOne({userID,'wishlistItems.productID':productID})
+exports.productInWishlist = async (userID, productID) => {
+    try {
+        const productInWishlist = await wishlistCollection.findOne({ userID, 'wishlistItems.productID': productID })
         return !!productInWishlist
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
 }

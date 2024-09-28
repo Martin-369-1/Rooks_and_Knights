@@ -86,7 +86,7 @@ module.exports.generateInvoice = (req, res, order) => {
 
 module.exports.generateSalesPdf = (req, res, salesList, reportType, startDate, endDate) => {
     const doc = new pdfkit();
-    
+
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=sales_report_${(reportType !== 'custom') ? reportType : startDate + '_' + endDate}.pdf`);
 

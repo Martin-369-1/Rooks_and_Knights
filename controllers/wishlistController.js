@@ -20,7 +20,7 @@ exports.addToWihslist = async (req, res) => {
         const productId = req.params.id;
         let error = await wishlistService.addToWishlist(req.userID, productId)
 
-        res.json({ success: true , successMessage:'product added to wishlist'})
+        res.json({ success: true, successMessage: 'product added to wishlist' })
 
     } catch (err) {
         console.log(err);
@@ -31,10 +31,10 @@ exports.addToWihslist = async (req, res) => {
 //delete a product form wishlist
 exports.deleteFromWishlist = async (req, res) => {
     try {
-        
+
         const wishlistItemID = req.params.id;
         await wishlistService.deleteFromWishlist(req.userID, wishlistItemID)
-        res.json({ success: true ,successMessage:'product removed for wihslist'})
+        res.json({ success: true, successMessage: 'product removed for wihslist' })
 
     } catch (err) {
         console.log(err);

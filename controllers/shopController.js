@@ -7,9 +7,9 @@ exports.getProductList = async (req, res) => {
     try {
         const { category, sortby, price, subCategory, search, page } = req.query;
         const currentPage = page || 1;
-        const noOfProducts= 8;
+        const noOfProducts = 8;
         const skipPages = (currentPage - 1) * noOfProducts
-        const { 
+        const {
             productList, categoryList, subCategoryList, totalNoOfProducts } = await shopServices.productList(category, sortby, price, subCategory, search, currentPage, noOfProducts, skipPages);
         const totalNoOfPages = Math.ceil(totalNoOfProducts / noOfProducts);
 

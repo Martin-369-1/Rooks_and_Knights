@@ -219,8 +219,8 @@ exports.putViewEditProduct = async (req, res) => {
 exports.patchListUnlistProduct = async (req, res) => {
     try {
         const productID = req.params.id;
-        const {list}=req.body;
-        await adminProductService.listUnlistProduct(productID,list);
+        const { list } = req.body;
+        await adminProductService.listUnlistProduct(productID, list);
         res.json({ success: true })
 
 
@@ -304,9 +304,9 @@ exports.putEditCategory = async (req, res) => {
 exports.patchListUnlistCategory = async (req, res) => {
     try {
         const categoryID = req.params.id;
-        const {list}=req.body
-        
-        const error = await adminCategoryService.listUnlistCategory(categoryID,list);
+        const { list } = req.body
+
+        const error = await adminCategoryService.listUnlistCategory(categoryID, list);
 
         if (error) {
             return res.status(400).json({ error })
@@ -393,8 +393,8 @@ exports.putEditSubCategory = async (req, res) => {
 exports.patchListUnlistSubCategory = async (req, res) => {
     try {
         const subCategoryID = req.params.id;
-        const {list} = req.body;
-        const error = await adminSubCategoryService.listUnlistSubCategory(subCategoryID,list);
+        const { list } = req.body;
+        const error = await adminSubCategoryService.listUnlistSubCategory(subCategoryID, list);
         if (error) {
             return res.status(400).json({ error })
         }
@@ -417,7 +417,7 @@ exports.getOrders = async (req, res) => {
         const skipPages = (currentPage - 1) * noOfList
         const { orders, totalNoOfList } = await adminOrderService.viewOrders(currentPage, noOfList, skipPages);
         const totalNoOfPages = Math.ceil(totalNoOfList / noOfList);
-        
+
         res.render('admin/orders', { orders, currentPage, totalNoOfPages })
     } catch (err) {
         console.log(err);
@@ -429,9 +429,9 @@ exports.getOrders = async (req, res) => {
 exports.getViewEditOrder = async (req, res) => {
     try {
         const orderID = req.params.id;
-        const { order,} = await adminOrderService.viewOrder(orderID);
+        const { order, } = await adminOrderService.viewOrder(orderID);
 
-        res.render('admin/viewEditOrder', { order});
+        res.render('admin/viewEditOrder', { order });
 
     } catch (err) {
         console.log(err);
@@ -543,8 +543,8 @@ exports.deleteOffer = async (req, res) => {
     try {
         const ID = req.params.id;
         const { type } = req.body;
-        console.log(ID,type);
-        
+        console.log(ID, type);
+
         await adminOfferService.deleteOffer(type, ID)
         res.status(200).json({ success: true })
     } catch (err) {

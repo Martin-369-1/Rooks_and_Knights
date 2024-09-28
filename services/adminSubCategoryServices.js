@@ -26,7 +26,7 @@ exports.subCategoryList = async (search, currentPage, noOfList, skipPages) => {
 //add sub category
 exports.addSubCategory = async (subCategoryName, subCategoryDescription) => {
     try {
-        let subCategory = await subCategoryCollection.findOne({ subCategoryName : { $regex: new RegExp(`^${subCategoryName}$`, "i") }});
+        let subCategory = await subCategoryCollection.findOne({ subCategoryName: { $regex: new RegExp(`^${subCategoryName}$`, "i") } });
 
         if (subCategory) { //checks subcategory exist
             return "subCategory Aldready exists"
@@ -64,7 +64,7 @@ exports.editSubCategory = async (subCategoryID, subCategoryName, subCategoryDesc
             return "subCategory already exists cannot edit"
         }
 
-        
+
         await subCategoryCollection.updateOne({ _id: subCategoryID }, { subCategoryName, subCategoryDescription })
     } catch (err) {
         console.log(err);
@@ -73,7 +73,7 @@ exports.editSubCategory = async (subCategoryID, subCategoryName, subCategoryDesc
 }
 
 //deleted subcategory
-exports.listUnlistSubCategory = async (subCategoryID,list) => {
+exports.listUnlistSubCategory = async (subCategoryID, list) => {
     try {
         // const productExist = await productCollection.findOne({ subCategoryID: subCategoryID })
 
@@ -81,7 +81,7 @@ exports.listUnlistSubCategory = async (subCategoryID,list) => {
         //     return "SubCategories with products cannot be deleted"
         // }
         await subCategoryCollection.updateOne({ _id: subCategoryID }, { isListed: list })
-        await productCollection.updateMany({_id:subCategoryID},{isListed:list})
+        await productCollection.updateMany({ _id: subCategoryID }, { isListed: list })
 
     } catch (err) {
 
