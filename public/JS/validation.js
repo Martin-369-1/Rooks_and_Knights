@@ -1,3 +1,5 @@
+
+
 function checkValidText(text, type, minChar, maxChar, containSpace, containNumbers, containSymbols) {
 
     if (text !== text.trim() || !text) {
@@ -20,7 +22,6 @@ function checkValidText(text, type, minChar, maxChar, containSpace, containNumbe
         return `${type} should not contain any symbols`;
     }
 
-    return '';
 }
 
 
@@ -28,6 +29,7 @@ function checkValidNumber(number, type, min, max) {
     if (!number) {
         return `${type} should not be empty`;
     }
+    console.log(number)
 
     if (!/^\d+$/.test(number)) {
         return `${type} should be a valid number`;
@@ -42,6 +44,7 @@ function checkValidNumber(number, type, min, max) {
     if (max && numValue > max) {
         return `${type} should be lesser than or equal to ${max}`;
     }
+
 
 }
 
@@ -63,11 +66,12 @@ function checkValidPassword(password, confirmPassword) {
         return `Password should be between 8 and 20 characters`;
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,20}$/;
 
-    if (!passwordRegex.test(password)) {
-        return `Password should contain at least one letter, one number, and one special character`;
-    }
+if (!passwordRegex.test(password)) {
+    return `Password should contain at least one letter, one number, one special character, and be between 8 to 20 characters long.`;
+}
+
 
 }
 

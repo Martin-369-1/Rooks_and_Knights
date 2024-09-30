@@ -138,8 +138,8 @@
                                   class="fas fa-pen"></i></button>
                             </td>
                             <td>
-                              <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"
-                                  onclick="deleteOffer('category','<%= category._id %>')"></i></button>
+                              <button class="btn btn-danger btn-sm" onclick="deleteOffer('category','<%= category._id %>')"><i class="fas fa-trash-alt"
+                                  ></i></button>
                             </td>
                           </tr>
                           <% } %>
@@ -189,8 +189,8 @@
                                   class="fas fa-pen"></i></button>
                             </td>
                             <td>
-                              <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"
-                                  onclick="deleteOffer('subCategory','<%= subCategory._id %>')"></i></button>
+                              <button class="btn btn-danger btn-sm" onclick="deleteOffer('subCategory','<%= subCategory._id %>')"><i class="fas fa-trash-alt"
+                                  ></i></button>
                             </td>
                           </tr>
                           <% } %>
@@ -369,15 +369,17 @@
       const editOfferDiv = document.getElementById('edit-offer-div')
       editButton = document.createElement('button')
 
-      if (!document.getElementById('editOfferButton')) {
-        var editButton = document.createElement('button');
+      if (document.getElementById('editOfferButton')) {
+        document.getElementById('editOfferButton').remove()
+      }
+
+      var editButton = document.createElement('button');
         editButton.textContent = "Edit";
         editButton.id = 'editOfferButton';
         editButton.onclick = () => editOffer(type, ID);
         editButton.classList.add('btn', 'btn-primary');
 
         editOfferDiv.appendChild(editButton);
-      }
 
     }
 
@@ -477,6 +479,8 @@
 
 
     function deleteOffer(type, ID) {
+      console.log(type,ID);
+      
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",

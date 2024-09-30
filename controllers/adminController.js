@@ -443,8 +443,8 @@ exports.getViewEditOrder = async (req, res) => {
 exports.patchChageProductStatus = async (req, res) => {
     try {
         const productOrderID = req.params.id;
-        const { orderID, status } = req.body;
-        await adminOrderService.changeProductStatus(productOrderID, orderID, status)
+        const { orderID, status ,productID ,quantity } = req.body;
+        await adminOrderService.changeProductStatus(productOrderID, orderID, status,productID,quantity)
 
         res.json({ success: true })
 
@@ -477,8 +477,8 @@ exports.getReturns = async (req, res) => {
 
 exports.patchAproveRejectReturn = async (req, res) => {
     try {
-        const { orderID, orderItemID, returnStatus, userID, amount, paymentMethod } = req.body;
-        await adminReturnService.aproveRejectReturn(orderID, orderItemID, returnStatus);
+        const { orderID, orderItemID, returnStatus, userID, amount, paymentMethod , productID , quantity} = req.body;
+        await adminReturnService.aproveRejectReturn(orderID, orderItemID, returnStatus , productID ,quantity);
 
         if (returnStatus == 'approved' && (paymentMethod == "Wallet" || paymentMethod == "Razorpay")) {
             await walletService.addToWallet(userID, amount)

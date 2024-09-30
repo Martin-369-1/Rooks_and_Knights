@@ -155,7 +155,7 @@
                                                     </div>
                                                 </td>
                                                 <td><button class="btn btn-success"
-                                                        onclick="updateProductStatus('<%= product._id %>','<%=order._id%>')">update</button>
+                                                        onclick="updateProductStatus('<%= product._id %>','<%=order._id%>','<%= product.productID._id %>','<%= product.quantity %>')">update</button>
                                                 </td>
                                                 <% }else{ %>
                                                     <td>
@@ -182,14 +182,14 @@
 
 
         <script>
-            function updateProductStatus(_id, orderID) {
+            function updateProductStatus(_id, orderID,productID,quantity) {
                 const status = document.getElementById(`product_status_${_id}`).value;
                 fetch(`/admin/orders/viewEditOrder/${_id}`, {
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ orderID, status })
+                    body: JSON.stringify({ orderID, status ,productID,quantity})
                 })
                     .then(res => res.json())
                     .then((data) => {

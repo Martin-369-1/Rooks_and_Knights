@@ -1,4 +1,5 @@
 const orderCollection = require('../models/orderModel')
+const productCollection = require('../models/productsModel')
 
 exports.returnsList = async (currentPage, noOfList, skipPages) => {
     try {
@@ -16,9 +17,15 @@ exports.returnsList = async (currentPage, noOfList, skipPages) => {
     }
 }
 
-exports.aproveRejectReturn = async (orderID, orderItemID, returnStatus) => {
+exports.aproveRejectReturn = async (orderID, orderItemID, returnStatus , productID , quantity) => {
     try {
         await orderCollection.updateOne({ _id: orderID, 'products._id': orderItemID }, { 'products.$.returnStatus': returnStatus })
+
+
+        if(returnStatus == 'approved'){
+            await productCollection.updateOne({_id:productID},{$inc:{stock:quantity}})
+        }
+        
 
     } catch (err) {
         console.log(err);

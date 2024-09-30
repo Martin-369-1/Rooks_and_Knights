@@ -51,12 +51,12 @@ exports.addToWishlist = async (userID, productID) => {
 }
 
 //delete a product form wishlist 
-exports.deleteFromWishlist = async (userID, wishlitItemID) => {
+exports.deleteFromWishlist = async (userID, productID) => {
     try {
 
         const updatedWishlist = await wishlistCollection.updateOne(
             { userID },
-            { $pull: { wishlistItems: { _id: wishlitItemID } } },
+            { $pull: { wishlistItems: { productID } } },
         );
 
     } catch (err) {

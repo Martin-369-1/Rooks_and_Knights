@@ -13,6 +13,7 @@
     </header>
 
     <div class="bg0 p-t-75 p-b-85">
+        <% if(cart.cartItems.length) {%>
         <div class="container">
             <div class="row">
 
@@ -131,6 +132,12 @@
                 </div>
             </div>
         </div>
+        <% }else{ %>
+            <div class="m-tb-116 text-center">
+                <p class="fs-31" style="color: rgba(0, 0, 0, 0.351);">Cart is Empty</p>
+                <a href="/shop">Continue shoping</a>
+            </div>
+        <% } %>
     </div>
 
 

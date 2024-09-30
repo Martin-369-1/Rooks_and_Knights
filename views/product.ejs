@@ -118,7 +118,7 @@
 											</div>
 
 											<input class="mtext-104 cl3 txt-center num-product" type="number"
-												name="quantity" value="1" id="productQuantity">
+												name="quantity" value="1" id="productQuantity" readonly>
 
 											<div class="btn-num-product btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
 												onclick="increaseProduct(this,'<%= product.stock %>')">
@@ -349,7 +349,7 @@
 
 		<%- include('./partials/scriptBody.ejs') %>
 
-
+			
 			<script>
 				//handle the quantity
 
@@ -387,7 +387,19 @@
 				//function ot add prouduct to cart
 				function addToCart(productID,categoryID,subCategoryID , event ) {
 					event.preventDefault();
+				
 					let quantity = document.getElementById('productQuantity').value;
+					
+					const error=checkValidNumber(quantity, "quantity", 1, 10)
+					
+					if(error){
+						Swal.fire({
+									title: "Error",
+									text: error,
+									icon: "error",
+								})
+						return
+					}
 					fetch(`/cart/addToCart/${productID}`, {
 						method: 'POST',
 						headers: {

@@ -1,3 +1,4 @@
+console.log("Main.css");
 
 (function ($) {
     "use strict";

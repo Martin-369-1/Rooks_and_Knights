@@ -3,10 +3,35 @@ const productCollection = require('../models/productsModel');
 const addressCollection = require('../models/addressModel')
 const categoryCollection = require('../models/CategoryModel')
 const subCategoryCollection = require('../models/subCategoryModel')
+const couponCollection = require('../models/couponModel')
 
-exports.createOrder = async (products, addressId, paymentMethod, basePrice, totalAmmount, discount, taxAmmount, userID) => {
+exports.createOrder = async (products, addressId, paymentMethod, couponCodes, userID) => {
     try {
         const address = await addressCollection.findOne({ userID, 'address._id': addressId })
+        const productIDs=products.map((product)=>product.productID)
+        const orderedProducts=await productCollection.find({_id:{$in:productIDs}}).populate('categoryID').populate('subCategoryID')
+
+        if(orderedProducts.some(product => product.isListed==false)){
+            return {error:"product does not exist"}
+        }
+
+        const coupons = await couponCollection.find({_id:{$in:couponCodes}})
+        
+        let discount=0;
+        let basePrice=0;
+        const couponDiscount=coupons.reduce((discount,coupon) => discount+coupon.discountAmount,0)
+        
+        for(let i=0;i<products.length;i++){
+            basePrice+=parseInt(orderedProducts[i].price * products[i].quantity)
+            discount+=parseInt(orderedProducts[i].price * Math.max(orderedProducts[i].offer , orderedProducts[i].subCategoryID.offer , orderedProducts[i].categoryID.offer)  * products[i].quantity /100) 
+            
+        }
+        console.log("coupon discount :",couponDiscount);
+        
+        discount+=couponDiscount
+
+        const totalAmmount=basePrice - discount +100;
+        const taxAmmount=parseInt(totalAmmount * 2/100) ;
 
         const newOrder = new orderCollection({
             userID,
@@ -32,7 +57,7 @@ exports.createOrder = async (products, addressId, paymentMethod, basePrice, tota
         }
 
         await newOrder.save()
-        return newOrder;
+        return {order:newOrder};
 
     } catch (err) {
         console.log(err);

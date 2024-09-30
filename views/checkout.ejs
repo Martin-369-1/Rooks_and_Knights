@@ -139,9 +139,9 @@
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Offer: <span id="OfferAmount">
                                     <% let offer=cart.cartItems.reduce((acc,product)=>{ %>
-                                        <% return acc+parseInt((product.productID.price *
-                                            Math.max(product.productID.offer,product.categoryID.offer,product.subCategoryID.offer)
-                                            /100)*product.quantity) %>
+                                        <% return acc+parseInt((product.productID.price
+                                            *Math.max(product.productID.offer,product.categoryID.offer,product.subCategoryID.offer)/100)*product.quantity)
+                                            %>
                                             <%},0) %>
                                                 <%= offer %>
 
@@ -336,6 +336,7 @@
         <%- include('./partials/scriptBody.ejs') %>
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <script>
+                let couponCodeIds = [];
                 function addNewAddress(event) {
                     event.preventDefault()
 
@@ -355,7 +356,6 @@
                         });
                         return
                     }
-
                     fetch('/address/add', {
                         method: "POST",
                         headers: {
@@ -368,15 +368,24 @@
                             if (data.success) {
                                 Swal.fire({
                                     title: "Added",
-                                    text: "New Address Added",
+                                    text: "New address has been added",
                                     icon: "success",
                                     timer: 2000
                                 });
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)
-                            }
-                            else if (data.authError) {
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Not added",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
+                                })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
                                 Swal.fire({
                                     icon: "error",
                                     title: "Oops...",
@@ -385,6 +394,7 @@
                                 });
                             }
                         })
+                        .catch(err => console.log(err))
                 }
 
                 function editAddress(event, _id) {
@@ -426,8 +436,17 @@
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)
-                            }
-                            else if (data.authError) {
+                            } else if (data.error) {
+                                Swal.fire({
+                                    title: "Not Edited",
+                                    text: data.error,
+                                    icon: "error",
+                                    timer: 2000
+                                })
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            } else if (data.authError) {
                                 Swal.fire({
                                     icon: "error",
                                     title: "Oops...",
@@ -436,6 +455,7 @@
                                 });
                             }
                         })
+                        .catch(err => console.log(err))
                 }
 
                 function removeAddress(event, ID) {
@@ -487,7 +507,9 @@
 
 
                 function editAddressModel(e, _id) {
-                    const addressdata = e.target;
+
+                    const addressdata = e.target.closest('button');
+
                     const { addressTitle, state, city, pinCode, streetAddress } = JSON.parse(addressdata.getAttribute('data-address-item'));
                     document.getElementById('addressTitleEdit').value = addressTitle;
                     document.getElementById('stateEdit').value = state;
@@ -596,11 +618,11 @@
 
                         if (cartItem.productID.offer || cartItem.categoryID.offer || cartItem.subCategoryID.offer) {
 
-                            discount = (cartItem.productID.price * Math.max(cartItem.productID.offer, cartItem.categoryID.offer, cartItem.subCategoryID.offer) / 100) * cartItem.quantity
+                            discount = parseInt((cartItem.productID.price * Math.max(cartItem.productID.offer, cartItem.categoryID.offer, cartItem.subCategoryID.offer) / 100) * cartItem.quantity)
 
                         }
 
-                        const couponDiscount = Number(document.getElementById('couponDiscountAmount').innerText)
+                        const couponDiscount = parseInt(document.getElementById('couponDiscountAmount').innerText)
 
                         discount += couponDiscount;
 
@@ -638,7 +660,7 @@
                         headers: {
                             'Content-type': 'application/json'
                         },
-                        body: JSON.stringify({ products, addressId, paymentMethod, basePrice, cartItemIds, totalAmmount, discount, taxAmmount })
+                        body: JSON.stringify({ products, addressId, paymentMethod, basePrice, cartItemIds, totalAmmount, discount, taxAmmount, couponCodeIds })
                     }).then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
@@ -686,7 +708,7 @@
                                     "modal": {
                                         "ondismiss": function () {
                                             alert('payment Failed')
-                                            window.location.href = "/"; 
+                                            window.location.href = "/";
                                         }
                                     }
                                 };
@@ -724,6 +746,7 @@
                         .then((res) => res.json())
                         .then((data) => {
                             if (data.success) {
+                                couponCodeIds.push(data.couponID)
                                 if (document.getElementById(`coupon_${data.couponID}`)) return;
 
 

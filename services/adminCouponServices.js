@@ -56,7 +56,7 @@ exports.deleteCoupon = async (couponID) => {
 exports.editCoupon = async (couponID, couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate) => {
     try {
         const coupon = await couponCollection.findOne({ $or: [{ couponName }, { couponCode }], _id: { $ne: couponID } })
-
+        
         if (coupon) {
             return "coupon code or name aldready exist"
         }

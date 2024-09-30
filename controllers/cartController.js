@@ -18,7 +18,6 @@ exports.addToCart = async (req, res) => {
     try {
         const productID = req.params.id;
         const { quantity, categoryID, subCategoryID } = req.body;
-        console.log(categoryID, subCategoryID);
 
         const userID = req.userID;
 

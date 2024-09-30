@@ -112,6 +112,8 @@
 
         </div>
 
+        <% const now = new Date(Date.now()) %>
+
         <div class="modal fade m-t-50" id="addCouponModel" tabindex="-2" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -142,7 +144,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="expiryDate" class="col-form-label">Expiry Date</label>
-                                <input type="date" class="form-control" id="expiryDate">
+                                <input type="date" class="form-control" id="expiryDate" min="<%= `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}` %>">
                             </div>
                         </form>
                     </div>
@@ -186,7 +188,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="expiryDateEdit" class="col-form-label">Expiry Date</label>
-                                <input type="date" class="form-control" id="expiryDateEdit">
+                                <input type="date" class="form-control" id="expiryDateEdit" min="<%= `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}` %>">
                             </div>
                         </form>
                     </div>
@@ -364,7 +366,8 @@
                 function editCouponModel(e, _id) {
 
                     const coupondata = e.target.closest('button');
-                    const { couponName, couponCode, discountAmount ,minimumOrderAmount,expiryDate } = JSON.parse(coupondata.getAttribute('data-coupon-item'));
+                    const { couponName, couponCode, discountAmount ,minimumOrderAmount,expiryDate ,ID} = JSON.parse(coupondata.getAttribute('data-coupon-item'));
+                    console.log(coupondata);
                     
                     document.getElementById('couponNameEdit').value = couponName;
                     document.getElementById('couponCodeEdit').value = couponCode;
@@ -382,7 +385,7 @@
                         var editButton = document.createElement('button');
                         editButton.textContent = "Edit";
                         editButton.id = 'editcouponButton';
-                        editButton.onclick = () => editCoupon(event, _id);
+                        editButton.onclick = () => editCoupon(event, (ID));
                         editButton.classList.add('btn', 'btn-primary');
 
                         editcouponDiv.appendChild(editButton);

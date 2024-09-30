@@ -38,12 +38,17 @@ exports.getCheckout = async (req, res) => {
 exports.postCheckout = async (req, res) => {
 
     try {
-        const { products, addressId, paymentMethod, basePrice, totalAmmount, cartItemIds, discount, taxAmmount } = req.body;
+        const { products, addressId, paymentMethod, basePrice, totalAmmount, cartItemIds, discount, taxAmmount , couponCodeIds } = req.body;
 
         //if cash on delivery
         if (paymentMethod == 'COD') {
+            const order = await orderService.createOrder(products, addressId, paymentMethod, couponCodeIds, req.userID)
+
+            if(order.error){
+                return res.status(400).json({error:order.error})
+            }
+
             await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
-            await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount, discount, taxAmmount, req.userID)
             return res.status(200).json({ success: true, successRedirect: '/' })
         }
 
@@ -55,8 +60,14 @@ exports.postCheckout = async (req, res) => {
                 return res.status(400).json({ error })
             }
 
+            
+            const order = await orderService.createOrder(products, addressId, paymentMethod, couponCodeIds, req.userID)
+
+            if(order.error){
+                return res.status(400).json({error:order.error})
+            }
+
             await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
-            const order = await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount, discount, taxAmmount, req.userID)
             await orderService.completePayment(order._id)
             await transationService.completeTransation(req.userID, totalAmmount, 'purchase', paymentMethod)
 
@@ -65,11 +76,16 @@ exports.postCheckout = async (req, res) => {
 
         //if razorpay
 
-        const order = await orderService.createOrder(products, addressId, paymentMethod, basePrice, totalAmmount, discount, taxAmmount, req.userID)
+        const order = await orderService.createOrder(products, addressId, paymentMethod, couponCodeIds, req.userID)
+
+        if(order.error){
+            return res.status(400).json({error:order.error})
+        }
+
         await cartService.deleteManyCartItem(cartItemIds, basePrice, req.userID)
 
         const options = {
-            amount: order.totalAmmount * 100,
+            amount: order.order.totalAmmount * 100,
             currency: "INR",
         }
 
@@ -78,7 +94,7 @@ exports.postCheckout = async (req, res) => {
                 console.log(err);
             }
 
-            req.session.order = order;
+            req.session.order = order.order;
             req.session.cartItemIds = cartItemIds;
             res.status(200).json({ razorpayOrder })
         })
@@ -169,6 +185,8 @@ exports.postAddCouponDiscount = async (req, res) => {
         if (coupon.error) {
             return res.status(400).json({ error: coupon.error })
         }
+
+        req.session.couponDiscount=(req.session.couponDiscount)? req.session.couponDiscount+coupon.discount:req.session.couponDiscount;
 
         return res.status(200).json({ success: true, couponDiscount: coupon.discount, couponID: coupon._id })
 

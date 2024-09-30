@@ -13,98 +13,106 @@
     </header>
 
     <div class="bg0 p-t-75 p-b-110 ">
+        <% if(wishlist.wishlistItems.length) {%>
         <div class="container">
             <div class="row">
+                
+                    <div class="col-lg-11 col-xl-8 m-lr-auto m-b-50">
+                        <div class="m-l-15 m-r--30 m-lr-0-xl">
+                            <div class="wrap-table-shopping-cart">
+                                <table class="table-shopping-cart">
+                                    <tr class="table_head">
+                                        <th class="column-1">Product</th>
+                                        <th class="column-2"></th>
+                                        <th class="column-3">Price</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
 
-                <div class="col-lg-11 col-xl-8 m-lr-auto m-b-50">
-                    <div class="m-l-15 m-r--30 m-lr-0-xl">
-                        <div class="wrap-table-shopping-cart">
-                            <table class="table-shopping-cart">
-                                <tr class="table_head">
-                                    <th class="column-1">Product</th>
-                                    <th class="column-2"></th>
-                                    <th class="column-3">Price</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
+                                    <% wishlist.wishlistItems.forEach((wishlistItem)=>{%>
 
-                                <% wishlist.wishlistItems.forEach((wishlistItem)=>{%>
-
-                                    <tr class="table_row" id="wishlistItemRow_<%= wishlistItem._id %> ">
-                                        <td class="column-1">
-                                            <a class="how-itemcart1 d-block"
-                                                href="/shop/product/<%= wishlistItem.productID._id %>">
-                                                <img src="<%= wishlistItem.productID.productImage1 %>" alt="IMG">
-                                            </a>
-                                        </td>
-                                        <td class="column-2">
-                                            <%= wishlistItem.productID.productName %>
-                                        </td>
-                                        <td class="column-3">
-                                            <%= wishlistItem.productID.price %>
-                                        </td>
+                                        <tr class="table_row" id="wishlistItemRow_<%= wishlistItem._id %> ">
+                                            <td class="column-1">
+                                                <a class="how-itemcart1 d-block"
+                                                    href="/shop/product/<%= wishlistItem.productID._id %>">
+                                                    <img src="<%= wishlistItem.productID.productImage1 %>" alt="IMG">
+                                                </a>
+                                            </td>
+                                            <td class="column-2">
+                                                <%= wishlistItem.productID.productName %>
+                                            </td>
+                                            <td class="column-3">
+                                                <%= wishlistItem.productID.price %>
+                                            </td>
 
 
-                                        <% if(wishlistItem.productID.stock>0){%>
-                                            <form action="/cart/addToCart/<%= wishlistItem.productID._id %>"
-                                                method="post" id="addToCartForm"
-                                                onsubmit="addToCart('<%= wishlistItem.productID._id %>','<%=wishlistItem.productID.categoryID%>','<%=wishlistItem.productID.subCategoryID%>',event)">
-                                                <td class="column-3">
-                                                    <div class="wrap-num-product flex-w  m-tb-10">
+                                            <% if(wishlistItem.productID.stock>0){%>
+                                                <form action="/cart/addToCart/<%= wishlistItem.productID._id %>"
+                                                    method="post" id="addToCartForm"
+                                                    onsubmit="addToCart('<%= wishlistItem.productID._id %>','<%=wishlistItem.productID.categoryID%>','<%=wishlistItem.productID.subCategoryID%>',event)">
+                                                    <td class="column-3">
+                                                        <div class="wrap-num-product flex-w  m-tb-10">
 
-                                                        <div class="btn-num-product-down btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
-                                                            onclick="decreaseProduct(this)">
-                                                            <i class="fs-16 zmdi zmdi-minus"></i>
+                                                            <div class="btn-num-product-down btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+                                                                onclick="decreaseProduct(this)">
+                                                                <i class="fs-16 zmdi zmdi-minus"></i>
+                                                            </div>
+
+                                                            <input class="mtext-104 cl3 txt-center num-product"
+                                                                type="number" name="quantity" value="1" id="productQuantity"
+                                                                disabled>
+
+                                                            <div class="btn-num-product btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+                                                                onclick="increaseProduct(this,'<%= wishlistItem.productID.stock %>')">
+                                                                <i class="fs-16 zmdi zmdi-plus"></i>
+                                                            </div>
                                                         </div>
+                                                    </td>
+                                                    <td class="column-3"> </td>
+                                                    <td class="column-3">
+                                                        <button type="submit">
+                                                            <i class="fa-solid fa-cart-shopping"></i>
 
-                                                        <input class="mtext-104 cl3 txt-center num-product"
-                                                            type="number" name="quantity" value="1" id="productQuantity"
-                                                            disabled>
-
-                                                        <div class="btn-num-product btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
-                                                            onclick="increaseProduct(this,'<%= wishlistItem.productID.stock %>')">
-                                                            <i class="fs-16 zmdi zmdi-plus"></i>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="column-3"> </td>
-                                                <td class="column-3">
-                                                    <button type="submit">
-                                                        <i class="fa-solid fa-cart-shopping"></i>
-
-                                                    </button>
-                                                </td>
-                                            </form>
-                                            <% }else{ %>
-                                                <td class="column-3">
-                                                    <p class="fs-20">Out Of Stock</p>
-                                                </td>
-                                                <td class="column-3"></td>
-                                                <td class="column-3"></td>
+                                                        </button>
+                                                    </td>
+                                                </form>
+                                                <% }else{ %>
+                                                    <td class="column-3">
+                                                        <p class="fs-20">Out Of Stock</p>
+                                                    </td>
+                                                    <td class="column-3"></td>
+                                                    <td class="column-3"></td>
                                                 <% } %>
 
 
                                                     <td class="column-2">
 
                                                         <button type="button"
-                                                            onclick="deleteWishlistItem('<%=wishlistItem._id%>',event)"><i
-                                                                class="fa-solid fa-trash"></i></button>
+                                                            onclick="deleteWishlistItem('<%=wishlistItem.productID._id%>',event)"><i class="fa-solid fa-trash"></i>
+                                                        </button>
 
                                                     </td>
-                                    </tr>
-                                    <% }); %>
+                                        </tr>
+                                        <% }); %>
 
 
-                            </table>
+                                </table>
+                            </div>
+
                         </div>
-
                     </div>
-                </div>
+                
 
 
 
             </div>
         </div>
+        <% }else{ %>
+            <div class="m-tb-104 text-center">
+                <p class="fs-31" style="color: rgba(0, 0, 0, 0.351);">Wishlist is Empty</p>
+                <a href="/shop">Continue shoping</a>
+            </div>
+        <% } %>
     </div>
 
 
@@ -223,7 +231,7 @@
                 //sending request to backend
 
                 //delete cart Item
-                function deleteWishlistItem(wishlistItemID, event) {
+                function deleteWishlistItem(productID, event) {
                     event.preventDefault()
                     Swal.fire({
                         title: "Are you sure?",
@@ -236,7 +244,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
 
-                            fetch(`/wishlist/${wishlistItemID}`, {
+                            fetch(`/wishlist/${productID}`, {
                                 method: "DELETE",
                                 headers: {
                                     'Content-Type': 'application/json'

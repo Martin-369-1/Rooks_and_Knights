@@ -1,6 +1,7 @@
 //models
 const orderCollection = require('../models/orderModel')
 const addressCollection = require('../models/addressModel')
+const productCollection = require('../models/productsModel')
 
 //list all orders
 exports.viewOrders = async (currentPage, noOfList, skipPages) => {
@@ -26,14 +27,18 @@ exports.viewOrder = async (orderID) => {
 }
 
 //change the productOrderStauts
-exports.changeProductStatus = async (productOrderID, orderID, status) => {
+exports.changeProductStatus = async (productOrderID, orderID, status,productID,quantity) => {
     try {
 
         let order = await orderCollection.findOneAndUpdate(
             { _id: orderID, 'products._id': productOrderID },
-            { $set: { 'products.$.status': status } },
+            { $set: { 'products.$.status': status ,paymentStatus:'completed'} },
             { new: true }
         );
+
+        if(status == 'canceled'){
+            await productCollection.updateOne({_id:productID},{$inc:{stock:quantity}})
+        }
 
         const allCanceled = order.products.every(product => product.status == 'canceled')
         const allDelivered = order.products.every(product => product.status == 'delivered')

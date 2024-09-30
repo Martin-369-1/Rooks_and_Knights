@@ -11,6 +11,10 @@ body {
     font-family: cursive;
 }
 
+textarea {
+    resize: none;
+  }
+
 .wrapper {
     background-color: #f1f2f5;
     align-items: stretch;

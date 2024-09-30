@@ -55,7 +55,7 @@
                                                 <td>
                                                     <% if(product.returnStatus=='requested' ) {%>
                                                         <form action=""
-                                                            onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event , '<%=returnItem.userID._id%>','<%=product.amountPaid%>' ,'<%=returnItem.paymentMethod%>')">
+                                                            onsubmit="changeReturnStatus('<%=returnItem._id%>','<%=product._id%>',event , '<%=returnItem.userID._id%>','<%=product.amountPaid%>' ,'<%=returnItem.paymentMethod%>','<%= product.productID._id %>','<%= product.quantity %>')">
                                                             <select
                                                                 id="returnStatus_<%= returnItem._id%>_<%= product._id %>"
                                                                 name="options"
@@ -108,7 +108,7 @@
 
             <script>
 
-                function changeReturnStatus(orderID, orderItemID, event, userID, amount, paymentMethod) {
+                function changeReturnStatus(orderID, orderItemID, event, userID, amount, paymentMethod,productID,quantity) {
                     event.preventDefault(); // Prevents the form from submitting
 
                     let returnStatus = document.getElementById(`returnStatus_${orderID}_${orderItemID}`).value;
@@ -128,7 +128,7 @@
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ orderID, orderItemID, returnStatus, userID, amount, paymentMethod }) // Pass necessary data
+                                body: JSON.stringify({ orderID, orderItemID, returnStatus, userID, amount, paymentMethod ,productID , quantity}) // Pass necessary data
                             }).then(res => res.json())
                                 .then((data) => {
                                     if (data.validationError) {

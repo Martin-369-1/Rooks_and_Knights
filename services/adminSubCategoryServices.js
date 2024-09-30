@@ -58,7 +58,7 @@ exports.addSubCategory = async (subCategoryName, subCategoryDescription) => {
 exports.editSubCategory = async (subCategoryID, subCategoryName, subCategoryDescription) => {
     try {
 
-        let subCategory = await subCategoryCollection.findOne({ subCategoryName, _id: { $ne: subCategoryID } })
+        let subCategory = await subCategoryCollection.findOne({ subCategoryName:{ $regex: new RegExp(`^${subCategoryName}$`, "i") }, _id: { $ne: subCategoryID } })
 
         if (subCategory) { //checks subcateogry exists
             return "subCategory already exists cannot edit"
