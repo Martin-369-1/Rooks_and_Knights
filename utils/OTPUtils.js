@@ -48,8 +48,8 @@ The Rooks and Knights Team`
 
     try {
         await transporter.sendMail(mailOptions);
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
         throw new Error('Error sending OTP');
     }
 }

@@ -15,7 +15,6 @@ exports.forgetPassword = async (email, req) => {
         req.session.countdownTime = 30;
         req.session.email = email;
         req.session.userID = user._id;
-        console.log(email, OTP);
 
         await OTPUtils.storeOTP(email, OTP);
 

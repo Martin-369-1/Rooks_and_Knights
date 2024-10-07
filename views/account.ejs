@@ -160,8 +160,12 @@
                                     <button type="button" onclick="orderViewTable(event)" data-toggle="modal"
                                         data-target="#orderModal" data-order-item="<%= JSON.stringify(order) %>"><i
                                             class="fa fa-eye"></i>View</button>
-                                    <button onclick="downloadInvoice('<%= order._id %>')"><i
-                                            class="fas fa-download"></i> Download Invoice </button>
+
+                                    <% if(order.orderStatus=='delivered') {%>
+                                        <button onclick="downloadInvoice('<%= order._id %>')"><i
+                                                class="fas fa-download"></i> Download Invoice </button>
+
+                                    <% } %>
                                 </div>
                             </div>
                             <% }) %>
@@ -296,7 +300,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-6"><strong>Order Status:</strong> <span id="orderStatus"></span> </div>
-                            <div class="col-6"><strong>Address:</strong> <span id="orderAddress"></span></div>
+                            <div class="col-12"><strong>Address:</strong> <span id="orderAddress"></span></div>
                         </div>
                     </div>
 

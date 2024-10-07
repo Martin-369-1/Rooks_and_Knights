@@ -28,7 +28,6 @@ exports.registerUser = async (username, email, phoneNumber, password, req) => {
         // Generate and store OTP
         const OTP = OTPUtils.generateOTP();
         req.session.countdownTime = 30;
-        console.log(email, OTP);
 
         await OTPUtils.storeOTP(email, OTP);
 

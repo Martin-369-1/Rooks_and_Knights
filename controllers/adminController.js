@@ -543,7 +543,6 @@ exports.deleteOffer = async (req, res) => {
     try {
         const ID = req.params.id;
         const { type } = req.body;
-        console.log(ID, type);
 
         await adminOfferService.deleteOffer(type, ID)
         res.status(200).json({ success: true })
@@ -607,7 +606,7 @@ exports.putEditCoupon = async (req, res) => {
     try {
         const couponID = req.params.id;
         const { couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate } = req.body;
-
+        
         const error = await adminCouponService.editCoupon(couponID, couponName, couponCode, discountAmount, minimumOrderAmount, expiryDate)
         if (error) {
             return res.status(400).json({ error })

@@ -26,7 +26,6 @@ exports.createOrder = async (products, addressId, paymentMethod, couponCodes, us
             discount+=parseInt(orderedProducts[i].price * Math.max(orderedProducts[i].offer , orderedProducts[i].subCategoryID.offer , orderedProducts[i].categoryID.offer)  * products[i].quantity /100) 
             
         }
-        console.log("coupon discount :",couponDiscount);
         
         discount+=couponDiscount
 

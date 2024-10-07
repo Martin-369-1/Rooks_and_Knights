@@ -17,7 +17,10 @@ router.patch('/return/returnProduct/:id', userAuthMiddleware.validUser, orderCon
 router.post('/completePayment', userAuthMiddleware.checkUserAuthenticated, orderController.completePayment)
 
 //add coupon
-router.post('/addCoupon', userAuthMiddleware.validUser, orderController.postAddCouponDiscount)
+router.post('/coupon', userAuthMiddleware.validUser, orderController.postAddCouponDiscount)
+
+//coupon list
+router.get('/coupon/:id', userAuthMiddleware.validUser , orderController.getAvaliableCoupon)
 
 //download Invoice pdf
 router.get('/downloadInvoicePdf/:id', userAuthMiddleware.checkUserAuthenticated, orderController.invoiceDownload)

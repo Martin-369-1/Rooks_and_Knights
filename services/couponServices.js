@@ -25,3 +25,15 @@ exports.addCouponDiscount = async (totalAmount, couponCode) => {
         console.log(err);
     }
 }
+
+exports.avaliableCouponList = async(totalAmount) =>{
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+
+    try{
+        const avaliableCouponList=await couponCollection.find({minimumOrderAmount:{$lte:totalAmount},expiryDate:{$gte:now}})
+        return avaliableCouponList;
+    }catch(err){
+        console.log(err);
+    }
+}

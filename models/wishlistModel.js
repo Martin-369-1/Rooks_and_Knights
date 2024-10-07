@@ -13,6 +13,14 @@ const wishlistSchema = Schema({
             type: Schema.Types.ObjectId,
             required: true,
             ref: 'products'
+        },
+        categoryID:{
+            type:Schema.Types.ObjectId,
+            ref:'categories'
+        },
+        subCategoryID:{
+            type:Schema.Types.ObjectId,
+            ref:'subCategories'
         }
     }]
 })

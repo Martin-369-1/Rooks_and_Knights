@@ -4,7 +4,7 @@ const wishlistCollection = require('../models/wishlistModel');
 //render wislist
 exports.viewWishlist = async (userID) => {
     try {
-        const wishlist = await wishlistCollection.findOne({ userID }).populate('wishlistItems.productID')
+        const wishlist = await wishlistCollection.findOne({ userID }).populate('wishlistItems.productID').populate('wishlistItems.categoryID').populate('wishlistItems.subCategoryID')
 
         if (!wishlist) {
             const newWishlist = new wishlistCollection({
@@ -23,8 +23,9 @@ exports.viewWishlist = async (userID) => {
 }
 
 //add new product to wishlit 
-exports.addToWishlist = async (userID, productID) => {
+exports.addToWishlist = async (userID, productID,categoryID,subCategoryID) => {
     try {
+        
         const wishlist = await wishlistCollection.findOne({ userID })
 
         if (!wishlist) {
@@ -32,16 +33,19 @@ exports.addToWishlist = async (userID, productID) => {
                 userID,
                 wishlistItems: [
                     {
-                        productID
+                        productID,
+                        categoryID,
+                        subCategoryID
                     }
                 ]
             })
+            
 
             await newWishlist.save()
             return
         }
 
-        wishlist.wishlistItems.push({ productID })
+        wishlist.wishlistItems.push({ productID,categoryID,subCategoryID })
 
         await wishlist.save()
 

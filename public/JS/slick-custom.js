@@ -1,5 +1,3 @@
-
-
 (function ($) {
   // USE STRICT
   "use strict";
@@ -10,11 +8,9 @@
     var wrapSlick1 = $(this);
     var slick1 = $(this).find('.slick1');
 
-
     var itemSlick1 = $(slick1).find('.item-slick1');
     var layerSlick1 = $(slick1).find('.layer-slick1');
     var actionSlick1 = [];
-
 
     $(slick1).on('init', function () {
       var layerCurrentItem = $(itemSlick1[0]).find('.layer-slick1');
@@ -33,7 +29,6 @@
         }, $(layerCurrentItem[i]).data('delay'), i);
       }
     });
-
 
     var showDot = false;
     if ($(wrapSlick1).find('.wrap-slick1-dots').length > 0) {
@@ -66,7 +61,6 @@
     });
 
     $(slick1).on('afterChange', function (event, slick, currentSlide) {
-
       var layerCurrentItem = $(itemSlick1[currentSlide]).find('.layer-slick1');
 
       for (var i = 0; i < actionSlick1.length; i++) {
@@ -82,9 +76,7 @@
           $(layerCurrentItem[index]).addClass($(layerCurrentItem[index]).data('appear') + ' visible-true');
         }, $(layerCurrentItem[i]).data('delay'), i);
       }
-
     });
-
   });
 
   /*==================================================================
@@ -133,38 +125,71 @@
     });
   });
 
-
   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var nameTab = $(e.target).attr('href');
     $(nameTab).find('.slick2').slick('reinit');
   });
 
   /*==================================================================
-  [ Slick3 ]*/
+  [ Slick3 with Zoom Effect ]*/
   $('.wrap-slick3').each(function () {
-    $(this).find('.slick3').slick({
+    var wrapSlick3 = $(this);
+    var slick3 = $(this).find('.slick3');
+
+    // Initialize slick slider
+    $(slick3).slick({
       slidesToShow: 1,
       slidesToScroll: 1,
       fade: true,
       infinite: true,
       autoplay: false,
       autoplaySpeed: 6000,
-
       arrows: true,
-      appendArrows: $(this).find('.wrap-slick3-arrows'),
+      appendArrows: $(wrapSlick3).find('.wrap-slick3-arrows'),
       prevArrow: '<button class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></button>',
       nextArrow: '<button class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></button>',
-
       dots: true,
-      appendDots: $(this).find('.wrap-slick3-dots'),
+      appendDots: $(wrapSlick3).find('.wrap-slick3-dots'),
       dotsClass: 'slick3-dots',
       customPaging: function (slick, index) {
         var portrait = $(slick.$slides[index]).data('thumb');
         return '<img src=" ' + portrait + ' "/><div class="slick3-dot-overlay"></div>';
-      },
+      }
+    });
+
+    // Zoom functionality
+    $(slick3).find('.item-slick3 .image-container').on('mousemove', function (e) {
+      const img = $(this).find('img');
+      const zoomLens = $(this).find('.zoom-lens');
+      const rect = this.getBoundingClientRect();
+
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const lensSize = 100;
+      let lensX = x - lensSize / 2;
+      let lensY = y - lensSize / 2;
+
+      if (lensX < 0) lensX = 0;
+      if (lensY < 0) lensY = 0;
+      if (lensX + lensSize > rect.width) lensX = rect.width - lensSize;
+      if (lensY + lensSize > rect.height) lensY = rect.height - lensSize;
+
+      zoomLens.css({
+        display: 'block',
+        left: lensX + 'px',
+        top: lensY + 'px'
+      });
+
+      img.css({
+        transform: `scale(1.5) translate(-${lensX}px, -${lensY}px)`
+      });
+    });
+
+    $(slick3).find('.item-slick3 .image-container').on('mouseleave', function () {
+      $(this).find('img').css('transform', 'scale(1)');
+      $(this).find('.zoom-lens').hide();
     });
   });
-
-
 
 })(jQuery);

@@ -178,6 +178,19 @@
                             </div>
                         </div>
 
+                        <div class="p-t-20 p-b-10">
+                            <div class="size-208 w-full">
+                                <span class="mtext-101">
+                                    Avaliable Coupons
+                                </span>
+                            </div>
+                            <div class="size-200  p-t-1 p-r-100">
+                                <ul id="avaliableCouponList">
+
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="m-t-10">
                             <p class="cl2 mtext-101">Coupon Discount: <span id="couponDiscountAmount">
                                     0
@@ -336,6 +349,7 @@
         <%- include('./partials/scriptBody.ejs') %>
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <script>
+                avaliabeCoupon()
                 let couponCodeIds = [];
                 function addNewAddress(event) {
                     event.preventDefault()
@@ -502,6 +516,7 @@
                                 })
                         }
                     });
+                    
                 }
 
 
@@ -530,6 +545,7 @@
 
                         editAddressDiv.appendChild(editButton);
                     }
+                    
                 }
 
                 function deleteProduct(button) {
@@ -559,7 +575,7 @@
                     totalAmount.innerText = Number(totalAmount.textContent) - ((cartItem.productID.price * cartItem.quantity) - offer)
                     discountAmount.innerText = Number(discountAmount.textContent) - offer - Number(couponDiscountAmount.textContent)
 
-
+                    avaliabeCoupon()
                     row.parentNode.removeChild(row);
 
                 }
@@ -736,7 +752,7 @@
                     const discountAmount = document.getElementById('discountAmount');
                     const couponList = document.getElementById('couponList');
 
-                    fetch(`/order/addCoupon`, {
+                    fetch(`/order/coupon`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json',
@@ -764,6 +780,8 @@
                                         <button type="button" onclick="removeCoupon('${data.couponID}',${data.couponDiscount})"><i class="fa-solid fa-trash"></i></button>
                                     </li>
                                 `;
+
+                                avaliabeCoupon()
 
                                 if (!document.getElementById(`coupon_${data.couponID}`))
 
@@ -800,6 +818,33 @@
                     totalAmount.innerText = parseInt(totalAmount.textContent) + parseInt(couponDiscount);
                     couponDiscountAmount.innerText = couponDiscountAmount.textContent - couponDiscount;
                     discountAmount.innerText = discountAmount.textContent - couponDiscount;
+                    avaliabeCoupon()
+                }
+
+                function avaliabeCoupon(){
+                    const totalAmmount = document.getElementById('totalAmount').textContent.trim();
+                    const avaliableCouponList = document.getElementById('avaliableCouponList');
+                    
+                    fetch(`/order/coupon/${totalAmmount}`,{
+                        method:'GET',
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                    }).then(res => res.json())
+                    .then((data)=>{
+                        data.avaliableCouponList.forEach((coupon)=>{
+
+                            const newCouponListItem = `
+                                        <li class="flex-sb" id="coupon_${coupon.couponID}">
+                                            <p style="font-family: monospace;" class="fs-20">${coupon.couponCode}</p>
+                                        </li>
+                                    `;
+    
+                                    if (!document.getElementById(`coupon_${coupon.couponID}`))
+    
+                                    avaliableCouponList.insertAdjacentHTML('beforeend', newCouponListItem);
+                        })
+                        })
                 }
 
                 function ValidateAddress(addressTitle, state, city, pinCode, streetAddress) {

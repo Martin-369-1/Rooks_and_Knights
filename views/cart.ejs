@@ -43,7 +43,7 @@
                                             <%= cartItem.productID.productName %>
                                         </td>
                                         <td class="column-3">
-                                            <%= cartItem.productID.price %>
+                                            <%=cartItem.productID.price  - parseInt(cartItem.productID.price * Math.max(cartItem.productID.offer , cartItem.categoryID.offer , cartItem.subCategoryID.offer))/100 %>
                                         </td>
 
 
@@ -55,7 +55,7 @@
                                                     <p id="stock-Left_<%=cartItem._id%>"></p>
                                                     <div class="wrap-num-product flex-w m-l-auto m-r-0">
                                                         <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
-                                                            onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>')">
+                                                            onclick="decreaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price  - parseInt(cartItem.productID.price * Math.max(cartItem.productID.offer , cartItem.categoryID.offer , cartItem.subCategoryID.offer))/100  %>')">
                                                             <i class="fs-16 zmdi zmdi-minus"></i>
                                                         </div>
 
@@ -66,8 +66,9 @@
                                                             oninput="productTotalPrice('<%= cartItem._id %>', '<%= cartItem.productID.price %>')"
                                                             readonly>
 
+                                                        
                                                         <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
-                                                            onclick="increaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price %>','<%= cartItem.productID.stock %>')">
+                                                            onclick="increaseProduct(this,'<%= cartItem._id %>', '<%= cartItem.productID.price  - parseInt(cartItem.productID.price * Math.max(cartItem.productID.offer , cartItem.categoryID.offer , cartItem.subCategoryID.offer))/100  %>','<%= cartItem.productID.stock %>')">
                                                             <i class="fs-16 zmdi zmdi-plus"></i>
                                                         </div>
                                                     </div>
@@ -76,7 +77,7 @@
                                                         <% } %>
                                         </td>
                                         <td class="column-5 cart-product-total" id="cartProductTotal_<%=cartItem._id%>">
-                                            <%=cartItem.productID.price * cartItem.quantity%>
+                                            <%=cartItem.productID.price * cartItem.quantity - parseInt(cartItem.productID.price * cartItem.quantity * Math.max(cartItem.productID.offer , cartItem.categoryID.offer , cartItem.subCategoryID.offer))/100%>
                                         </td>
                                         <td class="column-2">
 
@@ -119,7 +120,7 @@
 
                             <div class="size-209 p-t-1">
                                 <span class="mtext-110 cl2" id="totalAmmount">
-                                    <%= cart.totalPrice %>
+                                    <%= cart.cartItems.reduce((total,cartItem) => cartItem.productID.price * cartItem.quantity - parseInt(cartItem.productID.price * cartItem.quantity * Math.max(cartItem.productID.offer , cartItem.categoryID.offer , cartItem.subCategoryID.offer))/100 ,0) %>
                                 </span>
                             </div>
                         </div>
@@ -172,6 +173,8 @@
 
                 // Function to increase the number of products
                 function increaseProduct(button, ID, productPrice, stock) {
+                    console.log(productPrice);
+                    
                     const quantity = document.getElementById(`productQuantity_${ID}`)
                     const quantityVal = Number(quantity.value);
 

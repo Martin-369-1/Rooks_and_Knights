@@ -41,10 +41,10 @@ module.exports.generateInvoice = (req, res, order) => {
 
     function drawTableHeader() {
         doc.fontSize(10).text('Product Name', 50, y, { width: columnWidths.productName });
-        doc.text('Unit Price', 120, y, { width: columnWidths.unitPrice, align: 'center' });
-        doc.text('Quantity', 200, y, { width: columnWidths.quantity, align: 'center' });
-        doc.text('Discount', 350, y, { width: columnWidths.discount, align: 'center' });
-        doc.text('Final Price', 400, y, { width: columnWidths.finalPrice, align: 'center' });
+        doc.text('Unit Price', 200, y, { width: columnWidths.unitPrice, align: 'center' });
+        doc.text('Quantity', 300, y, { width: columnWidths.quantity, align: 'center' });
+        doc.text('Discount', 400, y, { width: columnWidths.discount, align: 'center' });
+        doc.text('Final Price', 450, y, { width: columnWidths.finalPrice, align: 'center' });
 
         y += rowHeight;
         doc.moveTo(50, y).lineTo(600, y).stroke();
@@ -54,10 +54,10 @@ module.exports.generateInvoice = (req, res, order) => {
     function drawProductRows(products) {
         products.forEach((product) => {
             doc.fontSize(10).text(product.productID.productName, 50, y, { width: columnWidths.productName });
-            doc.text(`Rs.${product.price}`, 120, y, { width: columnWidths.unitPrice, align: 'center' });
-            doc.text(product.quantity, 200, y, { width: columnWidths.quantity, align: 'center' });
-            doc.text(`Rs.${product.discount}`, 350, y, { width: columnWidths.discount, align: 'center' });
-            doc.text(`Rs.${product.amountPaid}`, 400, y, { width: columnWidths.finalPrice, align: 'center' });
+            doc.text(`Rs.${product.price}`, 200, y, { width: columnWidths.unitPrice, align: 'center' });
+            doc.text(product.quantity, 300, y, { width: columnWidths.quantity, align: 'center' });
+            doc.text(`Rs.${product.discount}`, 400, y, { width: columnWidths.discount, align: 'center' });
+            doc.text(`Rs.${product.amountPaid}`, 450, y, { width: columnWidths.finalPrice, align: 'center' });
 
             y += rowHeight;
 

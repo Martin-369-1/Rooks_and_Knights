@@ -42,7 +42,7 @@
                                                 <%= wishlistItem.productID.productName %>
                                             </td>
                                             <td class="column-3">
-                                                <%= wishlistItem.productID.price %>
+                                                <%= wishlistItem.productID.price - (wishlistItem.productID.price * Math.max(wishlistItem.productID.offer,wishlistItem.categoryID.offer , wishlistItem.subCategoryID.offer)/100) %>
                                             </td>
 
 

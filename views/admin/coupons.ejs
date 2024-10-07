@@ -363,11 +363,10 @@
 
                 }
 
-                function editCouponModel(e, _id) {
+                function editCouponModel(e, ID) {
 
                     const coupondata = e.target.closest('button');
-                    const { couponName, couponCode, discountAmount ,minimumOrderAmount,expiryDate ,ID} = JSON.parse(coupondata.getAttribute('data-coupon-item'));
-                    console.log(coupondata);
+                    const { couponName, couponCode, discountAmount ,minimumOrderAmount,expiryDate ,_id} = JSON.parse(coupondata.getAttribute('data-coupon-item'));
                     
                     document.getElementById('couponNameEdit').value = couponName;
                     document.getElementById('couponCodeEdit').value = couponCode;
@@ -385,7 +384,7 @@
                         var editButton = document.createElement('button');
                         editButton.textContent = "Edit";
                         editButton.id = 'editcouponButton';
-                        editButton.onclick = () => editCoupon(event, (ID));
+                        editButton.onclick = () => editCoupon(event, _id);
                         editButton.classList.add('btn', 'btn-primary');
 
                         editcouponDiv.appendChild(editButton);
@@ -396,7 +395,7 @@
                 function editCoupon(event, ID) {
 
                     event.preventDefault();
-
+                    
                     const couponName = document.getElementById('couponNameEdit').value 
                     const couponCode = document.getElementById('couponCodeEdit').value 
                     const discountAmount = document.getElementById('discountAmountEdit').value

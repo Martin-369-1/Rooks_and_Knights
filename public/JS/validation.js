@@ -29,7 +29,6 @@ function checkValidNumber(number, type, min, max) {
     if (!number) {
         return `${type} should not be empty`;
     }
-    console.log(number)
 
     if (!/^\d+$/.test(number)) {
         return `${type} should be a valid number`;

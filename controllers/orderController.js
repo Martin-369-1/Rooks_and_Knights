@@ -196,13 +196,27 @@ exports.postAddCouponDiscount = async (req, res) => {
     }
 }
 
+//avaliable coupon list
+exports.getAvaliableCoupon=async (req,res)=>{
+    try{
+        
+        const totalAmmount=req.params.id;
+
+        const avaliableCouponList=await couponService.avaliableCouponList(totalAmmount)
+        return res.status(200).json({success:true,avaliableCouponList})
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
 //cancel an order
 exports.patchCancel = async (req, res) => {
     try {
         const { productID, productQuantity, amountPaid } = req.body;
         const orderProductsID = req.params.id;
         const { paymentMethod, paymentStatus, additionlaCharge } = await orderService.cancelOrders(orderProductsID, req.userID, productID, productQuantity)
-
+        
         if ((paymentMethod == "Razorpay" || paymentMethod == "Wallet") && paymentStatus == 'completed') {
             await transationService.completeTransation(req.userID, amountPaid + additionlaCharge, 'refund')
             await walletService.addToWallet(req.userID, amountPaid + additionlaCharge)
