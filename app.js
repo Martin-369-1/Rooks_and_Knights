@@ -13,6 +13,7 @@ require('./config/passport')
 //Setting view engine
 app.set('view engine', 'ejs')
 app.locals.title = process.env.APP_TITLE
+app.locals.domain = process.env.APP_DOMAIN
 
 //Middlewares
 app.use(cookieParser(process.env.COOKIE_SECRET))
