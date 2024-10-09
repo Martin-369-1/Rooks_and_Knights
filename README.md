@@ -8,7 +8,7 @@
 
 - **User Authentication:**  
   - ✅ User registration via email or Google OAuth  
-  - ✅ Admin login with predefined credentials  
+  - ✅ Admin login with predefined credentials  : email- admin123@gmail.com : password - admin123
 
 - **Product Management:**  
   - 🛒 Browse products by categories and subcategories  
