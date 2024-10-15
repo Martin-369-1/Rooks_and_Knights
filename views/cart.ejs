@@ -120,7 +120,7 @@
 
                             <div class="size-209 p-t-1">
                                 <span class="mtext-110 cl2" id="totalAmmount">
-                                    <%= cart.cartItems.reduce((total,cartItem) => cartItem.productID.price * cartItem.quantity - parseInt(cartItem.productID.price * cartItem.quantity * Math.max(cartItem.productID.offer , cartItem.categoryID.offer , cartItem.subCategoryID.offer))/100 ,0) %>
+                                    <%=parseInt(cart.cartItems.reduce((total, cartItem) => total + (cartItem.productID.price * cartItem.quantity * (1 - Math.max(cartItem.productID.offer, cartItem.categoryID.offer, cartItem.subCategoryID.offer) / 100)), 0))  %>
                                 </span>
                             </div>
                         </div>
