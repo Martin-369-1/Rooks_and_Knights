@@ -1,6 +1,8 @@
 //modules
 const pdfKit = require('pdfkit')
 
+//changed in feature
+
 //services
 const addressService = require('../services/addressServices');
 const cartService = require('../services/cartServices')
@@ -8,6 +10,7 @@ const orderService = require('../services/orderServices')
 const walletService = require('../services/walletService')
 const transationService = require('../services/transationService')
 const couponService = require('../services/couponServices')
+const userService = require('../services/userService')
 
 //utils
 const { verifyPayment } = require('../utils/razorpayPaymentVerify')
@@ -217,7 +220,14 @@ exports.patchCancel = async (req, res) => {
         const orderProductsID = req.params.id;
         const { paymentMethod, paymentStatus, additionlaCharge } = await orderService.cancelOrders(orderProductsID, req.userID, productID, productQuantity)
         
-        if ((paymentMethod == "Razorpay" || paymentMethod == "Wallet") && paymentStatus == 'completed') {
+        const user=await userService.user(req.userID)
+
+        if(user.isblocked){
+            console.log('user is blocked')
+            return
+        }
+
+        if ((paymentMethod == "Razorpay" || paymentMethod == "Wallet") && paymentStatus == 'completed' ) {
             await transationService.completeTransation(req.userID, amountPaid + additionlaCharge, 'refund')
             await walletService.addToWallet(req.userID, amountPaid + additionlaCharge)
         }
@@ -228,6 +238,8 @@ exports.patchCancel = async (req, res) => {
         res.status(500).json({ error: "Server Error" })
     }
 }
+
+
 
 //request for return
 exports.patchReturn = async (req, res) => {

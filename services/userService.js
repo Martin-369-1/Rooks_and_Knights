@@ -89,3 +89,11 @@ exports.findUserByReferenceID = async (referalID) => {
         console.log(err);
     }
 }
+
+exports.user = async (userID)=>{
+    try{
+        return await userCollection.findOne({_id:userID})
+    }catch(err){
+        console.log(err);
+    }
+}
