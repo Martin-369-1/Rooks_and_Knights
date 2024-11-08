@@ -4,7 +4,7 @@ const crypto = require('crypto');
 module.exports.generateInvoice = (req, res, order) => {
     const date = new Date();
     const doc = new pdfkit();
-    const invoiceNumber = crypto.randomInt(1000, 9999); // Adjusted range for better uniqueness
+    const invoiceNumber = crypto.randomInt(1000, 9999); 
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=invoice_${invoiceNumber}.pdf`);
